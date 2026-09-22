@@ -25,7 +25,8 @@ env/
 Thumbs.db
 
 # Downloaded datasets and generated dataset splits
-/data/
+/data/*
+!/data/.gitkeep
 /prepared_da_yolo/
 
 # Cloned upstream implementations
