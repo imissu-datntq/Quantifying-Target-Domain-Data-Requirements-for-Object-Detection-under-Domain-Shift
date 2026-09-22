@@ -1,0 +1,54 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments and local configuration
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# IDE and operating-system files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Downloaded datasets and generated dataset splits
+/data/
+/prepared_da_yolo/
+
+# Cloned upstream implementations
+/external/
+
+# Training/evaluation outputs
+/runs/
+/wandb/
+/mlruns/
+/logs/
+
+# Model checkpoints and exported models
+/weights/
+*.pt
+*.pth
+*.ckpt
+*.weights
+*.onnx
+*.engine
+*.tflite
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+~$*
