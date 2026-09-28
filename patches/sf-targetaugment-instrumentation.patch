@@ -1,0 +1,137 @@
+diff --git a/TargetAugment_train/sampler.py b/TargetAugment_train/sampler.py
+index 32275a8..34d2583 100644
+--- a/TargetAugment_train/sampler.py
++++ b/TargetAugment_train/sampler.py
+@@ -2,25 +2,28 @@ import numpy as np
+ from torch.utils import data
+ 
+ 
+-def InfiniteSampler(n):
++def InfiniteSampler(n, seed=None):
+     # i = 0
+     i = n - 1
+-    order = np.random.permutation(n)
++    rng = np.random.RandomState(seed) if seed is not None else np.random
++    order = rng.permutation(n)
+     while True:
+         yield order[i]
+         i += 1
+         if i >= n:
+-            np.random.seed()
+-            order = np.random.permutation(n)
++            if seed is None:
++                np.random.seed()
++            order = rng.permutation(n)
+             i = 0
+ 
+ 
+ class InfiniteSamplerWrapper(data.sampler.Sampler):
+-    def __init__(self, data_source):
++    def __init__(self, data_source, seed=None):
+         self.num_samples = len(data_source)
++        self.seed = seed
+ 
+     def __iter__(self):
+-        return iter(InfiniteSampler(self.num_samples))
++        return iter(InfiniteSampler(self.num_samples, self.seed))
+ 
+     def __len__(self):
+         return 2 ** 31
+diff --git a/TargetAugment_train/train.py b/TargetAugment_train/train.py
+index e053449..4e0edb4 100644
+--- a/TargetAugment_train/train.py
++++ b/TargetAugment_train/train.py
+@@ -12,6 +12,9 @@ import net
+ from sampler import InfiniteSamplerWrapper
+ import numpy as np
+ import itertools
++import json
++import time
++import random
+ 
+ 
+ cudnn.benchmark = True
+@@ -94,8 +97,18 @@ parser.add_argument('--content_style_weight', type=float, default=1)
+ parser.add_argument('--constrain_weight', type=float, default=1)
+ parser.add_argument('--before_fcs_steps', type=int, default=0)
+ parser.add_argument('--device', type=str, default=0)
++parser.add_argument('--research_log', type=str, default=None,
++                    help='Exclusive JSONL loss/timing log for a bounded technical run')
++parser.add_argument('--research_seed', type=int, default=None)
+ args = parser.parse_args()
+ 
++if args.research_seed is not None:
++    random.seed(args.research_seed)
++    np.random.seed(args.research_seed)
++    torch.manual_seed(args.research_seed)
++    torch.cuda.manual_seed_all(args.research_seed)
++    cudnn.benchmark = False
++
+ assert args.scenario_name in ['voc2clipart', 'voc2wc', 'city2foggy' ,'KC', 'city', 'bdd100k'], \
+     'please choose one from voc2clipart, voc2wc, city2foggy, city, bdd100k and KC'
+ 
+@@ -125,22 +138,27 @@ style_dataset = FlatFolderDataset(args.style_dir, style_tf)
+ 
+ content_iter = iter(data.DataLoader(
+     content_dataset, batch_size=args.batch_size,
+-    sampler=InfiniteSamplerWrapper(content_dataset),
++    sampler=InfiniteSamplerWrapper(content_dataset, seed=args.research_seed),
+     num_workers=args.n_threads))
+ style_iter = iter(data.DataLoader(
+     style_dataset, batch_size=args.batch_size,
+-    sampler=InfiniteSamplerWrapper(style_dataset),
++    sampler=InfiniteSamplerWrapper(style_dataset, seed=None if args.research_seed is None else args.research_seed + 1),
+     num_workers=args.n_threads))
+ 
+ # optimizer = torch.optim.Adam(network.decoder.parameters(), lr=args.lr)
+ optimizer1 = torch.optim.Adam(itertools.chain(*[network.dec_1.parameters(),network.dec_2.parameters(), network.dec_3.parameters(), network.dec_4.parameters()]), lr=args.lr_decoder)
+ optimizer2 = torch.optim.Adam(itertools.chain(*[network.fc1.parameters(),network.fc2.parameters()]), lr=args.lr_fcs)
+ 
++research_stream = open(args.research_log, 'x') if args.research_log else None
++torch.cuda.reset_peak_memory_stats()
++research_durations = []
+ for i in tqdm(range(args.max_iter)):
+     adjust_learning_rate(args.lr_decoder,optimizer1, iteration_count=i)
+ 
+     content_images = next(content_iter).to(device)
+     style_images = next(style_iter).to(device)
++    torch.cuda.synchronize()
++    research_started = time.monotonic()
+ 
+     loss_c,loss_const = network(content_images, style_images,args.scenario_name,flag=0)
+     loss_c = args.content_weight * loss_c
+@@ -164,6 +182,16 @@ for i in tqdm(range(args.max_iter)):
+         loss.backward()
+         optimizer2.step()
+ 
++    torch.cuda.synchronize()
++    research_durations.append(time.monotonic() - research_started)
++    if research_stream:
++        losses = dict(content=float(loss_c), constraint=float(loss_const),
++                      style=float(loss_s_1) if i >= args.before_fcs_steps else None,
++                      content_style=float(loss_s_2) if i >= args.before_fcs_steps else None)
++        research_stream.write(json.dumps(dict(step=i, losses=losses,
++            seconds=research_durations[-1]), allow_nan=False) + '\n')
++        research_stream.flush()
++
+     save = False
+     if args.save_model_interval != -1:
+         if (i + 1) % args.save_model_interval == 0 or (i + 1) == args.max_iter:
+@@ -186,4 +214,15 @@ for i in tqdm(range(args.max_iter)):
+         for key in state_dict.keys():
+             state_dict[key] = state_dict[key].to(torch.device('cpu'))
+         torch.save(state_dict, args.save_dir +
+-                '/fc2_iter_{:d}.pth'.format(i + 1))
+\ No newline at end of file
++                '/fc2_iter_{:d}.pth'.format(i + 1))
++
++if research_stream:
++    research_stream.close()
++    measured = research_durations[20:]
++    report = dict(steps=args.max_iter, seed=args.research_seed,
++        peak_allocated_bytes=torch.cuda.max_memory_allocated(),
++        peak_reserved_bytes=torch.cuda.max_memory_reserved(),
++        mean_update_seconds=sum(measured) / len(measured) if measured else None,
++        selection_evidence=False, optimizer_resume_verified=False)
++    with open(args.research_log + '.summary.json', 'x') as stream:
++        json.dump(report, stream, indent=2, allow_nan=False)

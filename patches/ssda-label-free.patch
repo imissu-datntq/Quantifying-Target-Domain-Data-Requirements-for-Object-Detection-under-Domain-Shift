@@ -1,0 +1,198 @@
+diff --git a/ssda_yolov5_train.py b/ssda_yolov5_train.py
+index 27347ab..f6cd8c4 100644
+--- a/ssda_yolov5_train.py
++++ b/ssda_yolov5_train.py
+@@ -304,9 +304,17 @@ def train(hyp, opt, device):
+     dataloader_sr, dataset_sr = create_dataloader(train_path_source_real, train_path_source_fake, imgsz, batch_size // WORLD_SIZE, 
+         gs, single_cls, hyp=hyp, augment=True, cache=opt.cache_images, rect=opt.rect, rank=RANK, workers=workers,
+         image_weights=opt.image_weights, quad=opt.quad, prefix=colorstr('train_source_real_fake: '))
+-    dataloader_tr, dataset_tr = create_dataloader(train_path_target_real, train_path_target_fake, imgsz, batch_size // WORLD_SIZE, 
+-        gs, single_cls, hyp=hyp, augment=True, cache=opt.cache_images, rect=opt.rect, rank=RANK, workers=workers,
+-        image_weights=opt.image_weights, quad=opt.quad, prefix=colorstr('train_target_real_fake: '))
++    if opt.unlabeled_target:
++        from utils.unlabeled_target import create_unlabeled_pairs
++        if not opt.noautoanchor or opt.image_weights or opt.quad or opt.multi_scale or imgsz != 1280 or WORLD_SIZE != 1:
++            raise ValueError('Image-only target requires --noautoanchor, imgsz 1280, single GPU, and no label-dependent sampling/multiscale/quad')
++        dataloader_tr, dataset_tr = create_unlabeled_pairs(
++            train_path_target_real, data_dict['unlabeled_image_root'], train_path_target_fake,
++            batch_size, seed=opt.target_seed)
++    else:
++        dataloader_tr, dataset_tr = create_dataloader(train_path_target_real, train_path_target_fake, imgsz, batch_size // WORLD_SIZE,
++            gs, single_cls, hyp=hyp, augment=True, cache=opt.cache_images, rect=opt.rect, rank=RANK, workers=workers,
++            image_weights=opt.image_weights, quad=opt.quad, prefix=colorstr('train_target_real_fake: '))
+ 
+         
+     mlc = np.concatenate(dataset_sr.labels, 0)[:, 0].max()  # max label class
+@@ -363,11 +371,13 @@ def train(hyp, opt, device):
+     model_teacher.nc = nc  # attach number of classes to model
+     model_teacher.hyp = hyp  # attach hyperparameters to model
+     model_teacher.gr = 1.0  # iou loss ratio (obj_loss = 1.0 or iou)
+-    model_teacher.class_weights = labels_to_class_weights(dataset_tr.labels, nc).to(device) * nc  # attach class weights
++    model_teacher.class_weights = (model_student.class_weights.clone() if opt.unlabeled_target else labels_to_class_weights(dataset_tr.labels, nc).to(device) * nc)
+     model_teacher.names = names
+     
+ 
+     # Start training
++    initial_ema_updates = ema.updates if ema else 0
++    reached_update_limit = False
+     t0 = time.time()
+     nw = max(round(hyp['warmup_epochs'] * nb), 1000)  # number of warmup iterations, max(3 epochs, 1k iterations)
+     # nw = min(nw, (epochs - start_epoch) / 2 * nb)  # limit warmup to < 1/2 of training
+@@ -487,7 +497,8 @@ def train(hyp, opt, device):
+             # Forward
+             with amp.autocast(enabled=cuda):
+                 # [branch 1] for model_student, with using labels
+-                model_student.zero_grad()
++                if not opt.unlabeled_target:
++                    model_student.zero_grad()
+                 pred_sr = model_student(imgs_sr)  # forward
+                 loss_sr, loss_items_sr = compute_loss(pred_sr, targets_sr.to(device))  # loss scaled by batch_size
+  
+@@ -530,7 +541,7 @@ def train(hyp, opt, device):
+                     pred_labels = torch.cat(pred_labels_out_batch, dim=0)
+                 else:
+                     # pred_labels = torch.from_numpy(np.array([[0,0, 0.5, 0.5, 1, 1]])).to(device)
+-                    pred_labels = torch.from_numpy(np.array([[0,0, 0.5, 0.5, random.uniform(0.2,0.8), random.uniform(0.2,0.8)]])).to(device)
++                    pred_labels = (torch.zeros((0, 6), device=device) if opt.unlabeled_target else torch.from_numpy(np.array([[0,0, 0.5, 0.5, random.uniform(0.2,0.8), random.uniform(0.2,0.8)]])).to(device))
+                 loss_distillation, loss_items_distillation = compute_loss(pred_tr, pred_labels.to(device))  # loss scaled by batch_size
+                 
+                 # consistency loss (source_real and source_fake should have similarly outputs)
+@@ -554,6 +565,8 @@ def train(hyp, opt, device):
+                     loss *= 4.
+              
+ 
++            if opt.unlabeled_target and not torch.isfinite(loss).all():
++                raise FloatingPointError('Non-finite SSDA training loss')
+             try:
+                 # Backward
+                 scaler.scale(loss).backward()
+@@ -565,10 +578,15 @@ def train(hyp, opt, device):
+                     if ema:
+                         ema.update(model_student)
+                     last_opt_step = ni
++                    if (opt.max_optimizer_updates > 0
++                            and ema.updates - initial_ema_updates >= opt.max_optimizer_updates):
++                        reached_update_limit = True
+                     
+                     model_teacher.zero_grad()
+                     teacher_optimizer.step()
+-            except:
++            except Exception:
++                if opt.unlabeled_target:
++                    raise
+                 # for possible bug when running scaler.scale(loss).backward()
+                 print("RuntimeError: Function 'CudnnConvolutionBackward0' returned nan values in its 1th output")
+                 print(targets_sr, "\n", paths_sr,  "\n", targets_tr,  "\n", paths_tr)
+@@ -577,6 +595,14 @@ def train(hyp, opt, device):
+                 # continue
+                 
+                     
++            if opt.unlabeled_target:
++                import json
++                with (save_dir / 'technical_batches.jsonl').open('a') as stream:
++                    stream.write(json.dumps(dict(batch=ni, loss=float(loss.detach()),
++                        pseudo_boxes=len(pred_labels), ema_updates=ema.updates,
++                        optimizer_updates=ema.updates - initial_ema_updates,
++                        amp_scale=scaler.get_scale()), allow_nan=False) + '\n')
++
+             # Print
+             if RANK in [-1, 0]:
+                 mloss = (mloss * i + loss_items) / (i + 1)  # update mean losses
+@@ -604,6 +630,8 @@ def train(hyp, opt, device):
+                                                   save_dir.glob('train*.jpg') if x.exists()]})
+ 
+             # end batch ------------------------------------------------------------------------------------------------
++            if reached_update_limit:
++                break
+ 
+         # Scheduler
+         lr = [x['lr'] for x in student_optimizer.param_groups]  # for loggers
+@@ -613,7 +641,7 @@ def train(hyp, opt, device):
+         if RANK in [-1, 0]:
+             # mAP
+             ema.update_attr(model_student, include=['yaml', 'nc', 'hyp', 'gr', 'names', 'stride', 'class_weights'])
+-            final_epoch = epoch + 1 == epochs
++            final_epoch = epoch + 1 == epochs or reached_update_limit
+             if not notest or final_epoch:  # Calculate mAP
+                 wandb_logger.current_epoch = epoch + 1
+                 results, maps, _ = test.run(data_dict,
+@@ -689,6 +717,8 @@ def train(hyp, opt, device):
+                 del ckpt_student, ckpt_teacher
+ 
+         # end epoch ----------------------------------------------------------------------------------------------------
++        if reached_update_limit:
++            break
+     # end training -----------------------------------------------------------------------------------------------------
+     
+     if RANK in [-1, 0]:
+@@ -717,7 +747,7 @@ def train(hyp, opt, device):
+ 
+             # Strip optimizers
+             for f in last_student, best_student:
+-                if f.exists():
++                if f.exists() and not opt.unlabeled_target:
+                     strip_optimizer(f)  # strip optimizers, this will apparently reduce the model size
+             if loggers['wandb']:  # Log the stripped model
+                 loggers['wandb'].log_artifact(str(best_student if best_student.exists() else last_student), type='model',
+@@ -739,6 +769,10 @@ def parse_opt(known=False):
+     parser.add_argument('--batch-size', type=int, default=16, help='total batch size for all GPUs')
+     parser.add_argument('--img-size', nargs='+', type=int, default=[640, 640], help='[train, test] image sizes')
+     parser.add_argument('--rect', action='store_true', help='rectangular training')
++    parser.add_argument('--unlabeled-target', action='store_true', help='Use native paired image-only target manifest; no synthetic boxes')
++    parser.add_argument('--target-seed', type=int, default=42, help='Seed for image-only target shuffling')
++    parser.add_argument('--max-optimizer-updates', type=int, default=0,
++                        help='Stop cleanly after this many optimizer updates in the current invocation')
+     parser.add_argument('--resume', nargs='?', const=True, default=False, help='resume most recent training')
+     parser.add_argument('--nosave', action='store_true', help='only save final checkpoint')
+     parser.add_argument('--notest', action='store_true', help='only test final epoch')
+@@ -786,8 +820,9 @@ def main(opt):
+     set_logging(RANK)
+     if RANK in [-1, 0]:
+         print(colorstr('train: ') + ', '.join(f'{k}={v}' for k, v in vars(opt).items()))
+-        check_git_status()
+-        check_requirements(exclude=['thop'])
++        if not opt.unlabeled_target:
++            check_git_status()
++        check_requirements(FILE.parent / 'requirements.txt', exclude=['thop'])
+ 
+     # Resume
+     wandb_run = check_wandb_resume(opt)
+@@ -829,4 +864,3 @@ def main(opt):
+ if __name__ == "__main__":
+     opt = parse_opt()
+     main(opt)
+-
+diff --git a/utils/datasets.py b/utils/datasets.py
+index e53cf57..5f8144e 100644
+--- a/utils/datasets.py
++++ b/utils/datasets.py
+@@ -371,7 +371,9 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
+             f = []  # image files
+             f_fake = []  # fake image files
+             # for p in path if isinstance(path, list) else [path]:
+-            for p, p_fake in zip(path, path_fake):
++            if len(self.path) != len(self.path_fake):
++                raise ValueError('Source real/fake path groups must match')
++            for p, p_fake in zip(self.path, self.path_fake):
+                 p = Path(p)  # os-agnostic
+                 p_fake = Path(p_fake)  # os-agnostic
+                 # if p.is_dir():  # dir
+diff --git a/utils/general.py b/utils/general.py
+index 2da1b5c..5b9a46a 100644
+--- a/utils/general.py
++++ b/utils/general.py
+@@ -163,13 +163,7 @@ def check_requirements(requirements='requirements.txt', exclude=()):
+         try:
+             pkg.require(r)
+         except Exception as e:  # DistributionNotFound or VersionConflict if requirements not met
+-            print(f"{prefix} {r} not found and is required by YOLOv5, attempting auto-update...")
+-            try:
+-                assert check_online(), f"'pip install {r}' skipped (offline)"
+-                print(check_output(f"pip install '{r}'", shell=True).decode())
+-                n += 1
+-            except Exception as e:
+-                print(f'{prefix} {e}')
++            raise RuntimeError(f'{prefix} Missing/incompatible {r}; install explicitly in the isolated environment') from e
+ 
+     if n:  # if packages updated
+         source = file.resolve() if 'file' in locals() else requirements

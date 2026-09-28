@@ -1,0 +1,36 @@
+{
+  "yolov4.conv.137": {
+    "path": "weights/yolov4.conv.137",
+    "url": "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.conv.137",
+    "sha256": "11c5286cfbffabc9a3059927401ab3480e9483ceafd3265779a0dc26c769bed0",
+    "bytes": 170038676,
+    "verified": "Official MS-DAYOLO initialization asset downloaded and byte-size/SHA-256 verified; 2026-09-25",
+    "scope": "MS-DAYOLO source initialization; not a trained BDD source checkpoint"
+  },
+  "yolov5l-v7.0.pt": {
+    "path": "weights/yolov5l-v7.0.pt",
+    "url": "https://github.com/ultralytics/yolov5/releases/download/v7.0/yolov5l.pt",
+    "sha256": "2f603b7354c25454d1270663a14d8ddc1eea98e5eebc1d84ce0c6e3150fa155f",
+    "bytes": 93622629,
+    "verified": "Finite tensors and strict reload into pinned SF-YOLO Model with checkpoint architecture; 2026-09-25",
+    "original_classes": 80,
+    "parameters": 46563709,
+    "scope": "COCO initialization for SF only; not a trained BDD source checkpoint"
+  },
+  "vgg16_ori.pth": {
+    "path": "weights/vgg16_ori.pth",
+    "url": "https://raw.githubusercontent.com/vs-cv/sf-yolo/c84dfad79a889b5f172d7192ee0379edfd738835/TargetAugment_train/pre_trained/vgg16_ori.pth",
+    "git_blob": "e52b7276b75c9b1b0e4332291c51f9e2fd25b353",
+    "sha256": "ec244b53f70519b86654c68d4bebc88a5fc569e095cf42454f3520e16ad964a0",
+    "verified": "Exact pinned Git blob and strict upstream VGG state-dict load"
+  },
+  "yolov5l-v5.0.pt": {
+    "path": "weights/yolov5l-v5.0.pt",
+    "url": "https://github.com/ultralytics/yolov5/releases/download/v5.0/yolov5l.pt",
+    "sha256": "3edc11d910d99b744b01138c2f05c58e81f91d9a307d5ee1409e01ac6857ddbf",
+    "verified": "Loaded by SSDA-YOLO pinned checkout in its isolated environment",
+    "original_classes": 80,
+    "parameters": 47056765,
+    "scope": "SSDA initialization only; ten-class detector conversion and graph smoke pending"
+  }
+}

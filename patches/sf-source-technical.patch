@@ -1,0 +1,22 @@
+diff --git a/train_source.py b/train_source.py
+index f763dae..4144bfe 100644
+--- a/train_source.py
++++ b/train_source.py
+@@ -135,7 +135,7 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+         LOGGER.info(f'Transferred {len(csd)}/{len(model.state_dict())} items from {weights}')  # report
+     else:
+         model = Model(cfg, ch=3, nc=nc, anchors=hyp.get('anchors')).to(device)  # create
+-    amp = check_amp(model)  # check AMP
++    amp = False if opt.technical_no_amp else check_amp(model)
+ 
+     # Freeze
+     freeze = [f'model.{x}.' for x in (freeze if len(freeze) > 1 else range(freeze[0]))]  # layers to freeze
+@@ -454,6 +454,8 @@ def parse_opt(known=False):
+     parser.add_argument('--noval', action='store_true', help='only validate final epoch')
+     parser.add_argument('--noautoanchor', action='store_true', help='disable AutoAnchor')
+     parser.add_argument('--noplots', action='store_true', help='save no plot files')
++    parser.add_argument('--technical-no-amp', action='store_true',
++                        help='Bounded FP32 technical smoke without automatic AMP probe asset downloads')
+     parser.add_argument('--evolve', type=int, nargs='?', const=300, help='evolve hyperparameters for x generations')
+     parser.add_argument('--bucket', type=str, default='', help='gsutil bucket')
+     parser.add_argument('--cache', type=str, nargs='?', const='ram', help='image --cache ram/disk')

@@ -1,0 +1,141 @@
+diff --git a/include/darknet.h b/include/darknet.h
+index cbcd854..14fc5cd 100644
+--- a/include/darknet.h
++++ b/include/darknet.h
+@@ -877,6 +877,7 @@ typedef enum {
+ 
+ // data.h
+ typedef struct load_args {
++    int unlabeled; // Explicit image-only target input; never open annotation files.
+     int threads;
+     char **paths;
+     char *path;
+diff --git a/src/dark_cuda.c b/src/dark_cuda.c
+index fec0647..17be48a 100644
+--- a/src/dark_cuda.c
++++ b/src/dark_cuda.c
+@@ -334,6 +334,7 @@ float *cuda_make_array_pinned_preallocated(float *x, size_t n)
+             if (status != cudaSuccess) fprintf(stderr, " Can't pre-allocate CUDA-pinned buffer on CPU-RAM \n");
+             CHECK_CUDA(status);
+             x_cpu = pinned_ptr[pinned_block_id];
++            pinned_index = allocation_size;
+         }
+     }
+ 
+diff --git a/src/data.c b/src/data.c
+index 2cf6f0a..8c6727f 100644
+--- a/src/data.c
++++ b/src/data.c
+@@ -999,8 +999,9 @@ void blend_truth_mosaic(float *new_truth, int boxes, float *old_truth, int w, in
+ #include "http_stream.h"
+ 
+ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int boxes, int classes, int use_flip, int use_gaussian_noise, int use_blur, int use_mixup,
+-    float jitter, float resize, float hue, float saturation, float exposure, int mini_batch, int track, int augment_speed, int letter_box, int show_imgs)
++    float jitter, float resize, float hue, float saturation, float exposure, int mini_batch, int track, int augment_speed, int letter_box, int show_imgs, int unlabeled)
+ {
++    if (unlabeled) { use_blur = 0; use_mixup = 0; }
+     const int random_index = random_gen();
+     c = c ? c : 3;
+ 
+@@ -1189,7 +1190,7 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
+             float dy = ((float)ptop / oh) / sy;
+ 
+ 
+-            int min_w_h = fill_truth_detection(filename, boxes, truth, classes, flip, dx, dy, 1. / sx, 1. / sy, w, h);
++            int min_w_h = unlabeled ? 0 : fill_truth_detection(filename, boxes, truth, classes, flip, dx, dy, 1. / sx, 1. / sy, w, h);
+ 
+             if ((min_w_h / 8) < blur && blur > 1) blur = min_w_h / 8;   // disable blur if one of the objects is too small
+ 
+@@ -1315,8 +1316,9 @@ void blend_images(image new_img, float alpha, image old_img, float beta)
+ }
+ 
+ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int boxes, int classes, int use_flip, int gaussian_noise, int use_blur, int use_mixup,
+-    float jitter, float resize, float hue, float saturation, float exposure, int mini_batch, int track, int augment_speed, int letter_box, int show_imgs)
++    float jitter, float resize, float hue, float saturation, float exposure, int mini_batch, int track, int augment_speed, int letter_box, int show_imgs, int unlabeled)
+ {
++    if (unlabeled) { use_blur = 0; use_mixup = 0; }
+     const int random_index = random_gen();
+     c = c ? c : 3;
+     char **random_paths;
+@@ -1457,7 +1459,7 @@ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int bo
+             distort_image(sized, dhue, dsat, dexp);
+             //random_distort_image(sized, hue, saturation, exposure);
+ 
+-            fill_truth_detection(filename, boxes, truth, classes, flip, dx, dy, 1. / sx, 1. / sy, w, h);
++            if (!unlabeled) fill_truth_detection(filename, boxes, truth, classes, flip, dx, dy, 1. / sx, 1. / sy, w, h);
+ 
+             if (i_mixup) {
+                 image old_img = sized;
+@@ -1530,7 +1532,7 @@ void *load_thread(void *ptr)
+         *a.d = load_data_region(a.n, a.paths, a.m, a.w, a.h, a.num_boxes, a.classes, a.jitter, a.hue, a.saturation, a.exposure);
+     } else if (a.type == DETECTION_DATA){
+         *a.d = load_data_detection(a.n, a.paths, a.m, a.w, a.h, a.c, a.num_boxes, a.classes, a.flip, a.gaussian_noise, a.blur, a.mixup, a.jitter, a.resize,
+-            a.hue, a.saturation, a.exposure, a.mini_batch, a.track, a.augment_speed, a.letter_box, a.show_imgs);
++            a.hue, a.saturation, a.exposure, a.mini_batch, a.track, a.augment_speed, a.letter_box, a.show_imgs, a.unlabeled);
+     } else if (a.type == SWAG_DATA){
+         *a.d = load_data_swag(a.paths, a.n, a.classes, a.jitter);
+     } else if (a.type == COMPARE_DATA){
+diff --git a/src/data.h b/src/data.h
+index c82d662..7c27d62 100644
+--- a/src/data.h
++++ b/src/data.h
+@@ -87,7 +87,7 @@ data load_data_captcha(char **paths, int n, int m, int k, int w, int h);
+ data load_data_captcha_encode(char **paths, int n, int m, int w, int h);
+ data load_data_old(char **paths, int n, int m, char **labels, int k, int w, int h);
+ data load_data_detection(int n, char **paths, int m, int w, int h, int c, int boxes, int classes, int use_flip, int gaussian_noise, int use_blur, int use_mixup,
+-    float jitter, float resize, float hue, float saturation, float exposure, int mini_batch, int track, int augment_speed, int letter_box, int show_imgs);
++    float jitter, float resize, float hue, float saturation, float exposure, int mini_batch, int track, int augment_speed, int letter_box, int show_imgs, int unlabeled);
+ data load_data_tag(char **paths, int n, int m, int k, int use_flip, int min, int max, int w, int h, float angle, float aspect, float hue, float saturation, float exposure);
+ matrix load_image_augment_paths(char **paths, int n, int use_flip, int min, int max, int w, int h, float angle, float aspect, float hue, float saturation, float exposure, int dontuse_opencv);
+ data load_data_super(char **paths, int n, int m, int w, int h, int scale);
+diff --git a/src/detector.c b/src/detector.c
+index 878ba76..b8bde44 100644
+--- a/src/detector.c
++++ b/src/detector.c
+@@ -194,6 +194,9 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
+       net.train_images_num_target = train_images_num_target;
+ 
+       args_target =args;
++      args_target.unlabeled = 1;
++      args_target.blur = 0; // Object-aware blur requires labels.
++      args_target.mixup = 0; // Avoid label-dependent mosaic cropping.
+       args_target.d = &buffer_target;
+       args_target.paths = paths_target;
+       args_target.m = plist_target->size;
+diff --git a/src/parser.c b/src/parser.c
+index 8397f74..2294401 100644
+--- a/src/parser.c
++++ b/src/parser.c
+@@ -1296,7 +1296,9 @@ network parse_network_cfg_custom(char *filename, int batch, int time_steps)
+ #ifdef GPU
+     printf("net.optimized_memory = %d \n", net.optimized_memory);
+     if (net.optimized_memory >= 2 && params.train) {
+-        pre_allocate_pinned_memory((size_t)1024 * 1024 * 1024 * 8);   // pre-allocate 8 GB CPU-RAM for pinned memory
++        const int pinned_memory_mb = option_find_int_quiet(options, "pinned_memory_MB", 8192);
++        if (pinned_memory_mb < 1024) error("pinned_memory_MB must be at least 1024");
++        pre_allocate_pinned_memory((size_t)1024 * 1024 * pinned_memory_mb);
+     }
+ #endif  // GPU
+ 
+@@ -1334,7 +1336,7 @@ network parse_network_cfg_custom(char *filename, int batch, int time_steps)
+         options = s->options;
+         layer l = { (LAYER_TYPE)0 };
+         l.use_target = option_find_int_quiet(options, "use_target", 1);
+-        if (l.use_target==0 && params.batch!=1)  params.batch=net.batch/2;
++        if (l.use_target==0 && net.batch!=1)  params.batch=net.batch/2;
+         else  params.batch=net.batch;
+         LAYER_TYPE lt = string_to_layer_type(s->type);
+         if(lt == CONVOLUTIONAL){
+diff --git a/src/utils.c b/src/utils.c
+index 7242d99..3783edc 100644
+--- a/src/utils.c
++++ b/src/utils.c
+@@ -266,7 +266,7 @@ void replace_image_to_label(const char* input_path, char* output_path)
+     find_replace(output_path, "\\images\\train2014\\", "\\labels\\train2014\\", output_path);    // COCO
+     find_replace(output_path, "\\images\\val2014\\", "\\labels\\val2014\\", output_path);        // COCO
+     find_replace(output_path, "\\JPEGImages\\", "\\labels\\", output_path);    // PascalVOC
+-    //find_replace(output_path, "/images/", "/labels/", output_path);    // COCO
++    find_replace(output_path, "/images/", "/labels/", output_path);    // Research image/label views
+     //find_replace(output_path, "/VOC2007/JPEGImages/", "/VOC2007/labels/", output_path);        // PascalVOC
+     //find_replace(output_path, "/VOC2012/JPEGImages/", "/VOC2012/labels/", output_path);        // PascalVOC
+ 

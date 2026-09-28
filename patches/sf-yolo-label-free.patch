@@ -1,0 +1,531 @@
+diff --git a/TargetAugment_train/sampler.py b/TargetAugment_train/sampler.py
+index 32275a85..34d2583f 100644
+--- a/TargetAugment_train/sampler.py
++++ b/TargetAugment_train/sampler.py
+@@ -2,25 +2,28 @@ import numpy as np
+ from torch.utils import data
+ 
+ 
+-def InfiniteSampler(n):
++def InfiniteSampler(n, seed=None):
+     # i = 0
+     i = n - 1
+-    order = np.random.permutation(n)
++    rng = np.random.RandomState(seed) if seed is not None else np.random
++    order = rng.permutation(n)
+     while True:
+         yield order[i]
+         i += 1
+         if i >= n:
+-            np.random.seed()
+-            order = np.random.permutation(n)
++            if seed is None:
++                np.random.seed()
++            order = rng.permutation(n)
+             i = 0
+ 
+ 
+ class InfiniteSamplerWrapper(data.sampler.Sampler):
+-    def __init__(self, data_source):
++    def __init__(self, data_source, seed=None):
+         self.num_samples = len(data_source)
++        self.seed = seed
+ 
+     def __iter__(self):
+-        return iter(InfiniteSampler(self.num_samples))
++        return iter(InfiniteSampler(self.num_samples, self.seed))
+ 
+     def __len__(self):
+         return 2 ** 31
+diff --git a/TargetAugment_train/train.py b/TargetAugment_train/train.py
+index e0534497..4e0edb45 100644
+--- a/TargetAugment_train/train.py
++++ b/TargetAugment_train/train.py
+@@ -12,6 +12,9 @@ import net
+ from sampler import InfiniteSamplerWrapper
+ import numpy as np
+ import itertools
++import json
++import time
++import random
+ 
+ 
+ cudnn.benchmark = True
+@@ -94,8 +97,18 @@ parser.add_argument('--content_style_weight', type=float, default=1)
+ parser.add_argument('--constrain_weight', type=float, default=1)
+ parser.add_argument('--before_fcs_steps', type=int, default=0)
+ parser.add_argument('--device', type=str, default=0)
++parser.add_argument('--research_log', type=str, default=None,
++                    help='Exclusive JSONL loss/timing log for a bounded technical run')
++parser.add_argument('--research_seed', type=int, default=None)
+ args = parser.parse_args()
+ 
++if args.research_seed is not None:
++    random.seed(args.research_seed)
++    np.random.seed(args.research_seed)
++    torch.manual_seed(args.research_seed)
++    torch.cuda.manual_seed_all(args.research_seed)
++    cudnn.benchmark = False
++
+ assert args.scenario_name in ['voc2clipart', 'voc2wc', 'city2foggy' ,'KC', 'city', 'bdd100k'], \
+     'please choose one from voc2clipart, voc2wc, city2foggy, city, bdd100k and KC'
+ 
+@@ -125,22 +138,27 @@ style_dataset = FlatFolderDataset(args.style_dir, style_tf)
+ 
+ content_iter = iter(data.DataLoader(
+     content_dataset, batch_size=args.batch_size,
+-    sampler=InfiniteSamplerWrapper(content_dataset),
++    sampler=InfiniteSamplerWrapper(content_dataset, seed=args.research_seed),
+     num_workers=args.n_threads))
+ style_iter = iter(data.DataLoader(
+     style_dataset, batch_size=args.batch_size,
+-    sampler=InfiniteSamplerWrapper(style_dataset),
++    sampler=InfiniteSamplerWrapper(style_dataset, seed=None if args.research_seed is None else args.research_seed + 1),
+     num_workers=args.n_threads))
+ 
+ # optimizer = torch.optim.Adam(network.decoder.parameters(), lr=args.lr)
+ optimizer1 = torch.optim.Adam(itertools.chain(*[network.dec_1.parameters(),network.dec_2.parameters(), network.dec_3.parameters(), network.dec_4.parameters()]), lr=args.lr_decoder)
+ optimizer2 = torch.optim.Adam(itertools.chain(*[network.fc1.parameters(),network.fc2.parameters()]), lr=args.lr_fcs)
+ 
++research_stream = open(args.research_log, 'x') if args.research_log else None
++torch.cuda.reset_peak_memory_stats()
++research_durations = []
+ for i in tqdm(range(args.max_iter)):
+     adjust_learning_rate(args.lr_decoder,optimizer1, iteration_count=i)
+ 
+     content_images = next(content_iter).to(device)
+     style_images = next(style_iter).to(device)
++    torch.cuda.synchronize()
++    research_started = time.monotonic()
+ 
+     loss_c,loss_const = network(content_images, style_images,args.scenario_name,flag=0)
+     loss_c = args.content_weight * loss_c
+@@ -164,6 +182,16 @@ for i in tqdm(range(args.max_iter)):
+         loss.backward()
+         optimizer2.step()
+ 
++    torch.cuda.synchronize()
++    research_durations.append(time.monotonic() - research_started)
++    if research_stream:
++        losses = dict(content=float(loss_c), constraint=float(loss_const),
++                      style=float(loss_s_1) if i >= args.before_fcs_steps else None,
++                      content_style=float(loss_s_2) if i >= args.before_fcs_steps else None)
++        research_stream.write(json.dumps(dict(step=i, losses=losses,
++            seconds=research_durations[-1]), allow_nan=False) + '\n')
++        research_stream.flush()
++
+     save = False
+     if args.save_model_interval != -1:
+         if (i + 1) % args.save_model_interval == 0 or (i + 1) == args.max_iter:
+@@ -186,4 +214,15 @@ for i in tqdm(range(args.max_iter)):
+         for key in state_dict.keys():
+             state_dict[key] = state_dict[key].to(torch.device('cpu'))
+         torch.save(state_dict, args.save_dir +
+-                '/fc2_iter_{:d}.pth'.format(i + 1))
+\ No newline at end of file
++                '/fc2_iter_{:d}.pth'.format(i + 1))
++
++if research_stream:
++    research_stream.close()
++    measured = research_durations[20:]
++    report = dict(steps=args.max_iter, seed=args.research_seed,
++        peak_allocated_bytes=torch.cuda.max_memory_allocated(),
++        peak_reserved_bytes=torch.cuda.max_memory_reserved(),
++        mean_update_seconds=sum(measured) / len(measured) if measured else None,
++        selection_evidence=False, optimizer_resume_verified=False)
++    with open(args.research_log + '.summary.json', 'x') as stream:
++        json.dump(report, stream, indent=2, allow_nan=False)
+diff --git a/models/common.py b/models/common.py
+index 75cc4e97..dd1bd11f 100644
+--- a/models/common.py
++++ b/models/common.py
+@@ -7,6 +7,7 @@ import ast
+ import contextlib
+ import json
+ import math
++import os
+ import platform
+ import warnings
+ import zipfile
+@@ -24,16 +25,15 @@ import torch.nn as nn
+ from PIL import Image
+ from torch.cuda import amp
+ 
+-# Import 'ultralytics' package or install if if missing
++# Never let imported dependency checks mutate any Python environment.
++os.environ['YOLO_AUTOINSTALL'] = 'false'
++# Import the explicitly installed utility dependency.
+ try:
+     import ultralytics
+ 
+     assert hasattr(ultralytics, '__version__')  # verify package is not directory
+ except (ImportError, AssertionError):
+-    import os
+-
+-    os.system('pip install -U ultralytics')
+-    import ultralytics
++    raise ImportError('Install pinned ultralytics in the active SF-YOLO environment; automatic pip is disabled')
+ 
+ from ultralytics.utils.plotting import Annotator, colors, save_one_box
+ 
+diff --git a/train_sf-yolo.py b/train_sf-yolo.py
+index 34e8d4ae..a7dd81ac 100644
+--- a/train_sf-yolo.py
++++ b/train_sf-yolo.py
+@@ -52,6 +52,7 @@ from utils.autoanchor import check_anchors
+ from utils.autobatch import check_train_batch_size
+ from utils.callbacks import Callbacks
+ from utils.dataloaders import create_dataloader
++from utils.unlabeled_target import create_unlabeled_dataloader, concatenate_pseudo_labels
+ from utils.downloads import attempt_download, is_url
+ from utils.general import (LOGGER, TQDM_BAR_FORMAT, check_amp, check_dataset, check_file, check_git_info,
+                            check_git_status, check_img_size, check_requirements, check_suffix, check_yaml, colorstr,
+@@ -142,6 +143,13 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+     nc = 1 if single_cls else int(data_dict['nc'])  # number of classes
+     names = {0: 'item'} if single_cls and len(data_dict['names']) != 1 else data_dict['names']  # class names
+     is_coco = isinstance(val_path, str) and val_path.endswith('coco/val2017.txt')  # COCO dataset
++    if opt.unlabeled_target:
++        if opt.image_weights or opt.quad or opt.multi_scale or not opt.noautoanchor or not opt.noplots:
++            raise ValueError('Unlabeled target requires --noautoanchor --noplots and no image-weights/quad/multi-scale')
++        if opt.imgsz != 1280 or WORLD_SIZE != 1:
++            raise ValueError('BDD unlabeled integration requires native size 1280 and a single GPU')
++        if not str(weights).endswith('.pt'):
++            raise ValueError('Unlabeled adaptation requires a source checkpoint')
+ 
+     # Model
+     check_suffix(weights, '.pt')  # check weights
+@@ -150,6 +158,10 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+         with torch_distributed_zero_first(LOCAL_RANK):
+             weights = attempt_download(weights)  # download if not found locally
+         ckpt = torch.load(weights, map_location='cpu')  # load checkpoint to CPU to avoid CUDA memory leak
++        if opt.unlabeled_target:
++            source_class_weights = ckpt['model'].class_weights.detach().float().clone()
++            if source_class_weights.numel() != nc or ckpt['model'].model[-1].nc != nc:
++                raise ValueError('Source checkpoint must match all target classes')
+         model_student = Model(cfg or ckpt['model'].yaml, ch=3, nc=nc, anchors=hyp.get('anchors')).to(device)  # create the student model
+         model_teacher = Model(cfg or ckpt['model'].yaml, ch=3, nc=nc, anchors=hyp.get('anchors')).to(device)  # create the teacher model
+         exclude = ['anchor'] if (cfg or hyp.get('anchors')) and not resume else []  # exclude keys
+@@ -247,7 +259,11 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+         LOGGER.info('Using SyncBatchNorm()')
+ 
+     # Trainloader
+-    train_loader, dataset = create_dataloader(train_path,
++    if opt.unlabeled_target:
++        train_loader, dataset = create_unlabeled_dataloader(
++            train_path, data_dict['unlabeled_image_root'], batch_size, workers, opt.seed)
++    else:
++        train_loader, dataset = create_dataloader(train_path,
+                                               imgsz,
+                                               batch_size // WORLD_SIZE,
+                                               gs,
+@@ -264,8 +280,9 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+                                               shuffle=True,
+                                               seed=opt.seed)
+     labels = np.concatenate(dataset.labels, 0)
+-    mlc = int(labels[:, 0].max())  # max label class
+-    assert mlc < nc, f'Label class {mlc} exceeds nc={nc} in {data}. Possible class labels are 0-{nc - 1}'
++    if not opt.unlabeled_target:
++        mlc = int(labels[:, 0].max())  # max label class
++        assert mlc < nc, f'Label class {mlc} exceeds nc={nc} in {data}. Possible class labels are 0-{nc - 1}'
+ 
+     # Process 0
+     if RANK in {-1, 0}:
+@@ -289,7 +306,8 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+             model_student.half().float()  # pre-reduce anchor precision
+             model_teacher.half().float()  # pre-reduce anchor precision
+ 
+-        callbacks.run('on_pretrain_routine_end', labels, names)
++        if not opt.unlabeled_target:
++            callbacks.run('on_pretrain_routine_end', labels, names)
+ 
+     # DDP mode
+     if cuda and RANK != -1:
+@@ -304,14 +322,16 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+     hyp['label_smoothing'] = opt.label_smoothing
+     model_student.nc = nc  # attach number of classes to model
+     model_student.hyp = hyp  # attach hyperparameters to model
+-    model_student.class_weights = labels_to_class_weights(dataset.labels, nc).to(device) * nc  # attach class weights
++    model_student.class_weights = (source_class_weights.to(device) if opt.unlabeled_target else labels_to_class_weights(dataset.labels, nc).to(device) * nc)
+     model_student.names = names
+     model_teacher.nc = nc  # attach number of classes to model
+     model_teacher.hyp = hyp  # attach hyperparameters to model
+-    model_teacher.class_weights = labels_to_class_weights(dataset.labels, nc).to(device) * nc  # attach class weights
++    model_teacher.class_weights = model_student.class_weights.clone()
+     model_teacher.names = names
+ 
+     # Start training
++    initial_ema_updates = ema.updates if ema else 0
++    reached_update_limit = False
+     t0 = time.time()
+     nb = len(train_loader)  # number of batches
+     nw = max(round(hyp['warmup_epochs'] * nb), 100)  # number of warmup iterations, max(3 epochs, 100 iterations)
+@@ -405,7 +425,8 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+                 pred_teacher_nms = non_max_suppression(pred_teacher, conf_thres=conf_thres, iou_thres=iou_thres, multi_label=True, agnostic=single_cls, max_det=max_gt_boxes)
+                             
+                 # Student forward
+-                model_student.zero_grad()
++                if not opt.unlabeled_target:
++                    model_student.zero_grad()
+                 pred_student = model_student(imgs_style)  # forward
+                     
+                 # Generate pseudo labels using the teacher's prediction in order to obtain student loss
+@@ -427,7 +448,10 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+                         pseudo_labels_batch_nms.append(pseudo_label)
+ 
+                 # Concatenate all labels, or create a default label if there are none
+-                pseudo_labels_final = torch.cat(pseudo_labels_batch_nms, dim=0) if pseudo_labels_batch_nms else torch.tensor([[0, 0, 0.5, 0.7, random.uniform(0.3, 0.9), random.uniform(0.3, 0.9)]], device=device)
++                if opt.unlabeled_target:
++                    pseudo_labels_final = concatenate_pseudo_labels(pseudo_labels_batch_nms, device)
++                else:
++                    pseudo_labels_final = torch.cat(pseudo_labels_batch_nms, dim=0) if pseudo_labels_batch_nms else torch.tensor([[0, 0, 0.5, 0.7, random.uniform(0.3, 0.9), random.uniform(0.3, 0.9)]], device=device)
+     
+                 # Compute loss using teacher's prediction as pseudo labels
+                 loss, loss_items = compute_loss(pred_student, pseudo_labels_final.to(device), model_teacher, model_student)  # loss 
+@@ -438,6 +462,8 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+                     loss *= 4.
+ 
+             # Backward
++            if opt.unlabeled_target and not torch.isfinite(loss).all():
++                raise FloatingPointError('Non-finite SF adaptation loss')
+             scaler.scale(loss).backward()
+ 
+             # Optimize - https://pytorch.org/docs/master/notes/amp_examples.html
+@@ -450,11 +476,22 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+                 if ema:
+                     ema.update(model_student)
+                 last_opt_step = ni
++                if (opt.max_optimizer_updates > 0
++                        and ema.updates - initial_ema_updates >= opt.max_optimizer_updates):
++                    reached_update_limit = True
+ 
+                 model_teacher.train()
+                 model_teacher.zero_grad()
+                 optimizer_teacher.step()
+ 
++            if opt.unlabeled_target:
++                import json
++                with (save_dir / 'technical_batches.jsonl').open('a') as stream:
++                    stream.write(json.dumps(dict(batch=ni, loss=float(loss.detach()),
++                        pseudo_boxes=len(pseudo_labels_final), ema_updates=ema.updates,
++                        optimizer_updates=ema.updates - initial_ema_updates,
++                        amp_scale=scaler.get_scale()), allow_nan=False) + '\n')
++
+             # Log
+             if RANK in {-1, 0}:
+                 mloss = (mloss * i + loss_items) / (i + 1)  # update mean losses
+@@ -467,6 +504,8 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+                 callbacks.run('on_train_batch_end', model_student, ni, imgs, targets, paths, list(mloss), epoch, pseudo_labels_final, names, pbar)
+                 if callbacks.stop_training:
+                     return
++            if reached_update_limit:
++                break
+ 
+         # Scheduler
+         lr = [x['lr'] for x in optimizer_student.param_groups]  # for loggers
+@@ -476,7 +515,7 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+             # mAP
+             callbacks.run('on_train_epoch_end', epoch=epoch)
+             ema.update_attr(model_student, include=['yaml', 'nc', 'hyp', 'names', 'stride', 'class_weights'])
+-            final_epoch = (epoch + 1 == epochs) or stopper.possible_stop
++            final_epoch = (epoch + 1 == epochs) or stopper.possible_stop or reached_update_limit
+             if not noval or final_epoch:  # Calculate mAP
+                 results, maps, _ = validate.run(data_dict,
+                                                 batch_size=batch_size // WORLD_SIZE * 2,
+@@ -493,7 +532,7 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+ 
+             # Update best mAP
+             fi = fitness(np.array(results).reshape(1, -1))  # weighted combination of [P, R, mAP@.5, mAP@.5-.95]
+-            stop = stopper(epoch=epoch, fitness=fi)  # early stop check
++            stop = stopper(epoch=epoch, fitness=fi) or reached_update_limit  # early stop/update limit
+             if fi > best_fitness:
+                 best_fitness = fi
+             log_vals = list(mloss) + list(results) + lr
+@@ -508,6 +547,10 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+                     'ema': deepcopy(ema.ema).half(),
+                     'updates': ema.updates,
+                     'optimizer': optimizer_student.state_dict(),
++                    'scheduler': scheduler.state_dict(),
++                    'scaler': scaler.state_dict(),
++                    'teacher_model': deepcopy(de_parallel(model_teacher)).half(),
++                    'resume_verified': False,
+                     'opt': vars(opt),
+                     'git': GIT_INFO,  # {remote, branch, commit} if a git repo
+                     'date': datetime.now().isoformat()}
+@@ -521,8 +564,10 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+                     'date': datetime.now().isoformat()}
+ 
+                 # Save last, best and delete
++                torch.save(ckpt_student, last_student)
+                 torch.save(ckpt_teacher, last_teacher)
+                 if best_fitness == fi:
++                    torch.save(ckpt_student, best_student)
+                     torch.save(ckpt_teacher, best_teacher)
+                 if opt.save_period > 0 and epoch % opt.save_period == 0:
+                     torch.save(ckpt_teacher, w / f'epoch{epoch}_teacher.pt')
+@@ -574,6 +619,7 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+ 
+ def parse_opt(known=False):
+     parser = argparse.ArgumentParser()
++    parser.add_argument('--unlabeled-target', action='store_true', help='Use manifest-only BDD target loader and no fabricated pseudo boxes')
+     parser.add_argument('--weights', type=str, default=ROOT / 'yolov5s.pt', help='initial weights path')
+     parser.add_argument('--cfg', type=str, default='', help='model.yaml path')
+     parser.add_argument('--data', type=str, default=ROOT / 'data/coco128.yaml', help='dataset.yaml path')
+@@ -609,6 +655,8 @@ def parse_opt(known=False):
+     parser.add_argument('--freeze', nargs='+', type=int, default=[0], help='Freeze layers: backbone=10, first3=0 1 2')
+     parser.add_argument('--save-period', type=int, default=-1, help='Save checkpoint every x epochs (disabled if < 1)')
+     parser.add_argument('--seed', type=int, default=0, help='Global training seed')
++    parser.add_argument('--max-optimizer-updates', type=int, default=0,
++                        help='Stop cleanly after this many optimizer updates in the current invocation')
+     parser.add_argument('--local_rank', type=int, default=-1, help='Automatic DDP Multi-GPU argument, do not modify')
+     parser.add_argument('--conf_thres', type=float, default=0.4, help='Confidence threshold for pseudo labels generation by the teacher model')
+     parser.add_argument('--iou_thres', type=float, default=0.3, help='IoU threshold for pseudo labels NMS by the teacher model')
+@@ -797,4 +845,3 @@ def run(**kwargs):
+ if __name__ == '__main__':
+     opt = parse_opt()
+     main(opt)
+-
+diff --git a/train_source.py b/train_source.py
+index f763daec..4144bfe4 100644
+--- a/train_source.py
++++ b/train_source.py
+@@ -135,7 +135,7 @@ def train(hyp, opt, device, callbacks):  # hyp is path/to/hyp.yaml or hyp dictio
+         LOGGER.info(f'Transferred {len(csd)}/{len(model.state_dict())} items from {weights}')  # report
+     else:
+         model = Model(cfg, ch=3, nc=nc, anchors=hyp.get('anchors')).to(device)  # create
+-    amp = check_amp(model)  # check AMP
++    amp = False if opt.technical_no_amp else check_amp(model)
+ 
+     # Freeze
+     freeze = [f'model.{x}.' for x in (freeze if len(freeze) > 1 else range(freeze[0]))]  # layers to freeze
+@@ -454,6 +454,8 @@ def parse_opt(known=False):
+     parser.add_argument('--noval', action='store_true', help='only validate final epoch')
+     parser.add_argument('--noautoanchor', action='store_true', help='disable AutoAnchor')
+     parser.add_argument('--noplots', action='store_true', help='save no plot files')
++    parser.add_argument('--technical-no-amp', action='store_true',
++                        help='Bounded FP32 technical smoke without automatic AMP probe asset downloads')
+     parser.add_argument('--evolve', type=int, nargs='?', const=300, help='evolve hyperparameters for x generations')
+     parser.add_argument('--bucket', type=str, default='', help='gsutil bucket')
+     parser.add_argument('--cache', type=str, nargs='?', const='ram', help='image --cache ram/disk')
+diff --git a/utils/general.py b/utils/general.py
+index eefcc6ef..5d5f2600 100644
+--- a/utils/general.py
++++ b/utils/general.py
+@@ -36,14 +36,15 @@ import torch
+ import torchvision
+ import yaml
+ 
+-# Import 'ultralytics' package or install if if missing
++# Never let imported dependency checks mutate any Python environment.
++os.environ['YOLO_AUTOINSTALL'] = 'false'
++# Import the explicitly installed utility dependency.
+ try:
+     import ultralytics
+ 
+     assert hasattr(ultralytics, '__version__')  # verify package is not directory
+ except (ImportError, AssertionError):
+-    os.system('pip install -U ultralytics')
+-    import ultralytics
++    raise ImportError('Install pinned ultralytics in the active SF-YOLO environment; automatic pip is disabled')
+ 
+ from ultralytics.utils.checks import check_requirements
+ 
+@@ -58,7 +59,7 @@ RANK = int(os.getenv('RANK', -1))
+ # Settings
+ NUM_THREADS = min(8, max(1, os.cpu_count() - 1))  # number of YOLOv5 multiprocessing threads
+ DATASETS_DIR = Path(os.getenv('YOLOv5_DATASETS_DIR', ROOT.parent / 'datasets'))  # global datasets directory
+-AUTOINSTALL = str(os.getenv('YOLOv5_AUTOINSTALL', True)).lower() == 'true'  # global auto-install mode
++AUTOINSTALL = False  # Research adapter: dependencies are installed explicitly in the isolated environment.
+ VERBOSE = str(os.getenv('YOLOv5_VERBOSE', True)).lower() == 'true'  # global verbose mode
+ TQDM_BAR_FORMAT = '{l_bar}{bar:10}{r_bar}'  # tqdm bar format
+ FONT = 'Arial.ttf'  # https://ultralytics.com/assets/Arial.ttf
+diff --git a/utils/loggers/__pycache__/__init__.cpython-311.pyc b/utils/loggers/__pycache__/__init__.cpython-311.pyc
+index 60f95765cc72090018285b08081c665c654af224..73800d13f92691155f1b2b925cfe60bf23df6744 100644
+GIT binary patch
+delta 208
+zcmbPwmvP!XM!w~|yj%=GU~jc4E7o}<-*e{refqhnDVd4-`9(R2N%|(n<|gJAiDtS+
+zW@cu(CZ;Bqx|RmUDY}Lhsg^0`DTc|$CTUQmfu;G$DTyWefu)IgC7EfJnR)5DA&Eul
+zsU^BD`MHUidAcr%C5gI0sfDGPMX9-|c_qcVY57IE{z+M>$v`!!B|s`uE<aDVG%qE!
+s2&O4GBQvc;KeeJHwJ0w!XR{#7-*iUq$^1Fjf#ma?C`SIxPPxI10Ii}%qW}N^
+
+delta 78
+zcmbPsk8$c<M!w~|yj%=GaPIZT)SoUJ`JOY&*y?BG=cekX<`wHZ2Adn08yV=k<R_Qr
+grskCtZ=S^RH=U7X@`Rl0Kr$mYijiaU;oM+G09M5uAOHXW
+
+diff --git a/utils/loggers/clearml/__pycache__/__init__.cpython-311.pyc b/utils/loggers/clearml/__pycache__/__init__.cpython-311.pyc
+index 516ccc257066ce354973e0e2adfad2a427342af5..9a11b7373b2f272ce281a130e88b574f08b9ef07 100644
+GIT binary patch
+delta 182
+zcmXwwF%E(-6hPI{z!ki~Pep107Z-Me8Yh<z{a^{Sv6e(9&%i0%@eZC#27Sw0-W#Ux
+znfLPj`DA3f8S38S&kt)!DrCksm@^(mJc?1kN(cdb%@atLp@bl&L`E_wLSFvTtTTl~
+z$FdH!Q{_YH3XW(ia*&!9m4*}@!k(_3vec4xHz<vTU0zc$HsnUBh0)MyN%lV-E~<2l
+L?vAX+razy)6IVRN
+
+delta 52
+zcmdnYw26^tIWI340}z~h{V{bSkBN+{enx(7s(xx-vA$!lxq-Qnfxb(Aa%paAUP<x9
+GyI}yKj1e{f
+
+diff --git a/utils/loggers/clearml/__pycache__/clearml_utils.cpython-311.pyc b/utils/loggers/clearml/__pycache__/clearml_utils.cpython-311.pyc
+index afd7c64d215b759094356b5d4ea57fdbd36c4242..967a7b39cc94cf554e1cb717c78cee0e4c6bebac 100644
+GIT binary patch
+delta 207
+zcmewm@F9?IIWI340}$9-ZOST;-^eGxS$|qTH#H?QQ9r*ZCoxIi#Ms=#+#=CT*T~Gw
+zOxMKJ#8TJNz&J(M&?40`#XQ9@+1Mlvsx+`PKRG3_L_e@JF|Q;utuiw&T{k4LC_S}A
+z*CjtUF*8rsC9xz?Hz>8RG_xo*H#M)MST`-dNY_6pD>WIYCba}eWy<B}>6YfDq!z(6
+t1!rWYmFTBdl%y8rCFV@F;`CwMx4E5jH6s%b+h$Yl#WIZClW(d|2LSVtMFao<
+
+delta 78
+zcmewm_#uFAIWI340}z~h{V`QoVI!Xar;L|=Mt*LperjH^zGJYtfw_@^zDs^`X>Mv>
+hN%7>}oIZ^EH*;{UW@KjdXWG1#d$9~7%j8In=>X<)7~22<
+
+diff --git a/utils/loggers/comet/__pycache__/__init__.cpython-311.pyc b/utils/loggers/comet/__pycache__/__init__.cpython-311.pyc
+index 8758d3bc8086210e980e24e838253e298ff2435f..708089745db82627a4b21dbe77ad82dbbf024875 100644
+GIT binary patch
+delta 189
+zcmex&oALi0M!w~|yj%=GU~jc4>zn6BzFx8VBl@|iDVd4-`9(R2N%|(n<|gJAiDtS+
+zW@cu(CZ;Bqx|RmUDY}Lhsg^0`DTc|$CTUQmfu;G$DTyWefu)IgC7EfJnR)5DA&Eul
+zsU^BD`MHUidAcr%C5gI0sfDGPMX9-|c_qcVY57IE{z+M>$v`!!B|s`uE<aDVG%qE!
+a2&O4GBQvc;KeeJHwJ0w!XY+P3_izAy20^|6
+
+delta 59
+zcmex=hw<NSM!w~|yj%=GaPIZT)IZ)E`Fh1<ob@yEb5r$G^NRHygUt=hjSTc%@{>z*
+OQ}arSH(Q9ihXVkgbQL%N
+
+diff --git a/utils/loggers/comet/__pycache__/comet_utils.cpython-311.pyc b/utils/loggers/comet/__pycache__/comet_utils.cpython-311.pyc
+index d01a8ea2a234000582530b7a6f0465999eb54163..db7cee817d4f75d06bdef1737a67beb4f5e8f6ba 100644
+GIT binary patch
+delta 187
+zcmXwwF%khW6hJi^GZYG?8~h12vb!3M-YhQgck{DiY%(I5p>hOApi^VU6<otnY{6?@
+z^WG)7rkz{6-D=cKCy&j!d+)rOr#GueYGl@JF=srAd7Pktkq`p-n5U2qA_>EUQW?u(
+z5pnfPvtSE}o@D`z*XpQE2`h9Zd6?M>wSgIWgaz$_c2tq^dr;QFJl{}JH{@&SzBLex
+VB=?_|Yppz^gC}Qj`}{Pgy)UXcKLh{(
+
+delta 57
+zcmZ2rIp2bBIWI340}z~h{V`Qlcq897Rv9<_jQreG{nWf-eaB#P19Kw-eV6>?(%jU%
+LlH$#YZ1!RR1FjMc
+
+diff --git a/utils/loggers/wandb/__pycache__/__init__.cpython-311.pyc b/utils/loggers/wandb/__pycache__/__init__.cpython-311.pyc
+index 88cbaae93ec462cda811fe0386773b29803b17e5..0fb0bf085c13df15bed438526a1c7c190e882300 100644
+GIT binary patch
+delta 182
+zcmXwwF%p6>5CGNEfiL)jn~1~!Ha7GQN@;VD1H(Wv#xSFmZ{QWS>KlBR6uQkeyU*!s
+z<~@9WJ{j3=-p%0g`-gQT6*6O6EEo?X9>pkNC4>OJ<_RRrP(lz>A|n};A+LUE)|*nI
+zV_A>dsp_V54LRDH9Hgd0r6EO!u%~mcEOn&a1uA1<S2R?P4Y^TjVKnqwlKoGIld2q}
+Lt0Swi9gg`I4?jG;
+
+delta 52
+zcmdnUw1JUlIWI340}z~h{V{bSkBN-4enx(7s(xx-vA$!lxq-Qnfxb(Aa%paAUP<x9
+GyCDFefDtYL
+
+diff --git a/utils/loggers/wandb/__pycache__/wandb_utils.cpython-311.pyc b/utils/loggers/wandb/__pycache__/wandb_utils.cpython-311.pyc
+index 53f67280f6cf83796cac639a95f8754328aeee07..b640644fb9d03cfbcd368498923fda548a578d21 100644
+GIT binary patch
+delta 192
+zcmXwwF%rQ*6hLWZa)qcBe^z8AV#ZMDO^5@0*`HV=yJKx;sMKnQP@~b(xRw;W<~8rV
+z()ZH6x^AmcGalYIqnkT%P9Ij1kjS*z;)?Mg;?V#@=!Ibjyw78ZyMX|IK(UB~p9MVs
+zrAehTftDo|Dl7A&R0X7H3bHWOB}xTTv<P$BRnkyN%I+c824<@bWpzWgmh`lON(nOm
+XX|a~MWpuD)6mB2VX?soQa_&68>ghl#
+
+delta 62
+zcmX>UdN71{IWI340}z~h{W105MqUSQ88`im{M=Oi)VyMS$6#{<b0Y(Nm;B_?+|<01
+R;?1wP<>eSzCUa@+005ul6xRR%
+
