@@ -1,0 +1,7 @@
+# Verified CPU environment. For CUDA, install matching torch/torchvision builds
+# from the official PyTorch index; do not mix CPU and CUDA operator wheels.
+torch==2.11.0
+torchvision==0.26.0
+pycocotools==2.0.11
+numpy>=2.0
+Pillow>=10.4
