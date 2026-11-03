@@ -10,8 +10,9 @@
 - [x] Frozen plan scored once (2026-11-03); analysis + `docs/results_rq1_rq4_vi.md`.
 - [ ] RQ5 (ALDI++; plan `.agent/plans/active/2026-11-03-rq5-adaptation.md`):
   - [x] Port, 43 tests, CPU smoke with exact resume (2026-11-03).
-  - [ ] Pilot `kizhowl/bdd100k-rq5-pilot`: lock α and T by the pre-registered rule; check the correctness gate.
-  - [ ] Set `bdd_adapt/grid.POLICY`; write `runs/rq5/grid.csv`; push the protocol dataset; run the 46-run queue (`kaggle/bdd_adapt.py`).
+  - [x] Pilot `kizhowl/bdd100k-rq5-pilot`: α 0.9996, T 2000, gate passed (2026-11-04).
+  - [x] Set `bdd_adapt/grid.POLICY`; write `runs/rq5/grid.csv`; push both protocol datasets (2026-11-04).
+  - [ ] Finish the 46-run queue: bhgh 32 runs, kizhowl 14 lighting runs (resumes after the 2026-11-07 quota reset).
   - [ ] Freeze, score once, write `scripts/analyze_rq5.py` and `docs/results_rq5_vi.md`.
 - [x] Train source on the frozen 9,804-image pool; select only on source val (Kaggle, 2026-10-20).
 - [x] Zero-shot gap gate with the source model: weather 0.031 AP (CI 0.023-0.040) passes.

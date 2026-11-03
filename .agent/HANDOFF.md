@@ -2,7 +2,17 @@
 
 Updated 2026-10-30, Asia/Saigon.
 
-## 2026-11-03: RQ5 started (latest)
+## 2026-11-04: RQ5 grid running (latest)
+
+- **Pilot locked:** α = 0.9996, T = 2,000, gate passed (`DECISIONS.md` 2026-11-04, `runs/rq5/pilot_lock.json`). `grid.POLICY` is set; 44 tests pass. Cost ~35 T4-h (`runs/rq5/grid.csv`, 0.789 s/update).
+- **Both protocol datasets** carry the locked code (versions of 2026-11-04).
+- **Running since 2026-11-04 ~02:40 local:**
+  - `buihuynhgiahuy/bdd100k-rq5` v1: 32 runs (compound, weather, replay), SESSION_HOURS 11. Quota 30 h at push.
+  - `kizhowl/bdd100k-rq5` v1: 14 lighting runs, SESSION_HOURS 8.0 because only 8.83 h quota was left; the rest (mostly N5000) waits for the 2026-11-07 reset.
+- **Next session of either:** push v2 of that kernel with the kernel itself added to `kernel_sources` (it restores `rq5/` from the previous output and resumes `last.pt`). Same QUEUE, same code.
+- **GitHub:** the repo is pushed to https://github.com/YN2TB/CV-final (public, branch `main`). `data/`, `runs/`, weights and `docs/response/*.jpg` are gitignored.
+
+## 2026-11-03: RQ5 started
 
 - **Plan:** `.agent/plans/active/2026-11-03-rq5-adaptation.md`. Rules are pre-registered in `DECISIONS.md` (2026-11-03).
 - **Method:** ALDI++, re-implemented in `scripts/bdd_adapt/`. `bdd_pipeline/` is untouched.

@@ -198,6 +198,7 @@ Adaptive Teacher and 2PCNet were the alternatives:
 
 - 2026-11-03: plan written; rules pre-registered in DECISIONS.md.
 - 2026-11-03: port written in `scripts/bdd_adapt/` (augment, distill, train, grid), with `scripts/train_adapt.py`, `kaggle/bdd_adapt_pilot.py` and `kaggle/bdd_adapt.py`.
+- 2026-11-04: pilot complete (6.6 GPU-h). Rule gives α 0.9996, T 2000; gate passed. POLICY locked; both protocol datasets updated; grid launched on buihuynhgiahuy (32 runs) and kizhowl (14 lighting runs, 8 h session until the quota reset).
   - `pytest`: 43 passed (29 old, 14 new).
   - CPU smoke on real data with the real source model (`runs/rq5_smoke2/`): losses are finite, with 20–40 pseudo-boxes per image pair.
   - Interrupt and resume is bit-identical (teacher, student, momentum).
