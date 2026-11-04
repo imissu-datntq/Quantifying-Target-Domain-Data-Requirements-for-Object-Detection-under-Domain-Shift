@@ -69,7 +69,7 @@ These hold as of the 2026-10-19 amendment and the 2026-10-20 Kaggle runs.
 - One evaluation path: pycocotools via `scripts/bdd_pipeline/evaluation.py`. `image_id` maps by `file_name`.
 - Budgets are nested by seed (N=10 ⊂ N=25), and 3 sampling seeds are fixed. Ceilings use at least 2 seeds.
 - Checkpoints are written atomically and resume exactly. Resume uses `last.pt` with the original settings, never a historical best.
-- Never commit `data/`, `runs/`, weights or credentials.
+- Never commit `data/`, `runs/`, weights or credentials. The one exception is `data/split_reference/` (frozen manifests and hashes, no images or labels; approved 2026-11-05).
 
 ## Project layout
 

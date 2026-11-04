@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-The current research protocol is `docs/proposal_dataset_aligned.docx`; summarize public-facing status in `README.md` and keep live execution state in `.agent/`. `train_da_yolo_comparison.py` is an earlier standard-library prototype for three YOLO adaptation repositories, not the implementation of the current Faster R-CNN proposal. Raw datasets belong under `data/`; generated manifests, external repositories, checkpoints, and runs remain untracked.
+The current research protocol is `docs/proposal_dataset_aligned.docx`; summarize public-facing status in `README.md` and keep live execution state in `.agent/`. `train_da_yolo_comparison.py` is an earlier standard-library prototype for three YOLO adaptation repositories, not the implementation of the current Faster R-CNN proposal. Raw datasets belong under `data/`; generated manifests, external repositories, checkpoints, and runs remain untracked, except the frozen split identity in `data/split_reference/` (manifests and hashes only).
 
 ## Build, Test, and Development Commands
 

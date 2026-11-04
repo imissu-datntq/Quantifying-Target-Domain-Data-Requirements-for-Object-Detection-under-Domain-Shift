@@ -27,6 +27,8 @@ Thumbs.db
 # Downloaded datasets and generated dataset splits
 /data/*
 !/data/.gitkeep
+# Frozen split membership and hashes only (no images, no labels)
+!/data/split_reference/
 /prepared_da_yolo/
 
 # Cloned upstream implementations

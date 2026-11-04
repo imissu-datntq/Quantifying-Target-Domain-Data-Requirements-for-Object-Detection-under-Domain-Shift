@@ -37,51 +37,60 @@ Recovery(N) = [mAP(N) - mAP(0)] / [mAP_c - mAP(0)]
 
 Here, `mAP(0)` is source-only performance on the target test set and `mAP_c` is the empirical full-target-pool ceiling produced by the same fine-tuning procedure. The study estimates break-even, 75%, and 90% recovery budgets; 95% is a sensitivity result. Primary reporting uses COCO-style mAP50:95 over the four fixed reliable classes, with ten-class metrics, seed variation, bootstrap intervals, source-domain retention, and per-class results as diagnostics.
 
-## Repository Status
+## Current Status (2026-11-05)
 
-The research protocol is defined in [`docs/proposal_dataset_aligned.docx`](docs/proposal_dataset_aligned.docx). Project state and execution plans live under [`.agent/`](.agent/README.md).
+| Step | State |
+| --- | --- |
+| Split, EDA, pipeline | Done. Frozen split in `data/split_reference/`; 44 unit tests pass. |
+| Source model | Done. 12 epochs on Kaggle, source-val reliable mAP50:95 = 0.352. |
+| Zero-shot gap gate | Passed. Weather 0.031 AP (CI 0.023-0.040), lighting 0.099, compound 0.129. |
+| Fine-tuning schedule | Locked by a pre-registered lighting-val pilot: S = 500 updates, E = 2 epochs, LR 1e-3. |
+| RQ1-RQ4 (fine-tuning curves) | Done. 87 runs, final test scored once. Report: [`docs/results_rq1_rq4_vi.md`](docs/results_rq1_rq4_vi.md) (Vietnamese). |
+| RQ5 (ALDI++ adaptation vs fine-tuning) | Running. Pilot locked EMA α = 0.9996 and T = 2,000 updates; the 46-run grid is on Kaggle (started 2026-11-04). |
+| Next | Score RQ5 once, then `scripts/analyze_rq5.py` and `docs/results_rq5_vi.md`. |
 
-`train_da_yolo_comparison.py` is an earlier orchestration prototype for SSDA-YOLO, MS-DAYOLO, and SF-YOLO. It assumes a different split and model-comparison design, including a labeled BDD100K test file that is not part of the current proposal. Do not treat it as the executable implementation of the present study without reconciling those differences.
+The live state, next action and every locked decision are in [`.agent/HANDOFF.md`](.agent/HANDOFF.md), [`.agent/TODO.md`](.agent/TODO.md) and [`.agent/DECISIONS.md`](.agent/DECISIONS.md). The protocol is [`docs/proposal_dataset_aligned.docx`](docs/proposal_dataset_aligned.docx).
 
-The revised dataset has now been materialized locally at `data/bdd100k_revised/`
-from the original BDD100K source files, verified individually against the public
-Kaggle archive (solesensei_bdd100k version 2). Its labels are the 2018 BDD100K
-detection release (`bdd100k_labels_release`), which the official documentation now
-marks as deprecated in favour of Detection 2020 (`det_20`). Kaggle checksums only
-show that local files equal the mirror; `scripts/label_provenance.py` freezes a
-label sample for comparison with an official download, which is still pending. The 55,000/14,863/10,000 image, annotation, and manifest counts
-pass validation, and all four main study-domain counts match the table above.
-The split uses seed 20260916, hierarchical largest-remainder allocation over
-timeofday/weather/scene, and deterministic same-stratum swaps to keep exact
-duplicate content in one split. Cross-split basename and SHA256 overlap are zero.
-Official validation membership is preserved; within-split duplicate images are
-disclosed in the dataset metadata.
+`train_da_yolo_comparison.py` is an earlier prototype for SSDA-YOLO, MS-DAYOLO and SF-YOLO with a different split and design. It is not the implementation of this study.
 
-The EDA reads the new train and val detection annotations only. Its executed
-[notebook](notebooks/eda_revised_bdd100k.ipynb) covers domain and class support,
-box geometry, scene composition, image appearance, and nested training-budget
-coverage. The current local Vietnamese report is `runs/eda_revised_v2/report_vi.html` (amended protocol, adds occlusion/truncation and objects-per-image tables by domain);
-figures, CSV tables, and a Markdown version are alongside it. See the
-[workflow and reproduction commands](docs/revised_dataset_eda.md).
+## Getting the Data
 
-The Python [training/evaluation pipeline](docs/training_pipeline.md) now implements
-Faster R-CNN ResNet-50 FPN at native 1280×720, train-only nested budget sampling,
-source/target/control initialization, the common step-floor/epoch rule, complete
-atomic checkpoint resume and COCO AP/AR with per-class support. CLI entry points
-are `scripts/train_frcnn.py`, `scripts/pilot_frcnn.py`,
-`scripts/evaluate_frcnn.py` and `scripts/freeze_evaluation_plan.py`.
+The repository holds no images or labels. It holds the frozen split identity in [`data/split_reference/`](data/split_reference/): the membership manifests (`train/test/val.csv`: file name, time of day, weather, scene, image SHA256), the stratification and duplicate-repair records, `dataset_metadata.json`, and `expected_sha256.json` with the hashes of the manifests, metadata and generated annotation files. Labels are the 2018 BDD100K detection release (`bdd100k_labels_release`), which the official documentation marks as deprecated in favour of `det_20`.
 
-CPU train/validation smoke and exact resume equivalence have been verified.
-The [Vietnamese implementation report](docs/pipeline_report_vi.md) distinguishes
-these checks from research performance. Default optimizer/schedule/support
-settings are provisional; the next milestone is a representative GPU throughput
-and memory pilot and fixed research configuration. Full training runs, final
-holdout performance evaluation and adaptation-method selection remain later
-research steps.
+1. Download the public Kaggle mirror [`solesensei/solesensei_bdd100k`](https://www.kaggle.com/datasets/solesensei/solesensei_bdd100k) (version 2, about 7.6 GiB) and unzip it, for example into `data/raw/`:
+
+   ```powershell
+   kaggle datasets download solesensei/solesensei_bdd100k -p data/raw --unzip
+   ```
+
+   You need the images under `bdd100k/bdd100k/images/100k/{train,val}/` and the folder that holds `bdd100k_labels_images_train.json` and `bdd100k_labels_images_val.json`. The public test images are not used.
+
+2. Check the files against the mirror (size and CRC32 of all 80,000 images and both label files; SHA256 is computed locally):
+
+   ```powershell
+   python scripts/kaggle_source.py --images-root data/raw/bdd100k/bdd100k/images/100k --labels-root <folder with the two label JSONs> --output-dir data/raw/kaggle_verified --workers 12
+   ```
+
+3. Build and validate the split (seed 20260916; 55,000 train / 14,863 test / 10,000 official val):
+
+   ```powershell
+   python scripts/prepare_revised_bdd100k.py --verified-source data/raw/kaggle_verified/source_verified.json --output-dir data/bdd100k_revised --seed 20260916
+   python scripts/prepare_revised_bdd100k.py --output-dir data/bdd100k_revised --validate-only
+   ```
+
+4. Confirm that your split is ours: every hash must print `OK`.
+
+   ```powershell
+   python -c "import hashlib,json,pathlib; r=pathlib.Path('data/bdd100k_revised'); e=json.loads(pathlib.Path('data/split_reference/expected_sha256.json').read_text()); [print('OK ' if hashlib.sha256((r/k).read_bytes()).hexdigest()==v else 'BAD', k) for k,v in e.items()]"
+   ```
+
+How the split is built (hierarchical largest-remainder allocation over time of day / weather / scene, duplicate-content repair, zero cross-split overlap) is documented in [`docs/revised_dataset_eda.md`](docs/revised_dataset_eda.md). Kaggle kernels skip steps 1-3: they link the mirror's images and check them against the same manifests ([`docs/kaggle_training.md`](docs/kaggle_training.md)).
+
+Held-out test labels are opened only by a frozen, one-shot final-evaluation plan. Never use weather or compound validation images for selection: they are part of the final test set.
 
 ## GPU Training on Kaggle
 
-GPU runs use private Kaggle kernels on the `kizhowl` account. The frozen protocol (code, annotations, manifests, hashes) is a private Kaggle dataset; images are symlinked from the public mirror and rehashed against the manifests before any run. See [docs/kaggle_training.md](docs/kaggle_training.md).
+GPU runs use private Kaggle kernels on the `kizhowl` account (RQ5 is split with `buihuynhgiahuy`). The frozen protocol (code, annotations, manifests, hashes) is a private Kaggle dataset; images are symlinked from the public mirror and rehashed against the manifests before any run. See [docs/kaggle_training.md](docs/kaggle_training.md).
 
 ## Local Checks
 

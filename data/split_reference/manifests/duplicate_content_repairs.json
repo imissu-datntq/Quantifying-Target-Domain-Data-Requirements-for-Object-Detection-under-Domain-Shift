@@ -1,0 +1,13 @@
+[
+  {
+    "sha256": "7fde08ad8dbf6df568c1e867a6376795e2751e708e473c7042a38b3fa0e19a19",
+    "moved_image": "559b242e-90cd7279.jpg",
+    "swapped_image": "0066b72f-974f6883.jpg",
+    "kept_split": "train",
+    "stratum": [
+      "daytime",
+      "partly cloudy",
+      "highway"
+    ]
+  }
+]
