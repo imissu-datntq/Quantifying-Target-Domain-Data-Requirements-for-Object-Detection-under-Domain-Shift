@@ -4,6 +4,12 @@ This repository supports a BDD100K study of a practical deployment question: how
 
 The study does not propose a new detector. It measures annotation efficiency under controlled lighting, weather, and compound shifts while keeping the detector, data partitions, evaluation path, and target test sets fixed.
 
+## Repository Layout
+
+- The repository root is the final study: `scripts/` (pipeline, campaign, RQ5 adaptation, analysis), `tests/`, `kaggle/`, `docs/`, `.agent/` (decisions and handoff notes).
+- Results report (Vietnamese): `docs/bao_cao_ket_qua_vi.docx`, with the detailed write-ups `docs/results_local_rq1_rq4_vi.md` and `docs/results_rq5_vi.md`.
+- `phase1_initial/` holds the initial exploration work (September 2026: split tooling, R101/YOLO and domain-adaptation smoke tests and pilots) that preceded the final training pipeline. It is kept unchanged for reference and is not used by the final study.
+
 ## Research Design
 
 The current proposal uses a materialized, stratified split of the labeled BDD100K images:

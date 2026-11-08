@@ -281,3 +281,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local environments and tool state kept at the repository root
+.venvs/
+.superpowers/
