@@ -1,0 +1,9 @@
+{
+  "annotations/bdd100k_labels_images_train.json": "26a4a3958afd41f054ec5a9b378e430d99e183c9509413501619a45251cb6e00",
+  "annotations/bdd100k_labels_images_test.json": "a7275fa34826086a006786a6ee269f452c188c9f922681a25fee004ab38691cf",
+  "annotations/bdd100k_labels_images_val.json": "eda6c2f7434b1a13c2c39cd47dd67fa17e5e2b3e9fb63234277e87082c5a6cce",
+  "manifests/train.csv": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+  "manifests/test.csv": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+  "manifests/val.csv": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951",
+  "dataset_metadata.json": "bfdf4cc8ed6c396636e2f82ebd5f9dca4a9c6d2904644478fa36ad5a6c09e052"
+}

@@ -1,0 +1,73 @@
+split,timeofday,weather,images
+train,dawn/dusk,clear,1578
+train,dawn/dusk,foggy,12
+train,dawn/dusk,overcast,903
+train,dawn/dusk,partly cloudy,449
+train,dawn/dusk,rainy,258
+train,dawn/dusk,snowy,343
+train,dawn/dusk,undefined,415
+train,daytime,clear,9804
+train,daytime,foggy,38
+train,daytime,overcast,5945
+train,daytime,partly cloudy,3355
+train,daytime,rainy,1985
+train,daytime,snowy,2253
+train,daytime,undefined,5534
+train,night,clear,18015
+train,night,foggy,53
+train,night,overcast,57
+train,night,partly cloudy,39
+train,night,rainy,1738
+train,night,snowy,1770
+train,night,undefined,348
+train,undefined,clear,2
+train,undefined,rainy,9
+train,undefined,snowy,2
+train,undefined,undefined,95
+test,dawn/dusk,clear,426
+test,dawn/dusk,foggy,3
+test,dawn/dusk,overcast,244
+test,dawn/dusk,partly cloudy,121
+test,dawn/dusk,rainy,70
+test,dawn/dusk,snowy,93
+test,dawn/dusk,undefined,112
+test,daytime,clear,2650
+test,daytime,foggy,10
+test,daytime,overcast,1606
+test,daytime,partly cloudy,907
+test,daytime,rainy,537
+test,daytime,snowy,609
+test,daytime,undefined,1495
+test,night,clear,4869
+test,night,foggy,14
+test,night,overcast,15
+test,night,partly cloudy,10
+test,night,rainy,470
+test,night,snowy,479
+test,night,undefined,94
+test,undefined,rainy,3
+test,undefined,undefined,26
+val,dawn/dusk,clear,307
+val,dawn/dusk,foggy,1
+val,dawn/dusk,overcast,182
+val,dawn/dusk,partly cloudy,95
+val,dawn/dusk,rainy,55
+val,dawn/dusk,snowy,74
+val,dawn/dusk,undefined,64
+val,daytime,clear,1764
+val,daytime,foggy,5
+val,daytime,overcast,1039
+val,daytime,partly cloudy,638
+val,daytime,rainy,396
+val,daytime,snowy,422
+val,daytime,undefined,994
+val,night,clear,3274
+val,night,foggy,7
+val,night,overcast,18
+val,night,partly cloudy,5
+val,night,rainy,286
+val,night,snowy,273
+val,night,undefined,66
+val,undefined,clear,1
+val,undefined,rainy,1
+val,undefined,undefined,33

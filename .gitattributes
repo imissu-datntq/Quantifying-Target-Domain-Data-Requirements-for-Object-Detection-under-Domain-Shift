@@ -1,0 +1,2 @@
+# Frozen split files must keep their exact bytes (their SHA256 is the split identity)
+/data/split_reference/** -text

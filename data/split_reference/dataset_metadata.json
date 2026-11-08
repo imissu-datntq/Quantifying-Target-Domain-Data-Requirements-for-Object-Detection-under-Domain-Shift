@@ -1,0 +1,524 @@
+{
+  "seed": 20260916,
+  "algorithm": "Hierarchical Hamilton allocation by (timeofday, weather), then scene; sorted cells, scenes and basenames; Python random.Random(seed) shuffle per stratum; exact-content groups repaired by deterministic same-stratum singleton swaps",
+  "source_dataset": "https://www.kaggle.com/datasets/solesensei/solesensei_bdd100k",
+  "source_version": 2,
+  "source_verification": "Every source image and label file matches Kaggle ZIP size and CRC32; SHA256 computed locally",
+  "source_label_sha256": {
+    "train": "c1998792e385fd79213187576ca07d5249563d0ab83ae976688ad60668baca9e",
+    "val": "c835be652f0c002897be51e74deedd16a1dcee0b7230f19c0456fba772f694af"
+  },
+  "counts": {
+    "train": 55000,
+    "test": 14863,
+    "val": 10000
+  },
+  "excluded_unannotated": 137,
+  "excluded_public_unlabeled_test": 20000,
+  "classes": [
+    "pedestrian",
+    "rider",
+    "car",
+    "truck",
+    "bus",
+    "train",
+    "motorcycle",
+    "bicycle",
+    "traffic light",
+    "traffic sign"
+  ],
+  "aliases": {
+    "person": "pedestrian",
+    "motor": "motorcycle",
+    "bike": "bicycle"
+  },
+  "annotation_policy": "Detection only; original box coordinates/attributes preserved, no clipping or dropping of invalid geometry; lane/drivable-area polygons excluded",
+  "images": "Independent byte-identical copies, not links",
+  "duplicate_content_repairs": [
+    {
+      "sha256": "7fde08ad8dbf6df568c1e867a6376795e2751e708e473c7042a38b3fa0e19a19",
+      "moved_image": "559b242e-90cd7279.jpg",
+      "swapped_image": "0066b72f-974f6883.jpg",
+      "kept_split": "train",
+      "stratum": [
+        "daytime",
+        "partly cloudy",
+        "highway"
+      ]
+    }
+  ],
+  "within_split_repeated_content_images": {
+    "train": 1,
+    "test": 0,
+    "val": 2
+  },
+  "nondetection_annotations_omitted": {
+    "train": 515935,
+    "test": 138431,
+    "val": 93711
+  },
+  "dimensions": {
+    "1280x720": 79863
+  },
+  "max_abs_joint_stratum_rounding_error": 0.7225426906946453,
+  "domain_census": [
+    {
+      "split": "train",
+      "timeofday": "dawn/dusk",
+      "weather": "clear",
+      "images": 1578
+    },
+    {
+      "split": "train",
+      "timeofday": "dawn/dusk",
+      "weather": "foggy",
+      "images": 12
+    },
+    {
+      "split": "train",
+      "timeofday": "dawn/dusk",
+      "weather": "overcast",
+      "images": 903
+    },
+    {
+      "split": "train",
+      "timeofday": "dawn/dusk",
+      "weather": "partly cloudy",
+      "images": 449
+    },
+    {
+      "split": "train",
+      "timeofday": "dawn/dusk",
+      "weather": "rainy",
+      "images": 258
+    },
+    {
+      "split": "train",
+      "timeofday": "dawn/dusk",
+      "weather": "snowy",
+      "images": 343
+    },
+    {
+      "split": "train",
+      "timeofday": "dawn/dusk",
+      "weather": "undefined",
+      "images": 415
+    },
+    {
+      "split": "train",
+      "timeofday": "daytime",
+      "weather": "clear",
+      "images": 9804
+    },
+    {
+      "split": "train",
+      "timeofday": "daytime",
+      "weather": "foggy",
+      "images": 38
+    },
+    {
+      "split": "train",
+      "timeofday": "daytime",
+      "weather": "overcast",
+      "images": 5945
+    },
+    {
+      "split": "train",
+      "timeofday": "daytime",
+      "weather": "partly cloudy",
+      "images": 3355
+    },
+    {
+      "split": "train",
+      "timeofday": "daytime",
+      "weather": "rainy",
+      "images": 1985
+    },
+    {
+      "split": "train",
+      "timeofday": "daytime",
+      "weather": "snowy",
+      "images": 2253
+    },
+    {
+      "split": "train",
+      "timeofday": "daytime",
+      "weather": "undefined",
+      "images": 5534
+    },
+    {
+      "split": "train",
+      "timeofday": "night",
+      "weather": "clear",
+      "images": 18015
+    },
+    {
+      "split": "train",
+      "timeofday": "night",
+      "weather": "foggy",
+      "images": 53
+    },
+    {
+      "split": "train",
+      "timeofday": "night",
+      "weather": "overcast",
+      "images": 57
+    },
+    {
+      "split": "train",
+      "timeofday": "night",
+      "weather": "partly cloudy",
+      "images": 39
+    },
+    {
+      "split": "train",
+      "timeofday": "night",
+      "weather": "rainy",
+      "images": 1738
+    },
+    {
+      "split": "train",
+      "timeofday": "night",
+      "weather": "snowy",
+      "images": 1770
+    },
+    {
+      "split": "train",
+      "timeofday": "night",
+      "weather": "undefined",
+      "images": 348
+    },
+    {
+      "split": "train",
+      "timeofday": "undefined",
+      "weather": "clear",
+      "images": 2
+    },
+    {
+      "split": "train",
+      "timeofday": "undefined",
+      "weather": "rainy",
+      "images": 9
+    },
+    {
+      "split": "train",
+      "timeofday": "undefined",
+      "weather": "snowy",
+      "images": 2
+    },
+    {
+      "split": "train",
+      "timeofday": "undefined",
+      "weather": "undefined",
+      "images": 95
+    },
+    {
+      "split": "test",
+      "timeofday": "dawn/dusk",
+      "weather": "clear",
+      "images": 426
+    },
+    {
+      "split": "test",
+      "timeofday": "dawn/dusk",
+      "weather": "foggy",
+      "images": 3
+    },
+    {
+      "split": "test",
+      "timeofday": "dawn/dusk",
+      "weather": "overcast",
+      "images": 244
+    },
+    {
+      "split": "test",
+      "timeofday": "dawn/dusk",
+      "weather": "partly cloudy",
+      "images": 121
+    },
+    {
+      "split": "test",
+      "timeofday": "dawn/dusk",
+      "weather": "rainy",
+      "images": 70
+    },
+    {
+      "split": "test",
+      "timeofday": "dawn/dusk",
+      "weather": "snowy",
+      "images": 93
+    },
+    {
+      "split": "test",
+      "timeofday": "dawn/dusk",
+      "weather": "undefined",
+      "images": 112
+    },
+    {
+      "split": "test",
+      "timeofday": "daytime",
+      "weather": "clear",
+      "images": 2650
+    },
+    {
+      "split": "test",
+      "timeofday": "daytime",
+      "weather": "foggy",
+      "images": 10
+    },
+    {
+      "split": "test",
+      "timeofday": "daytime",
+      "weather": "overcast",
+      "images": 1606
+    },
+    {
+      "split": "test",
+      "timeofday": "daytime",
+      "weather": "partly cloudy",
+      "images": 907
+    },
+    {
+      "split": "test",
+      "timeofday": "daytime",
+      "weather": "rainy",
+      "images": 537
+    },
+    {
+      "split": "test",
+      "timeofday": "daytime",
+      "weather": "snowy",
+      "images": 609
+    },
+    {
+      "split": "test",
+      "timeofday": "daytime",
+      "weather": "undefined",
+      "images": 1495
+    },
+    {
+      "split": "test",
+      "timeofday": "night",
+      "weather": "clear",
+      "images": 4869
+    },
+    {
+      "split": "test",
+      "timeofday": "night",
+      "weather": "foggy",
+      "images": 14
+    },
+    {
+      "split": "test",
+      "timeofday": "night",
+      "weather": "overcast",
+      "images": 15
+    },
+    {
+      "split": "test",
+      "timeofday": "night",
+      "weather": "partly cloudy",
+      "images": 10
+    },
+    {
+      "split": "test",
+      "timeofday": "night",
+      "weather": "rainy",
+      "images": 470
+    },
+    {
+      "split": "test",
+      "timeofday": "night",
+      "weather": "snowy",
+      "images": 479
+    },
+    {
+      "split": "test",
+      "timeofday": "night",
+      "weather": "undefined",
+      "images": 94
+    },
+    {
+      "split": "test",
+      "timeofday": "undefined",
+      "weather": "rainy",
+      "images": 3
+    },
+    {
+      "split": "test",
+      "timeofday": "undefined",
+      "weather": "undefined",
+      "images": 26
+    },
+    {
+      "split": "val",
+      "timeofday": "dawn/dusk",
+      "weather": "clear",
+      "images": 307
+    },
+    {
+      "split": "val",
+      "timeofday": "dawn/dusk",
+      "weather": "foggy",
+      "images": 1
+    },
+    {
+      "split": "val",
+      "timeofday": "dawn/dusk",
+      "weather": "overcast",
+      "images": 182
+    },
+    {
+      "split": "val",
+      "timeofday": "dawn/dusk",
+      "weather": "partly cloudy",
+      "images": 95
+    },
+    {
+      "split": "val",
+      "timeofday": "dawn/dusk",
+      "weather": "rainy",
+      "images": 55
+    },
+    {
+      "split": "val",
+      "timeofday": "dawn/dusk",
+      "weather": "snowy",
+      "images": 74
+    },
+    {
+      "split": "val",
+      "timeofday": "dawn/dusk",
+      "weather": "undefined",
+      "images": 64
+    },
+    {
+      "split": "val",
+      "timeofday": "daytime",
+      "weather": "clear",
+      "images": 1764
+    },
+    {
+      "split": "val",
+      "timeofday": "daytime",
+      "weather": "foggy",
+      "images": 5
+    },
+    {
+      "split": "val",
+      "timeofday": "daytime",
+      "weather": "overcast",
+      "images": 1039
+    },
+    {
+      "split": "val",
+      "timeofday": "daytime",
+      "weather": "partly cloudy",
+      "images": 638
+    },
+    {
+      "split": "val",
+      "timeofday": "daytime",
+      "weather": "rainy",
+      "images": 396
+    },
+    {
+      "split": "val",
+      "timeofday": "daytime",
+      "weather": "snowy",
+      "images": 422
+    },
+    {
+      "split": "val",
+      "timeofday": "daytime",
+      "weather": "undefined",
+      "images": 994
+    },
+    {
+      "split": "val",
+      "timeofday": "night",
+      "weather": "clear",
+      "images": 3274
+    },
+    {
+      "split": "val",
+      "timeofday": "night",
+      "weather": "foggy",
+      "images": 7
+    },
+    {
+      "split": "val",
+      "timeofday": "night",
+      "weather": "overcast",
+      "images": 18
+    },
+    {
+      "split": "val",
+      "timeofday": "night",
+      "weather": "partly cloudy",
+      "images": 5
+    },
+    {
+      "split": "val",
+      "timeofday": "night",
+      "weather": "rainy",
+      "images": 286
+    },
+    {
+      "split": "val",
+      "timeofday": "night",
+      "weather": "snowy",
+      "images": 273
+    },
+    {
+      "split": "val",
+      "timeofday": "night",
+      "weather": "undefined",
+      "images": 66
+    },
+    {
+      "split": "val",
+      "timeofday": "undefined",
+      "weather": "clear",
+      "images": 1
+    },
+    {
+      "split": "val",
+      "timeofday": "undefined",
+      "weather": "rainy",
+      "images": 1
+    },
+    {
+      "split": "val",
+      "timeofday": "undefined",
+      "weather": "undefined",
+      "images": 33
+    }
+  ],
+  "integrity": {
+    "passed": true,
+    "image_annotation_manifest_counts": {
+      "train": 55000,
+      "test": 14863,
+      "val": 10000
+    },
+    "basename_overlap": {
+      "train/test": 0,
+      "train/val": 0,
+      "test/val": 0
+    },
+    "sha256_content_overlap": {
+      "train/test": 0,
+      "train/val": 0,
+      "test/val": 0
+    },
+    "validation_membership": "Preserved official val exactly",
+    "test_label_access": "Construction and structural validation only; no model evaluation or test-class EDA",
+    "limitation": "Exact hashes do not detect near-duplicate images or geographic/video-level dependence"
+  },
+  "manifest_sha256": {
+    "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+    "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+    "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+  }
+}
