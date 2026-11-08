@@ -208,3 +208,80 @@ The pre-registered rule (2026-11-03) was applied mechanically by `scripts/rq5_pi
 - **Gate passed:** N=0 at T is 0.2595, above step 0 (0.2533). Under α = 0.999 the N=0 teacher drifts below step 0 after ~1,500 updates; this is the faster-EMA arm and is not used.
 - **Grid:** `POLICY = {floor_updates: 2000, ema_alpha: 0.9996}`; run length max(2000, 2N). Measured 0.789 s/update on a T4 (AMP, 2+2 images). Estimated ~35 T4-h for the 46 runs, under the 60 h limit.
 - **Disclosure:** the unsupervised gain on lighting val is small (+0.006 AP); N=100 keeps rising slightly after T (0.268 → 0.272). Both are reported, not tuned around.
+
+## 2026-11-05: Full fresh rerun on the local RTX 3060, no Kaggle
+
+The user decided to stop using Kaggle and rerun the whole study from scratch on the local Linux machine (RTX 3060 12 GB, driver CUDA 12.8). "From scratch" includes the selection pilots, not just the grids.
+
+- **Scope:** rebuild split → source model → zero-shot gate → schedule pilot (re-run rounds 2+3 configs, apply the 2026-10-30 rule unchanged) → 87-run campaign → RQ5 pilot (apply the 2026-11-03 rule unchanged) → 46-run RQ5 grid → one frozen plan, scored once.
+- **Rules stay, numbers are re-derived.** The pre-registered rules (schedule 2026-10-30, RQ5 2026-11-03) are reused as written. Their Kaggle outcomes (S=500/E=2/LR 1e-3, α 0.9996/T 2000) are *not* carried over; the local pilots re-lock them.
+- **Second opening of held-out labels.** The Kaggle campaign was scored once on 2026-11-03. The local rerun's final scoring is a second opening, reported as an independent replication, never mixed with or selected against the Kaggle numbers.
+- **Source settings** are the Kaggle source kernel's (`kaggle/bdd_source_train.py`): 12 epochs, batch 4, AMP, LR 0.005, warmup 500, seed 0, selection on source val only.
+- **Split:** rebuilt from the local copy (all 80,002 files pass the mirror's size/CRC32), seed 20260916. Manifests matched the frozen SHA256 directly; annotations and `dataset_metadata.json` differed only in line endings (Windows CRLF vs Linux LF) and were converted to CRLF, after which all 7 hashes match `data/split_reference/expected_sha256.json`. Membership and content are identical.
+- **Environment:** `~/venvs/cv-final`, torch 2.11.0+cu128, torchvision 0.26.0, pycocotools 2.0.11. 44/44 tests pass. Measured 0.46 s/update at batch 4 (≈8.7 img/s).
+
+## 2026-11-05: Local zero-shot gate and schedule lock (S=500, E=3, LR 1e-3)
+
+Local source model `runs/local/source/source_seed0/best.pt` (sha256 `8b1b5b4d…5d8faf`): source-val reliable mAP50:95 0.3517, selected at the final step 29,412.
+
+**Zero-shot gate** (`runs/local/zero_shot_gap/summary.json`, source val vs target train pools, 1,000 bootstrap resamples, no held-out label read). All three shifts pass:
+
+| shift | gap (AP) | 95% CI | Kaggle 2026-10-20 |
+|---|---|---|---|
+| weather | 0.032 | 0.024–0.041 | 0.031 (0.023–0.040) |
+| lighting | 0.100 | 0.091–0.110 | 0.099 |
+| compound | 0.129 | 0.121–0.139 | 0.129 |
+
+**Schedule pilot** (`runs/local/schedule_pilot/summary.json`, lighting val 3,274 images, batch 2, AMP, warmup 50; round-3 configs plus the round-2 seed-0 configs the rule compares). The 2026-10-30 rule was applied unchanged:
+
+| run | updates | lighting val reliable |
+|---|---|---|
+| N0 (source model) | 0 | 0.2468 |
+| N100 S125 | 125 | 0.2503 |
+| N100 S250 seeds 0/1/2 | 250 | 0.2554 / 0.2547 / 0.2539 |
+| N100 S500 | 500 | 0.2514 |
+| N1000 E2 | 1,000 | 0.2746 |
+| N1000 E3 | 1,500 | 0.2780 |
+| N1000 E5, LR 1e-3 | 2,500 | 0.2797 |
+| N1000 E10 | 5,000 | 0.2772 |
+| N1000 E5, LR 5e-4 | 2,500 | 0.2775 |
+| N10 S250 | 250 | 0.1969 |
+| N10 S500 | 500 | 0.1834 |
+
+- δ = max(0.005, SD 0.0007) = **0.005**.
+- **LR = 1e-3:** 5e-4 is 0.0022 *below* it at N1000 E5.
+- **S = 500:** best is S250 (0.2554); S500 is within δ (0.0040), S125 is not (0.00503); largest S within δ wins.
+- **E = 3:** best is E5 (0.2797); E3 (0.0017) and E10 (0.0026) are within δ, **E2 is not (0.00511, outside by 0.0001)**; smallest E within δ wins.
+  - This differs from the Kaggle lock (E=2), where E2 was 0.003 below the best. The margin is razor-thin and is disclosed as such; the rule is applied as written, not re-argued.
+- **N10 flag:** both N10 runs land below N0 by more than δ (0.050, 0.063). Expected negative transfer at the N10 rung; reported as a finding.
+- **Locked policy** (`bdd_pipeline/campaign.POLICY`): S=500, **E=3**, LR 1e-3, batch 2, accumulation 1, AMP, warmup 50. Seeds unchanged. 44/44 tests pass after the change.
+- **Grid:** 87 runs, 391,368 image-passes, about 12.9 h of training at the measured 8.45 img/s (batch 2), plus test predictions (~0.083 s/image). `runs/local/campaign/grid.csv`.
+
+## 2026-11-06: Local campaign scored once; local RQ5 pilot locked (α = 0.9996, T = 2,000)
+
+- **Campaign:** 87/87 runs finished 2026-11-06 04:54 under S=500/E=3/LR 1e-3, no errors. One plan frozen over all 87 prediction files before any test label was read: `runs/local/campaign/final_plan.json`, schema 3, bootstrap 1,000 resamples seed 20261030, sha256 `a1c5eb9fa457188d8094d97f2a8e8984e7b0b34d633a5b37c9b8175fc9436a44`. Scored once on CPU (176/176 entries, `runs/local/campaign/scored/`), finished before 10:02. This is the second opening of the held-out labels (the first was the Kaggle campaign, 2026-11-03); it is reported as the local replication.
+- **RQ5 pilot** (`runs/local/rq5/pilot/`, lighting val 1,000-image subset, 4 × 6,000 updates, ~0.62 s/update). The 2026-11-03 rule applied by `scripts/rq5_pilot_lock.py` → `runs/local/rq5/pilot_lock.json`:
+
+| step | N0 α .9996 | N100 α .9996 | N0 α .999 | N100 α .999 |
+|---|---|---|---|---|
+| 0 | 0.2497 | 0.2497 | 0.2497 | 0.2497 |
+| 1,000 | 0.2558 | 0.2615 | 0.2535 | 0.2629 |
+| 2,000 | 0.2588 | 0.2679 | 0.2508 | 0.2656 |
+| 4,000 | 0.2593 | 0.2712 | 0.2474 | 0.2653 |
+| 6,000 | 0.2584 | 0.2715 | 0.2474 | 0.2654 |
+
+  - **α = 0.9996:** mean peak 0.2656 vs 0.2603 (difference 0.0053 > δ, so chosen as the higher one, not by the tie rule).
+  - **T = 2,000:** N=0 sustained from 1,000, N=100 from 2,000. Not the pilot maximum.
+  - **Gate passed:** N=0 at T 0.2588 > step 0 0.2497. Under α 0.999 the N=0 teacher again drifts below step 0 after ~2,000 updates.
+  - Same lock as Kaggle (2026-11-04), so `bdd_adapt/grid.POLICY` is unchanged. N=100 keeps rising after T (0.268 → 0.272); disclosed, not tuned around.
+- **RQ5 grid:** 46 runs started 2026-11-06 10:03 via `scripts/local_rq5_grid.py`; ~18 h of training at the measured rate plus predictions.
+
+## 2026-11-07: Local RQ5 grid scored once; RQ5 results
+
+- **Grid:** 46/46 runs finished 2026-11-07 07:11 (`scripts/local_rq5_grid.py`, ~0.6 s/update). One plan frozen over the 46 prediction files before any RQ5 test label was read: `runs/local/rq5/final_plan.json`, schema 3, bootstrap 1,000 resamples seed 20261030 (shared with the local FT scoring), sha256 `3df3d788a57ebf2eb9cf0d4e996a954857740eabf6f20c8c9ca7b58bbf91b4b7`. Scored once on CPU (94/94, `runs/local/rq5/scored/`, done 09:27). The Kaggle RQ5 grid (launched 2026-11-04) was abandoned and never scored.
+- **Analysis** by `scripts/analyze_rq5.py` (rules of 2026-11-03 applied as written) → `runs/local/rq5/analysis/`, report `docs/results_rq5_vi.md`.
+  - Δ(N) = DA − FT, reliable: lighting +0.009 / +0.070 / +0.015 / −0.011 / −0.010 (N 0/10/100/1000/5000); weather +0.006 / +0.057 / +0.014 / −0.003; compound +0.011 / +0.061 / +0.016 / −0.012. Meaningful at N ≤ 100 everywhere; at N ≥ 1000 DA is significantly below FT.
+  - **Crossover N× ∈ (100, 1000] for all three shifts.** N_eq(0) = 160 / 349 / 153 FT images (lighting/weather/compound).
+  - Attribution (seed 0): adapt − replay 0.003–0.010 at N ≤ 10, ≤ 0.004 at N=100, ≈ 0 at N=1000; replay − FT carries the N=10 gap (0.046–0.064, FT overfits) and the N=1000 deficit.
+  - N_eq uses the sustained (last upward) crossing of the FT curve, since FT dips below mAP(0) at small N; this detail was not spelled out in the 2026-11-03 rule and is disclosed.
+- **Disclosed confound:** T_run = max(T, 2N) was pre-registered as matching FT's E=2; the local FT lock is E=3, and the rule was not changed. At N=1000 FT sees ~3,000 labeled-target image passes vs ~2,000 for adapt/replay (1 labeled target image per step). The N ≥ 1000 deficit is therefore confounded with labeled-training volume.

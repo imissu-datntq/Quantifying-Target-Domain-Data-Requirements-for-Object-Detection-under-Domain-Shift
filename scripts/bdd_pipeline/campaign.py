@@ -6,10 +6,11 @@ from pathlib import Path
 from .data import EXPECTED_DOMAINS
 from .training import schedule_size
 
-# Locked 2026-10-30 from the lighting-val schedule pilot, round 3 (.agent/DECISIONS.md). None
-# would mean not yet locked: grid generation for launching refuses.
+# Locked 2026-11-05 by the 2026-10-30 rule applied to the local RTX 3060 schedule pilot
+# (runs/local/schedule_pilot/, .agent/DECISIONS.md). The Kaggle lock of 2026-10-30 had epochs=2.
+# None would mean not yet locked: grid generation for launching refuses.
 POLICY = {
-    "floor_steps": 500, "epochs": 2, "lr": 0.001,
+    "floor_steps": 500, "epochs": 3, "lr": 0.001,
     "batch_size": 2, "accumulation": 1, "warmup_updates": 50, "amp": True,
     "sampling_seeds": (0, 1, 2), "ceiling_seeds": (0, 1), "control_seed": 0,
 }
