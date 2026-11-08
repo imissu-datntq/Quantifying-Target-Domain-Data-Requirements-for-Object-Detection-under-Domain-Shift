@@ -18,6 +18,9 @@ SEED = 20260916
 EXPECTED = {"train": 55000, "test": 14863, "val": 10000}
 CLASSES = ("pedestrian", "rider", "car", "truck", "bus", "train", "motorcycle", "bicycle", "traffic light", "traffic sign")
 ALIASES = {"person": "pedestrian", "motor": "motorcycle", "bike": "bicycle"}
+# The frozen split identity (data/split_reference/expected_sha256.json) was built on Windows, so every
+# text output uses CRLF on every platform; csv.writer already writes "\r\n" with newline="".
+CRLF = "\r\n"
 DOMAINS = {"source": ("daytime", "clear"), "lighting": ("night", "clear"), "weather": ("daytime", "rainy"), "compound": ("night", "rainy")}
 # Protocol amendment 2026-10-19 (evaluation roles only; physical split membership is unchanged).
 # Preserved-val images of these domains join the final held-out test set and are never used for selection.
@@ -245,7 +248,7 @@ def prepare(verification: Path, destination: Path, seed: int):
                 print(f"Copied and verified {index:,}/{len(jobs):,} images", flush=True)
     annotation_counts = Counter()
     dropped_nondetection = Counter()
-    handles = {split: (destination / "annotations" / f"bdd100k_labels_images_{split}.json").open("w", encoding="utf-8") for split in EXPECTED}
+    handles = {split: (destination / "annotations" / f"bdd100k_labels_images_{split}.json").open("w", encoding="utf-8", newline=CRLF) for split in EXPECTED}
     try:
         for handle in handles.values():
             handle.write("[\n")
@@ -275,8 +278,8 @@ def prepare(verification: Path, destination: Path, seed: int):
         rows = [new_rows[name] for name in sorted(new_rows) if membership[name] == split]
         write_csv(destination / "manifests" / f"{split}.csv", rows)
     write_csv(destination / "manifests" / "stratification.csv", allocation)
-    (destination / "manifests" / "duplicate_content_repairs.json").write_text(json.dumps(content_repairs, indent=2), encoding="utf-8")
-    (destination / "manifests" / "excluded_unannotated.txt").write_text("\n".join(excluded) + "\n", encoding="utf-8")
+    (destination / "manifests" / "duplicate_content_repairs.json").write_text(json.dumps(content_repairs, indent=2), encoding="utf-8", newline=CRLF)
+    (destination / "manifests" / "excluded_unannotated.txt").write_text("\n".join(excluded) + "\n", encoding="utf-8", newline=CRLF)
     census = []
     for split in EXPECTED:
         counts = Counter((row["timeofday"], row["weather"]) for row in new_rows.values() if row["split"] == split)
@@ -284,8 +287,8 @@ def prepare(verification: Path, destination: Path, seed: int):
     write_csv(destination / "manifests" / "domain_census.csv", census)
     integrity = validate(destination)
     result = {"seed": seed, "algorithm": "Hierarchical Hamilton allocation by (timeofday, weather), then scene; sorted cells, scenes and basenames; Python random.Random(seed) shuffle per stratum; exact-content groups repaired by deterministic same-stratum singleton swaps", "source_dataset": provenance["dataset_url"], "source_version": provenance["version"], "source_verification": provenance["verification"], "source_label_sha256": {key: row["sha256"] for key, row in source_labels.items()}, "counts": EXPECTED, "excluded_unannotated": len(excluded), "excluded_public_unlabeled_test": 20000, "classes": CLASSES, "aliases": ALIASES, "annotation_policy": "Detection only; original box coordinates/attributes preserved, no clipping or dropping of invalid geometry; lane/drivable-area polygons excluded", "images": "Independent byte-identical copies, not links", "duplicate_content_repairs": content_repairs, "within_split_repeated_content_images": {split: EXPECTED[split] - len(hashes[split]) for split in EXPECTED}, "nondetection_annotations_omitted": dict(dropped_nondetection), "dimensions": dict(Counter(f'{r["width"]}x{r["height"]}' for r in new_rows.values())), "max_abs_joint_stratum_rounding_error": max(abs(row["rounding_error"]) for row in allocation), "domain_census": census, "integrity": integrity, "manifest_sha256": {split: sha256(destination / "manifests" / f"{split}.csv") for split in EXPECTED}}
-    (destination / "dataset_metadata.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    (destination / "COMPLETE").write_text("All dataset invariants passed. Treat test membership as frozen.\n", encoding="utf-8")
+    (destination / "dataset_metadata.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8", newline=CRLF)
+    (destination / "COMPLETE").write_text("All dataset invariants passed. Treat test membership as frozen.\n", encoding="utf-8", newline=CRLF)
     print(json.dumps(result, ensure_ascii=False, indent=2), flush=True)
 
 
