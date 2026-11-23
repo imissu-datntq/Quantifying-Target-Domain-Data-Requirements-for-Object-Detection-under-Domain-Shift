@@ -1,6 +1,6 @@
 # ExecPlan: RQ5, adaptation vs fine-tuning along the label budget
 
-- **Status:** active. Created 2026-11-03 (Asia/Saigon).
+- **Status:** completed (46 runs, scored once on 2026-11-07); archived 2026-11-23. Earlier status line: active. Created 2026-11-03 (Asia/Saigon).
 - **Owner:** Claude Code session with the user. Compute: Kaggle `kizhowl` (user, 2026-11-03: "run it on kaggle for now").
 - **Depends on:** the completed supervised campaign (`2026-10-30-supervised-campaign.md`), its frozen source model, and its scored fine-tuning (FT) curves in `runs/campaign/scored/`.
 

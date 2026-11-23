@@ -1,5 +1,7 @@
 # ExecPlan: supervised campaign (RQ1–RQ4)
 
+- **Status:** completed (87 runs, scored once on 2026-11-06); archived 2026-11-23.
+
 Status: active. Created 2026-10-30 (Asia/Saigon). The user approved this plan the same day.
 
 ## Progress

@@ -285,3 +285,105 @@ Local source model `runs/local/source/source_seed0/best.pt` (sha256 `8b1b5b4d…
   - Attribution (seed 0): adapt − replay 0.003–0.010 at N ≤ 10, ≤ 0.004 at N=100, ≈ 0 at N=1000; replay − FT carries the N=10 gap (0.046–0.064, FT overfits) and the N=1000 deficit.
   - N_eq uses the sustained (last upward) crossing of the FT curve, since FT dips below mAP(0) at small N; this detail was not spelled out in the 2026-11-03 rule and is disclosed.
 - **Disclosed confound:** T_run = max(T, 2N) was pre-registered as matching FT's E=2; the local FT lock is E=3, and the rule was not changed. At N=1000 FT sees ~3,000 labeled-target image passes vs ~2,000 for adapt/replay (1 labeled target image per step). The N ≥ 1000 deficit is therefore confounded with labeled-training volume.
+
+## 2026-11-21: Lecturer review of the results report; revision rules written before any new run
+
+Source: `docs/review_2026-11-21_lecturer_vi.md`. Plan: `.agent/plans/active/2026-11-21-lecturer-review-revision.md`. Every rule below was written before any revision run existed and before any new test label was read. The analysis rules were written **after** the existing curves had been seen, so they are descriptive, not confirmatory.
+
+**Framing (lecturer).**
+- The headline is the control arm: *most of what domain adaptation gives at small labeled budgets is not adaptation.* It is tied to ALDI's thesis (Kay et al., CVPR 2024) that reported DAOD gains depend on implementation and baseline choices.
+- The data-efficiency curves are the context that makes the claim measurable. N_BE/N75/N90 are secondary, practical results.
+- Weather is the third replication of the decomposition, not a third threshold measurement.
+- This supersedes "the contribution is the curve" in `CLAUDE.md`, which is rewritten in the plan's Phase 4.
+
+**Kaggle (user).** Kaggle is dropped as a results source. The report, README and result notes carry local numbers only. The lecturer had asked for both runs to be reported equally, so the user informs the lecturer.
+- Pending user confirmation: keep one disclosure sentence that held-out labels were first opened on 2026-11-03 by a Kaggle campaign under a different schedule (E=2). The comparison can go; the count of test-set openings cannot.
+- Pending user confirmation: delete `kaggle/`, `scripts/kaggle_*.py`, `docs/kaggle_training.md` and `docs/results_rq1_rq4_vi.md` from `main`. Mentions of the Kaggle *mirror* as the data source stay; that is provenance.
+
+**Provenance constraint.** Every run records the SHA256 of all `scripts/bdd_pipeline/*.py` (and `scripts/bdd_adapt/*.py`). Those folders stay byte-identical. New analysis code lives in `scripts/analyze_campaign.py` and `scripts/analyze_rq5.py`.
+
+**Analysis rules (existing scored outputs only).**
+- **Thresholds.** N95 is retired from every reported table (`recovery.LEVELS` keeps it only because the file is frozen). A threshold whose first passing rung is the ceiling rung is reported as "not determined within the pool (> last failing rung)": that rung is 1 by construction.
+- **Fit.** The power fit is retired from the report. Replacement: Recovery = α + β·ln N by ordinary least squares.
+  - Region: ladder rungs from the first rung whose 95% band lower bound is above 0 and stays above 0 at every larger rung, up to the largest rung below the ceiling. The ceiling rung is excluded, since it is 1 by construction.
+  - At least four rungs, otherwise no fit and the ladder bracket is the result.
+  - R² and RMSE are computed on the region only.
+  - Held-out check: fit the three lowest rungs of the region, predict the remaining rungs and the ceiling rung, report the errors.
+  - A fit-based threshold is given only by interpolation inside the fitted range.
+  - Sensitivity: the same fit with the region starting at the point-estimate N_BE.
+- **Recovery denominator.** Ceiling − zero-shot is tabulated per shift and class with its bootstrap CI and its ratio to the 0.01 floor.
+- **Interaction detection limit.** For drop(compound) − drop(lighting) − drop(weather): the 95% CI half-width, and (z₀.₉₇₅ + z₀.₈₀)·SE with SE the bootstrap SD. Both are given in AP and as a share of the weather drop. The claim is "an interaction smaller than this cannot be detected", not "no evidence of an interaction".
+- **Replay share.** share(N) = (replay − FT) / (adapt − FT) on reliable mAP, over the sampling seeds common to all three arms, paired by seed. CI: the shared test resamples, seeds redrawn as triples. Undefined where |adapt − FT| < δ = 0.005, for the point value and for each replicate. Reported at N ∈ {10, 100, 1000}; N = 0 is tabulated separately (FT is then the source model).
+- **Against no fine-tuning.** adapt(N) − mAP(0) and replay(N) − mAP(0) are tabulated with CI, because FT at N ≤ 50 is below zero-shot.
+
+**Claim rules, fixed before the revision runs are scored.**
+- **Headline.** "Most of the gain is not adaptation" is supported at budget N when share(N) > 0.5 with the lower 95% bound above 0.5 in all three shifts, with three replay seeds. It is stated only for labeled budgets; at N = 0 the seed-0 shares are 0.17–0.55 and the claim is not made.
+- **Matched passes.** With adapt − FT at N = 1,000 under matched labeled passes: if the upper 95% bound is below 0 and the estimate is ≤ −δ, "FT is ahead from N = 1,000" stands. Otherwise the crossover claim is withdrawn and the report says there is no meaningful difference at N = 1,000.
+
+**Rules for the new runs (Phase 2 is not yet authorized; these apply once it is).**
+- **Ceiling.** mAP_c := seed mean of the full-pool fine-tune at **E = 12** (the source model's epoch count), every other setting as `campaign.POLICY`, final update kept, seeds 0/1. It replaces the E = 3 ceiling as the recovery denominator **whatever the result**. Recovery stays unclipped. The E = 3 full-pool runs become the top rung of the ladder. Matched-pool (1,738) ceilings for lighting and weather follow the same rule with seeds 0/1.
+- **Materially higher** := paired difference (E12 − E3) ≥ δ = 0.005 AP with the lower 95% bound above 0. Both threshold tables are published either way.
+- **Bracket reading.** Ladder rungs stay at E = 3. Thresholds against the E3 ceiling are lower bounds; against the E12 ceiling they are upper bounds wherever large rungs are themselves undertrained. The pilot shows N = 1,000 saturated at E3 (0.2780, vs 0.2797 at E5 and 0.2772 at E10 on lighting val).
+- **RQ5 matched passes.** `adapt` and `replay` at N = 1,000 with 3,000 updates (`--floor-updates 3000`), so labeled target image-passes equal FT's 3,000. Seeds 0/1/2 for both arms, same nested subsets. The original runs stay as the pre-registered result; the matched runs are the confound control.
+- **Replay seeds.** `replay` at N = 10 and 100 gains seeds 1 and 2 at the original run length.
+- **Scoring.** One new frozen plan over all new prediction sets, scored once, bootstrap 1,000 resamples seed 20261030 so they pair with the existing scored outputs. Existing sets are not rescored. This is the third opening of held-out labels (2026-11-03 Kaggle, 2026-11-06/07 local).
+
+## 2026-11-21 (addendum): second seed for the E3 matched-pool ceilings
+
+Written while the revision queue was running, before any revision run was scored. User approved 2026-11-21.
+
+- **Added runs:** `fine-tune_lighting_N1738_s1` and `fine-tune_weather_N1738_s1` under the locked E = 3 policy (2,607 updates each), block `matched_pool_e3` of `scripts/local_revision_runs.py`. The revision plan therefore freezes 42 prediction sets, not 40.
+- **Why:** the E12 matched-pool ceilings have seeds 0/1, the E3 ones had seed 0 only. At the 1,738 pool the seed also decides which images are drawn, so the paired E12 − E3 difference of the "materially higher" rule could be formed on one seed only, and the E3 matched-pool table (RQ4) rested on one seed. The gap was found by the independent review of the driver.
+- **Unchanged:** every rule of the 2026-11-21 entry. Replay at N = 1,000 at the original 2,000-update length stays seed 0 only, so share(1,000) over three seeds exists only under matched passes; this is disclosed, not filled.
+
+## 2026-11-21 (addendum 2): reporting rules made explicit after the analysis review
+
+Written while the revision queue was running, before any revision run was scored. Six independent reviewers checked the new analysis code; these points were left to a rule decision. Each one narrows what may be claimed.
+
+- **Headline rule, direction and budgets.** "Most of the gain is not adaptation" is evaluated at N = 10 and N = 100 only, and additionally requires adapt − FT > 0 in all three shifts. A share above 0.5 of a *deficit* (N = 1,000 today) is not evidence for the headline; it is reported in the matched-pass section.
+- **Baseline of the share.** The share is defined against FT (2026-11-21). FT at N ≤ 50 is below the source model, so at N = 10 the same numbers read differently against the source model: there the replay arm gains about 0 and the whole of ALDI++'s small gain is distillation. Both readings are reported side by side (`rq5_replay_share.csv`, `rq5_vs_zero_shot.csv`), and the headline is worded as a statement about the advantage **over fine-tuning**.
+- **Share with undefined replicates.** A share is quoted with its interval only when at most 5% of its bootstrap replicates are undefined (|gain| < δ). Otherwise it is reported as not determined, with the fraction.
+- **Fit thresholds.** A fit-based N75/N90 is quoted only when it lies inside its ladder bracket (`fit_inside_ladder_bracket`). A CI bound flagged as censored is written "> largest region rung" (or "< smallest"), not as a number. Per-class fits that contradict a measured rung are not quoted.
+- **Held-out check wording.** The log-linear fit on the three lowest region rungs over-predicts the larger lighting rungs by +0.003, +0.008, +0.013 recovery and the ceiling rung by +0.020. The plan's earlier "predicts to three digits" came from the anchored power form and is withdrawn.
+
+## 2026-11-23: Kaggle run code removed; crash cause left alone
+
+- **Removed from `main` (user, 2026-11-23, "if it affects nothing"):** `kaggle/` (9 kernels), `scripts/kaggle_materialize.py`, `docs/kaggle_training.md`, `docs/results_rq1_rq4_vi.md`. Nothing imported them; 151 tests pass and every entry point imports after the removal. They remain in the git history.
+- **Kept:** `scripts/kaggle_source.py`. Despite its name it is not run code: it verifies the local raw files against the public Kaggle mirror (README setup step 2), which is data provenance. `docs/review_response_2026-10-20_kaggle_vi.md` and `docs/lecturer_update_2026-10-30_vi.md` are kept as records of correspondence; their pointers to the removed files are historical.
+- **Still pending:** whether the report keeps one sentence disclosing that held-out labels were first opened by the Kaggle campaign on 2026-11-03. The notes keep it until the user decides.
+- **Runaway `nvidia-smi dmon`** (likely cause of the 2026-11-21 crash): the user chose to leave it alone. The queue finished on 2026-11-22 20:44 without another crash.
+
+## 2026-11-23: Revision plan frozen (42 sets), before any revision label was read
+
+- **Runs:** all 42 finished 2026-11-22 20:44 (`runs/local/revision.log`). One machine crash on 2026-11-21 interrupted run 20; it resumed from `last.pt` at step 2,500 of 3,000 and the 19 finished runs were re-verified by hash.
+- **Pre-freeze checklist passed for all 42 runs:** completed; update count equal to the pre-registered count (2,000 / 3,000 / 10,428 / 11,916 / 108,096 / 2,607); `test_labels_accessed` false; training and prediction implementation hashes equal to the original grids'; prediction file hashes equal to the manifests; 42 distinct checkpoints; the 12 fine-tune runs have loadable `weights.pt`; no leftover `last.pt`; no git change in the frozen or hashed files.
+- **Plan:** `runs/local/revision/final_plan.json`, schema 3, 42 prediction sets, 84 scoring entries, bootstrap 1,000 resamples seed 20261030, sha256 `de135bccadbb11494901192af0950f45ae22d9f2b6ee173338666dec10b10282`. Bootstrap, split hashes, model contract and evaluation code are identical to `runs/local/campaign/final_plan.json`, so the new sets pair with the existing scored outputs.
+- **Scoring:** once, into `runs/local/revision/scored/`. This is the third opening of held-out labels (2026-11-03 Kaggle, 2026-11-06/07 local), approved by the user on 2026-11-21 together with the runs.
+- **Scored 2026-11-23, 08:53 to 10:28:** 84 of 84 entries, no error (`runs/local/revision/scoring.log`); every entry has a defined reliable metric and a finite bootstrap of 1,000 resamples with seed 20261030; `scored/frozen_plan.json` is identical to the frozen plan. The plan must not be scored again.
+
+## 2026-11-23 (later): no mention of the Kaggle runs in public documents; provenance script renamed
+
+- **User decision:** drop the Kaggle runs completely, without a disclosure sentence. The user informs the lecturer directly. The assistant had recommended keeping one sentence, because the same held-out labels were opened by that campaign on 2026-11-03; the user decided otherwise.
+- **What it covers:** the report (`docs/bao_cao_ket_qua_vi.docx`, at its Phase 4 rewrite), `docs/results_local_rq1_rq4_vi.md`, `docs/results_rq5_vi.md` and `README.md`. All comparisons with, and references to, the Kaggle runs were removed from the two notes and the README on 2026-11-23.
+- **Wording constraint that follows:** those documents must not claim that the held-out labels were opened only once in total. They say what is true of each plan: each frozen plan was scored exactly once (campaign, RQ5 grid, revision).
+- **Not covered:** this log, `HANDOFF.md`, the plans and the two dated correspondence files (`docs/review_response_2026-10-20_kaggle_vi.md`, `docs/lecturer_update_2026-10-30_vi.md`) keep their history. The user confirmed on 2026-11-23 that the two correspondence files are not to be deleted. The Kaggle *mirror* as the source of the dataset is provenance and stays in the README and the EDA document.
+- **Renamed (user request):** `scripts/kaggle_source.py` → `scripts/verify_source_mirror.py`. Nothing imported it. Its outputs keep their names (`data/raw/kaggle_verified/`, `kaggle_zip_directory.json`), because the built dataset and the README setup steps refer to those paths.
+
+## 2026-11-23: Revision results, and reporting rules decided after they were seen
+
+**Analysis.** `scripts/analyze_campaign.py` and `scripts/analyze_rq5.py` take `--revision-scored`. Outputs: `runs/local/campaign/analysis_rev2/`, `runs/local/rq5/analysis_rev2/`. 239 tests pass. Without the option both scripts reproduce `analysis_rev1/` byte for byte; with it, the 2026-11-03 tables and the 3-epoch full-pool rows are unchanged. Runs are told apart by `run.epochs` and `run.total_updates`, never by label. The code was written by two agents, reviewed by four and fixed by two; the coordinator re-ran the regression.
+
+**Results under the rules of 2026-11-21, applied as written.**
+- **Ceilings (reliable, paired E12 − E3, 95% CI):** lighting full pool +0.0029 (+0.0014 to +0.0041); compound +0.0005 (−0.0021 to +0.0037); weather full pool −0.0045 (−0.0067 to −0.0025); pool 1,738: lighting −0.0021 (−0.0031 to −0.0007), weather −0.0044 (−0.0067 to −0.0022). **None is materially higher** (δ = 0.005). Per class, only lighting traffic light (+0.0077) and traffic sign (+0.0053) at the full pool are.
+- **mAP_c is the E12 mean by rule:** 0.2989 / 0.3310 / 0.2578 (lighting / weather / compound); denominators 0.0551 / 0.0109 / 0.0384.
+- **Thresholds, reliable, full pool, E3 ceiling → E12 ceiling:** lighting N_BE 100 → 100, N75 5,000 → 5,000, N90 10,000 → 18,015 (the E3 full-pool rung, recovery 0.948). Compound N_BE 100 → 100, N75 1,000 → 1,000, N90 not determined within the pool → 1,738 (the E3 full-pool rung, recovery 0.986). Weather: see the reporting rule below.
+- **Headline:** supported at N = 10 and N = 100 with three replay seeds. Shares against FT: N = 10: 0.875 (0.850–0.902) / 0.939 (0.910–0.962) / 0.835 (0.805–0.863); N = 100: 0.861 (0.782–0.905) / 0.898 (0.808–1.037) / 0.759 (0.619–0.853). Against the source model the N = 10 shares are 0.046, undefined, 0.071, and the N = 100 shares 0.867 / 0.804 / 0.803.
+- **Matched passes at N = 1,000 (adapt − FT, three seeds):** lighting −0.0076 (−0.0091 to −0.0058) and compound −0.0074 (−0.0097 to −0.0047): "FT ahead from N = 1,000" stands. Weather −0.0021 (−0.0038 to +0.0002): withdrawn, no meaningful difference. adapt − replay under matched passes is −0.0012 / −0.0005 / −0.0016.
+
+**Reporting rules decided after the results were seen (descriptive, not pre-registered).**
+- **Recovery with undefined replicates.** Mirroring addendum 2: when more than 5% of the bootstrap replicates of a recovery curve are undefined (denominator at or below the 0.01 floor), its recovery values, band, thresholds and fit are reported as not determined, with the fraction. This applies to weather against the E12 ceiling (339 of 1,000 at the full pool; the 1,738 pool is undefined outright at 0.0099). Weather is then given in raw AP against both ceilings.
+- **Two ceilings, no choice between them.** The 2026-11-21 rule made E12 the denominator "whatever the result" and required both tables. The write-up presents both side by side and says plainly that E12 is not higher on the small pools and is lower on weather, where the 3-epoch full-pool run exceeds the E12 "ceiling". No ceiling is picked as better after the fact.
+- **RQ5 reference line.** The RQ5 tables and figures keep the 3-epoch full-pool mean as their reference, labelled "FT full pool, 3 epochs" when the revision runs are included, not "ceiling".
+- **`quotable` stays as recorded** (the bootstrap draw of the default seed). The exact undefined fraction is reported next to it. The compound matched-pass share against FT sits at 4.2% against the 5% limit and is not part of the headline.
+- **Seeds are strict:** each E12 ceiling needs exactly seeds 0 and 1, and lighting and weather need seed 0 (campaign) and seed 1 (revision) of the 3-epoch run at 1,738.
+- **Rounding fix in the note:** three interval bounds of the recovery table in `docs/results_local_rq1_rq4_vi.md` were mis-rounded in the 2026-11-06 version (lighting N = 1,000 low 0.52, N = 5,000 high 0.82, N = 10,000 low 0.89). The table is now generated from `recovery_points.csv`. `docs/bao_cao_ket_qua_vi.docx` still carries the old bounds.

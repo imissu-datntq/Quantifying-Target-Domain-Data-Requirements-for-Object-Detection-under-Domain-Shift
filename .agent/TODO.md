@@ -1,5 +1,22 @@
 # TODO
 
+## Revision after the lecturer review of 2026-11-21
+
+Plan: `.agent/plans/active/2026-11-21-lecturer-review-revision.md`.
+
+- [x] Phase 0: save the review (`docs/review_2026-11-21_lecturer_vi.md`), pre-register the rules (`DECISIONS.md` 2026-11-21).
+- [x] Phase 1 (no new run), done 2026-11-21: N95 retired and "not determined within pool" status; log-linear fit on the positive region with a held-out check; interaction detection limit; recovery-denominator table; replay share against FT and against the source model; 151 tests; the two result notes and `docs/training_pipeline.md` updated.
+- [x] Independent audit of the two notes (numbers, wording against the `DECISIONS.md` rules, completeness), done 2026-11-23 by three agents; all findings applied.
+- [x] Runaway `nvidia-smi dmon`: the user chose to leave it alone (2026-11-23).
+- [x] Kaggle run code and documents removed from `main` (2026-11-23); the data-provenance check renamed `scripts/verify_source_mirror.py`.
+- [x] Kaggle runs removed from the two result notes and the README, no disclosure sentence (user decision 2026-11-23).
+- [ ] Phase 4: apply the same to `docs/bao_cao_ket_qua_vi.docx` (section 11 and every comparison) when it is rewritten.
+- [x] Phase 2, done 2026-11-22 20:44: 42 runs (`scripts/local_revision_runs.py`, log `runs/local/revision.log`); one crash on 2026-11-21, resumed.
+- [x] Phase 3a, 2026-11-23: pre-freeze checklist passed, plan frozen (`runs/local/revision/final_plan.json`, 42 sets).
+- [x] Phase 3b: one-shot scoring done 2026-11-23 10:28, 84 of 84 entries (`runs/local/revision/scored/`).
+- [x] Phase 3c, done 2026-11-23: both analysis scripts take `--revision-scored`; outputs in `analysis_rev2/`; the two result notes updated from the CSVs.
+- [ ] Phase 4, the user's own step: write the report from their template (control arm first; both threshold tables; no Kaggle runs), the reply to the lecturer and the README introduction. Kaggle is already out of the repo and the notes; `CLAUDE.md` is already rewritten.
+
 ## Local fresh rerun (RTX 3060, from 2026-11-05; Kaggle dropped)
 
 - [x] Env `~/venvs/cv-final` (torch 2.11.0+cu128), 44/44 tests pass.
@@ -12,8 +29,8 @@
 - [x] RQ5 pilot done 10:01: α 0.9996, T 2,000, gate passed (same as Kaggle; POLICY unchanged).
 - [x] RQ5 grid 46/46 done 2026-11-07 07:11; plan frozen `runs/local/rq5/final_plan.json`; scored once 09:27, analysed by `scripts/analyze_rq5.py`, report `docs/results_rq5_vi.md` (DECISIONS 2026-11-07).
 - [x] Local RQ1–RQ4 report: `docs/results_local_rq1_rq4_vi.md`.
-- [ ] Freeze one plan, score once, analysis and write-ups.
-- [ ] Make `prepare_revised_bdd100k.py` write CRLF on every platform.
+- [x] Freeze one plan, score once, analysis and write-ups (campaign 2026-11-06, RQ5 2026-11-07).
+- [x] Make `prepare_revised_bdd100k.py` write CRLF on every platform (commit `7e943f2`).
 
 ## Kaggle-era record (superseded by the local rerun)
 
@@ -25,15 +42,14 @@
 - [x] Schedule locked from lighting val only: S=500, E=2, LR 1e-3 (2026-10-30, DECISIONS.md).
 - [x] Campaign: 87 runs in 3 Kaggle sessions (2026-10-31 to 2026-11-02).
 - [x] Frozen plan scored once (2026-11-03); analysis + `docs/results_rq1_rq4_vi.md`.
-- [ ] RQ5 (ALDI++; plan `.agent/plans/active/2026-11-03-rq5-adaptation.md`):
+- [x] RQ5 (ALDI++; plan `.agent/plans/archive/2026-11-03-rq5-adaptation.md`), completed by the local grid:
   - [x] Port, 43 tests, CPU smoke with exact resume (2026-11-03).
   - [x] Pilot `kizhowl/bdd100k-rq5-pilot`: α 0.9996, T 2000, gate passed (2026-11-04).
   - [x] Set `bdd_adapt/grid.POLICY`; write `runs/rq5/grid.csv`; push both protocol datasets (2026-11-04).
-  - [ ] Finish the 46-run queue: bhgh 32 runs, kizhowl 14 lighting runs (resumes after the 2026-11-07 quota reset).
+  - [x] The 46-run queue: superseded, run locally and finished 2026-11-07.
   - [x] Freeze, score once, write `scripts/analyze_rq5.py` and `docs/results_rq5_vi.md`.
 - [x] Train source on the frozen 9,804-image pool; select only on source val (Kaggle, 2026-10-20).
 - [x] Zero-shot gap gate with the source model: weather 0.031 AP (CI 0.023-0.040) passes.
-- [ ] Implement an established adaptation method after supervised curves,
-  preserving the final-test selection boundary.
+- [x] Implement an established adaptation method after supervised curves, preserving the final-test selection boundary (ALDI++, `scripts/bdd_adapt/`).
 - [ ] If required for stronger independence claims, audit near-duplicates and
   geographic/video-group dependence before training; preserve split versioning.
