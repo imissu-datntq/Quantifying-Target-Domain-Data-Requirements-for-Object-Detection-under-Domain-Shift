@@ -285,3 +285,6 @@ __marimo__/
 # Local environments and tool state kept at the repository root
 .venvs/
 .superpowers/
+
+# Overleaf upload bundle (rebuilt from docs/overleaf/)
+/docs/overleaf_ieee.zip

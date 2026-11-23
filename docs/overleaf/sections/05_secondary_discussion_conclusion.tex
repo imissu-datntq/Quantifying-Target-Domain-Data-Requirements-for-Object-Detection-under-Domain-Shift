@@ -1,0 +1,86 @@
+% Sections 8--11: secondary results, discussion, limitations, conclusion.
+% Input by main.tex; no preamble here.
+
+\section{Side Results}\label{sec:secondary}
+
+\subsection{Source Forgetting}\label{sec:forgetting}
+
+\begin{table}[t]
+\centering
+\caption{Change in reliable mAP on the source test set relative to the source model (mean over seeds).}
+\label{tab:forget}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+ & \multicolumn{3}{c}{FT} & \aldi{} & replay \\
+\cmidrule(lr){2-4}
+$N$ & lighting & weather & compound & (3 shifts) & (3 shifts) \\
+\midrule
+10 & $-$0.055 & $-$0.058 & $-$0.055 & $-$0.003 to $-$0.004 & $-$0.003 \\
+100 & $-$0.019 & $-$0.018 & $-$0.022 & $-$0.001 to $-$0.002 & $\approx 0$ \\
+1,000 & $-$0.012 & $-$0.006 & $-$0.016 & $\approx 0$ & $\approx 0$ \\
+\begin{tabular}[t]{@{}l@{}}full pool,\\ 3 epochs\end{tabular} & $-$0.026 & $-$0.005 & $-$0.018 & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+FT forgets the most at $N = 10$ (Table~\ref{tab:forget}). On lighting and compound, forgetting is smallest at $N = 250$ ($-0.011$ and $-0.014$) and then grows again at large $N$, because the number of updates grows. \aldi and replay show almost no forgetting, because they always mix source images into the batch; this is a practical advantage of the training recipe, and, again, not of adaptation. Lighting, $N = 5{,}000$: FT $-0.020$, \aldi $-0.010$. In the matched-passes experiment, \aldi changes by $-0.004$ / $-0.002$ / $-0.004$ AP and replay by 0.000 / $+0.001$ / 0.000.
+
+\subsection{COCO-Initialization Control}\label{sec:coco}
+
+\begin{table}[t]
+\centering
+\caption{Reliable mAP by initialization.}
+\label{tab:coco}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+ & COCO & Source-model & \\
+Shift, $N$ & initialization & initialization & Zero-shot \\
+\midrule
+lighting 100 / 1,000 & 0.171 / 0.220 & 0.244 / 0.273 & 0.244 \\
+weather 100 / 1,000 & 0.209 / 0.267 & 0.314 / 0.332 & 0.320 \\
+compound 100 / 1,000 & 0.149 / 0.198 & 0.223 / 0.252 & 0.219 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Pretraining on the source domain accounts for most of the performance (Table~\ref{tab:coco}): with 1,000 target images, COCO initialization is still below zero-shot in all three shifts.
+
+\section{Discussion}\label{sec:discussion}
+
+\textbf{The advantage of DAOD also measures the weakness of the baseline.} At small budgets, the large advantage of \aldi over FT appears exactly where FT overfits: 10 images with 500 updates. An arm that keeps only the training recipe of \aldi (source-image mixing, strong augmentation, EMA), which is in essence a form of regularized fine-tuning, already obtains 76--94\% of \aldi's advantage over FT at $N = 10$ and $N = 100$. This result parallels the argument of ALDI: the reported advantage of DAOD depends on how the baseline is built. Here it is extended to the setting with target labels, and it is measured on all three shifts with the same conclusion.
+
+\textbf{Genuine adaptation has value, but it is small and shrinks quickly.} Without labels, \aldi gains 0.006--0.011 AP over the source model, equivalent to about 150--350 labeled images under FT; distillation accounts for 0.003--0.009 AP of this (seed 0) and is most of the gain on lighting and compound. Once 100 labeled images are available, the contribution of distillation falls to $\leq 0.004$ AP; at 1,000 images it is 0.
+
+\textbf{At $N = 1{,}000$, FT with the locked schedule leads} on lighting and compound, even when labeled image passes are matched; on lighting at $N = 5{,}000$, the conclusion is still confounded with the difference in image passes. The lag of the EMA teacher is an alternative explanation that has not been ruled out.
+
+\textbf{Practical implications,} within the scope of this configuration:
+\begin{itemize}
+\item Below about 100 labeled images, fine-tuning with a fixed schedule is not advisable: it can make the model worse than no fine-tuning at all. The cheap part of \aldi (source-image mixing, strong augmentation, EMA) already gives most of the benefit, and it preserves performance on the source domain.
+\item From about 1,000 labeled images on, fine-tuning matches or beats \aldi.
+\item Reaching 75\% recovery takes about 5,000 images for lighting and 1,000 images for compound, under both ceilings.
+\end{itemize}
+
+\textbf{What must be tested to generalize these results:} an FT whose number of updates scales with $N$ (to determine whether avoiding overfitting is enough to erase the advantage at small $N$); other DAOD methods, each with its own replay arm on the same budgets; the matched-passes experiment at $N = 5{,}000$; rungs between 100 and 1,000 to locate the crossover; and a second detector.
+
+\section{Limitations}\label{sec:limitations}
+
+\begin{enumerate}
+\item \textbf{One DAOD method, reimplemented.} \aldi was rewritten in torchvision with fixed $1280\times720$ images, no burn-in, a small batch and LR $10^{-3}$. The measured UDA gain is small ($+0.006$ to $+0.011$ AP). The main claim has so far been tested on only one method.
+\item \textbf{One detector, one schedule.} Every threshold is specific to the schedule $S = 500$, $E = 3$; $E = 3$ was chosen by a margin of 0.0001 AP. With $E = 2$, every rung $N \geq 500$ would receive one third fewer updates.
+\item \textbf{The small-$N$ advantage depends on the FT schedule.} FT uses a fixed 500 updates, so it overfits at $N \leq 50$; an FT whose number of updates scales with $N$ has not been run. The curves measure ``data plus the corresponding amount of training''.
+\item \textbf{The matched-passes experiment was run only at $N = 1{,}000$,} and it matches only the student's image passes; the lag of the EMA teacher has not been separated out. On lighting at $N = 5{,}000$, the conclusion is still confounded with the difference in labeled image passes.
+\item \textbf{The ceiling is a ceiling of the schedule.} The 12-epoch ceiling is still much shorter than the standard 1$\times$ schedule; the ladder rungs are trained for only 3 epochs, so the thresholds against the 12-epoch ceiling are upper bounds at the large rungs.
+\item \textbf{Weather} has a denominator of 0.015 AP (3-epoch ceiling) and 0.011 AP (12-epoch ceiling); traffic sign is below the minimum. The weather thresholds against the 12-epoch ceiling are undetermined.
+\item \textbf{The interaction test in RQ1 is weak:} it cannot detect an interaction smaller than about 0.014--0.020 AP.
+\item \textbf{Some rules were set after the results had been seen} (Section~\ref{sec:rules}): the fit region, the 5\% rule for recovery, the side-by-side presentation of the two ceilings, and the sustained crossing for \Neq. The rule for the main claim was written after seed 0 had been seen; its independent confirmation comes from seeds 1 and 2 of the replay arm.
+\item \textbf{The per-cell decomposition table uses only seed 0;} replay with the original number of updates at $N = 0$ and $N = 1{,}000$ has only seed 0.
+\item \textbf{BDD100K labels from the 2018 release,} which has since been replaced by \texttt{det\_20}. Near-duplicate images and geographic dependence between splits have not been checked; the hashes rule out only exact duplicates.
+\end{enumerate}
+
+\section{Conclusion}\label{sec:conclusion}
+
+At small labeled budgets ($N = 10$ and $N = 100$), a control arm without adaptation reproduces 76--94\% of \aldi's advantage over fine-tuning, in all three shifts and with 3 seeds. At $N = 10$, that advantage is mostly the avoidance of the damage that fine-tuning does by overfitting; at $N = 100$, the conclusion holds against both reference points. At $N = 1{,}000$, after labeled image passes are matched, fine-tuning leads \aldi on lighting and compound, and there is no meaningful difference on weather. The data-efficiency curves show why: fine-tuning with a fixed schedule makes the model worse than zero-shot at $N \leq 50$ and breaks even around $N = 100$--$250$. The 12-epoch ceiling does not change this picture. In practical terms, about 5,000 labeled images (lighting) and 1,000 images (compound) are needed to reach 75\% recovery.

@@ -1,0 +1,70 @@
+% Quantifying Target-Domain Data Requirements for Object Detection under Domain Shift
+% IEEE conference format (IEEEtran). Compile with pdfLaTeX + BibTeX (Overleaf default).
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{xspace}
+\usepackage{textcomp}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{figures/}}
+
+% ---------------------------------------------------------------------------
+% Notation used throughout the paper
+% ---------------------------------------------------------------------------
+\newcommand{\NBE}{\ensuremath{N_{\mathrm{BE}}}\xspace}        % break-even budget
+\newcommand{\Nsf}{\ensuremath{N_{75}}\xspace}                 % 75% recovery threshold
+\newcommand{\Nnf}{\ensuremath{N_{90}}\xspace}                 % 90% recovery threshold
+\newcommand{\Nx}{\ensuremath{N_{\times}}\xspace}              % crossover budget
+\newcommand{\Neq}{\ensuremath{N_{\mathrm{eq}}}\xspace}        % equivalent labeled budget
+\newcommand{\mAPc}{\ensuremath{\mathrm{mAP}_{c}}\xspace}      % target ceiling
+\newcommand{\mAPsrc}{\ensuremath{\mathrm{mAP}_{\mathrm{source}}}\xspace}
+\newcommand{\mAPzero}{\ensuremath{\mathrm{mAP}(0)}\xspace}    % zero-shot
+\newcommand{\aldi}{ALDI\texttt{++}\xspace}
+
+% Note set under a table, full width of the float, justified.
+\newcommand{\tabnote}[1]{\par\vspace{2pt}\parbox{\linewidth}{\footnotesize #1}}
+% Framed statement of the main claim.
+\newcommand{\claimbox}[1]{\par\medskip\noindent\fbox{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}{#1}}\par\medskip}
+
+\begin{document}
+
+\title{Quantifying Target-Domain Data Requirements for Object Detection under Domain Shift:\\
+Most of the Small-Budget Advantage of Domain Adaptation over Fine-Tuning Is Not Adaptation}
+
+% TODO: fill in the author block before submission.
+\author{\IEEEauthorblockN{Author Names}
+\IEEEauthorblockA{Affiliation\\
+City, Country\\
+email@example.com}}
+
+\maketitle
+
+\begin{abstract}
+How many labeled target-domain images does an object detector need to recover from domain shift, and when does a domain adaptive method pay off over plain fine-tuning on those images? We train a Faster R-CNN R50-FPN detector on daytime, clear-weather BDD100K images and study three target domains: night and clear (lighting), day and rainy (weather), and night and rainy (compound). The main result comes from a control arm. We compare \aldi, a domain adaptive object detection (DAOD) method, with fine-tuning (FT) on the same nested labeled subsets, and add a replay control that keeps everything from \aldi (source-image mixing, strong augmentation, EMA teacher) but drops the unlabeled target stream and the distillation, that is, the adaptation. At the two budgets tested, $N = 10$ and $N = 100$ labeled images, the replay control reproduces 76--94\% of \aldi's advantage over FT in all three shifts, with three seeds and every lower 95\% confidence bound above 0.5: at small labeled budgets, most of the advantage of domain adaptation over fine-tuning is not adaptation. At $N = 10$ that advantage is mostly the avoidance of the damage FT does by overfitting; against the source model, \aldi gains only 0.003--0.011 AP. At $N = 1{,}000$, with labeled image passes matched, FT leads \aldi on lighting (by 0.008 AP) and compound (by 0.007 AP), and there is no meaningful difference on weather; distillation contributes nothing at this budget. The data-efficiency curves are the context that makes this measurable: under a fixed schedule, FT is worse than zero-shot for $N \leq 50$, breaks even at $N = 100$--$250$, and reaches 75\% recovery at $N = 5{,}000$ (lighting) and $N = 1{,}000$ (compound). A 12-epoch ceiling is not materially higher than the 3-epoch one in any shift. For lighting and compound the thresholds barely move: the lighting \Nnf moves from 10,000 to the full pool of 18,015, and the compound \Nnf from not determined within the pool to 1,738. Weather leaves only 0.015 AP to recover against the 3-epoch ceiling (0.011 AP against the 12-epoch ceiling, under which all its thresholds are undetermined), so it serves as a third replication of the decomposition, not as a third threshold measurement.
+\end{abstract}
+
+\begin{IEEEkeywords}
+object detection, domain shift, domain adaptation, label efficiency, fine-tuning, BDD100K
+\end{IEEEkeywords}
+
+\input{sections/01_introduction_related}
+\input{sections/02_data_method}
+\input{sections/03_main_results}
+\input{sections/04_curves_thresholds}
+\input{sections/05_secondary_discussion_conclusion}
+
+\appendices
+\input{sections/06_appendix}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

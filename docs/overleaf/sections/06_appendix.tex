@@ -1,0 +1,11 @@
+% Appendix: reproducibility. Input by main.tex after \appendices; no preamble here.
+
+\section{Reproducibility}\label{sec:repro}
+
+\begin{itemize}\raggedright
+\item Code and documentation: the project's git repository. The training pipeline is in \texttt{scripts/bdd\_pipeline/}, and \aldi is in \texttt{scripts/bdd\_adapt/}; these two directories are kept unchanged byte for byte, because every run records their SHA256 hashes.
+\item Analysis: \texttt{scripts/analyze\_campaign.py} and \texttt{scripts/analyze\_rq5.py} (option \texttt{-{}-revision-scored}). Copies of every table and figure in this paper are in \texttt{docs/results/campaign/} and \texttt{docs/results/rq5/}.
+\item Split membership: \texttt{data/split\_reference/} (manifests and hashes, no images or labels).
+\item Frozen plans (SHA256): campaign \texttt{a1c5eb9f\ldots9436a44}; RQ5 \texttt{3df3d788\ldots91b4b7}; supplementary \texttt{de135bcc\ldots b10282}.
+\item Hardware: one RTX 3060 12 GB; about 8.4 images/s at batch 2 with AMP.
+\end{itemize}

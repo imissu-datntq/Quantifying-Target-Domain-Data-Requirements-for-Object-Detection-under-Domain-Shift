@@ -1,0 +1,28 @@
+% Sections 1 (Introduction) and 2 (Related work).
+
+\section{Introduction}\label{sec:intro}
+
+A detector trained under one condition often loses performance when it is deployed under another: night instead of day, rain instead of clear weather. Labeling images of a new domain is expensive, so the practical question has two parts: how many labeled target-domain images are needed to recover, and when a domain adaptive object detection (DAOD) method is worth more than simple fine-tuning on those same images.
+
+DAOD papers usually report an advantage over a baseline. ALDI (Kay et al.~\cite{kay2024aldi}) showed that the reported advantage depends strongly on implementation choices and on how the baseline is built. This study continues in that direction, in the setting where target labels are available: besides comparing \aldi with fine-tuning (FT), we run a control arm that keeps the training recipe of \aldi unchanged but removes the adaptation. The difference between \aldi and the control arm is the part due to adaptation; the difference between the control arm and FT is the part due to the training recipe.
+
+The contributions of this paper, in order of importance, are:
+\begin{enumerate}
+\item \textbf{Decomposition with a control arm.} At $N = 10$ and $N = 100$, most of the advantage of \aldi over FT is reproduced by an arm without adaptation, in all three shifts. At $N = 1{,}000$, after the number of labeled image passes is matched, FT leads on lighting and compound. Others can verify this claim, because it only requires adding one control arm to any DAOD comparison.
+\item \textbf{Data-efficiency curves} for the three shifts on the same fixed test sets, with recovery normalized by the target-domain ceiling. They are the context: it is the shape of the FT curve at small $N$ that produces most of the advantage of \aldi.
+\item \textbf{Practical thresholds} \NBE (break-even), \Nsf and \Nnf, reported against both the 3-epoch ceiling and the 12-epoch ceiling, with ladder intervals and confidence intervals (CIs). These are secondary results.
+\item \textbf{Side results:} the amount of source forgetting after fine-tuning, and a control with COCO initialization instead of initialization from the source model.
+\end{enumerate}
+Section and table titles refer to five research questions: how much each shift reduces accuracy (RQ1, Section~\ref{sec:drop}), how recovery grows with the labeled budget (RQ2, Section~\ref{sec:recovery}), the labeled-budget thresholds (RQ3, Section~\ref{sec:thr-two}), whether the shifts differ at the same pool size (RQ4, Section~\ref{sec:rq4}), and how a DAOD method compares with fine-tuning (RQ5, Section~\ref{sec:main}).
+
+This paper does not aim to show that domain shift degrades detector performance, nor does it propose another day$\to$night benchmark on BDD100K; both have already been studied.
+
+This paper extends an earlier version (8 November 2026) with 42 runs added after a review on 21 November 2026: the 12-epoch ceiling, the matched-passes experiment at $N = 1{,}000$, and additional seeds for the control arm. The main rules for reading the results of these runs were written down before the runs were scored; Section~\ref{sec:rules} lists the rules that were set afterwards.
+
+\section{Related Work}\label{sec:related}
+
+\textbf{Domain adaptation for object detection.} Most DAOD methods with public code are built on Faster R-CNN (Ren et al.~\cite{ren2015faster}). Methods of the mean-teacher family (Tarvainen and Valpola~\cite{tarvainen2017mean}), such as Adaptive Teacher (Li et al.~\cite{li2022adaptive}) and MIC (Hoyer et al.~\cite{hoyer2023mic}), use a teacher updated by an exponential moving average (EMA) to produce pseudo-labels or distillation targets on unlabeled target images. ALDI (Kay et al.~\cite{kay2024aldi}) reimplements many methods in a common framework on Faster R-CNN R50-FPN, compares them with a fairly trained source baseline, and proposes \aldi. We chose \aldi because it uses exactly the same architecture as this study and is the strongest configuration in that benchmark.
+
+\textbf{Adaptation with little labeled target data.} Few-shot Adaptive Faster R-CNN (Wang et al.~\cite{wang2019fewshot}) and AcroFOD (Gao et al.~\cite{gao2022acrofod}) adapt a detector with a small number of labeled target images; AcroFOD evaluates several amounts of target data in some settings and compares against a fine-tuning baseline. Few-shot detection benchmarks measure absolute performance at fixed numbers of shots per class, on novel classes, so they do not answer the question asked here: what fraction of the performance attainable in the target domain a labeled budget recovers.
+
+\textbf{BDD100K} (Yu et al.~\cite{yu2020bdd100k}) has been used as a target domain in studies of domain adaptation for detectors (e.g., Hsu et al.~\cite{hsu2020progressive}), including day$\to$night adaptation and adaptation across weather conditions. The gap this study targets is narrower: hold one real dataset and one test set fixed, vary the target labeled budget over a wide range, and split the advantage of a DAOD method into a part due to adaptation and a part due to the training recipe.
