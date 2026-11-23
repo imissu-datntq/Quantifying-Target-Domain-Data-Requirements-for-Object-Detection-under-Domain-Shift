@@ -186,7 +186,8 @@ marker is created adjacent to the plan before any test-annotation access; this
 plan cannot be rerun by choosing a different output directory. Checkpoint/domain/
 limit overrides are prohibited. A failure after opening preserves partial output
 for diagnosis, and requires an explicit recovery decision rather than automatic
-holdout re-execution. No final plan or test evaluation has been executed here.
+holdout re-execution. Three final plans have since been executed, each once
+(`runs/local/{campaign,rq5,revision}/final_plan.json`).
 
 ## Verification
 
@@ -203,8 +204,8 @@ resume equivalence, evaluator checks and remaining hardware/research limitations
 
 ## Campaign path (added 2026-10-30)
 
-The grid runs as Kaggle sessions. Held-out labels are opened once, by scoring frozen
-prediction files after the whole grid is complete.
+The grids run on the local GPU. Each grid's prediction files are frozen in one plan and
+scored exactly once after that grid is complete (three plans: campaign, RQ5 grid, revision).
 
 | File | Purpose |
 | --- | --- |
@@ -214,13 +215,19 @@ prediction files after the whole grid is complete.
 | `scripts/freeze_evaluation_plan.py --prediction-manifests` | Schema-3 plan. Rejects smoke, incomplete or limited runs, files that changed, and prediction sets that don't cover the exact final-test image list |
 | `scripts/evaluate_frcnn.py --final-plan` | Schema 3: re-checks every hash, takes the one-shot lock, then scores each domain's labels once. Predictions are mapped to images by file name. Writes `metrics.json` and `bootstrap_class_ap.npy` (1,000 shared test-image resamples, seed 20261030) |
 | `scripts/analyze_campaign.py` | Produces the RQ1–RQ4 outputs listed below |
-| `kaggle/bdd_campaign.py` | Queue-runner kernel: restores previous sessions, resumes exactly, stops before the 12 h limit, predicts, and drops optimizer checkpoints |
+| `scripts/local_campaign.py`, `scripts/local_rq5_grid.py`, `scripts/local_revision_runs.py` | Queue runners for the local GPU: skip finished runs, resume an interrupted run from `last.pt`, predict on the final-test images, and drop optimizer checkpoints |
 
 `analyze_campaign.py` produces:
-- **RQ1:** the domain drop and the compound-vs-sum interaction, each with a CI.
+- **RQ1:** the domain drop and the compound-vs-sum interaction, each with a CI. The interaction also carries its detection limit: bootstrap SE, CI half-width and the 80%-power minimum detectable effect, in AP and as a share of the weather drop.
 - **RQ2:** seed-mean recovery curves with a hierarchical bootstrap band. Each band resamples the sampling seeds, the ceiling seeds and the test images.
-- **RQ3:** N_BE/N75/N90/N95, each given as a point estimate, a band interval, a ladder bracket, and a power-fit estimate with CI.
+- **RQ3:** N_BE/N75/N90, each given as a point estimate with a status, a band interval and a ladder bracket. N95 is retired. A threshold that only the ceiling rung passes has the status "not determined within pool".
 - **RQ4:** the same thresholds measured against matched-pool ceilings.
+- **Fit** (`fits.csv`, `fit_holdout.csv`): Recovery = α + β·ln N by least squares on the positive region of the curve, at least four rungs, with a held-out-rung check. It replaces the power fit and is descriptive only.
+- **Recovery denominator** (`recovery_denominator.csv`): ceiling − zero-shot per shift and class, with CI and its ratio to the 0.01 floor.
 - Forgetting on the source test set, and the generic-pretrained controls.
+
+`analyze_rq5.py` adds, next to its 2026-11-03 tables: the replay share against fine-tuning and against the source model (`rq5_replay_share.csv`, `rq5_replay_share_vs_source.csv`) and each arm's gain over the source model (`rq5_vs_zero_shot.csv`). The rules for all of these are in `.agent/DECISIONS.md` (2026-11-21 and its two addenda).
+
+With `--revision-scored <revision scored dir>` both scripts also read the 42 revision runs, told apart by `run.epochs` and `run.total_updates`. `analyze_campaign.py` adds the analyses `full-pool-e12` and `matched-pool-e12` (12-epoch ceilings, with the 3-epoch full-pool run as a measured top rung), `ceiling_e12_vs_e3.csv` and `forgetting_e12.csv`. `analyze_rq5.py` merges the extra replay seeds and adds `rq5_matched_passes.csv`, `rq5_matched_passes_per_class.csv`, `rq5_replay_share_matched.csv` and `rq5_forgetting_revision.csv`. Without the option both reproduce the earlier outputs byte for byte.
 
 **Freeze rule.** `training.py` records the SHA256 of every `bdd_pipeline/*.py` in each run's config, and resume rejects any change. Finish all `bdd_pipeline/` edits before the first campaign session. Analysis changes after launch belong in `scripts/analyze_campaign.py`, which is outside the package.
