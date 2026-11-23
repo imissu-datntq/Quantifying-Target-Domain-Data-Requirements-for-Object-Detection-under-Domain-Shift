@@ -2,7 +2,14 @@
 
 Updated 2026-11-23, Asia/Saigon.
 
-## 2026-11-23: revision scored and re-analysed; the report is the user's next step (latest)
+## 2026-11-23 (later): the two reports for the lecturer rewritten from scratch (latest)
+
+- `docs/bao_cao_ket_qua_cap_nhat_2026-11-23.docx` (full results report, control arm first) and `docs/bao_cao_tiep_thu_gop_y_2026-11-23.docx` (response to the 2026-11-21 review) were rewritten from scratch at the user's request, every number from the two result notes and `docs/results/`; audited by one independent agent and fixed.
+- The response leaves out review point 4 (report both compute runs) entirely, user decision; its sections are titled by topic, not by the lecturer's numbering.
+- Open for the user: ALDI's venue (notes say CVPR 2024, unverified; the report cites arXiv:2403.12029 only); the lecturer's closing paragraph (scientific potential, matched-budget experiments, journal) is not yet in `docs/review_2026-11-21_lecturer_vi.md`.
+- `docs/bao_cao_ket_qua_vi.docx` (the 2026-11-08 report) is untouched.
+
+## 2026-11-23: revision scored and re-analysed; the report is the user's next step
 
 - **Phase 2 is complete:** all 42 revision runs finished 2026-11-22 20:44, no second crash. The pre-freeze checklist passed for every run (`DECISIONS.md` 2026-11-23).
 - **Plan frozen:** `runs/local/revision/final_plan.json`, 42 sets, 84 scoring entries, sha256 `de135bcc…b10282`.
