@@ -8,7 +8,7 @@ The data-efficiency curves (recovery as a function of the labeled budget N) are 
 
 ## Results
 
-Numbers are reliable-class mAP50:95 on the held-out final test sets. Full tables, intervals and limitations are in the Vietnamese write-ups [`docs/results_rq5_vi.md`](docs/results_rq5_vi.md) and [`docs/results_local_rq1_rq4_vi.md`](docs/results_local_rq1_rq4_vi.md).
+Numbers are reliable-class mAP50:95 on the held-out final test sets. The result tables and figures are in [`docs/results/`](docs/results/). Full tables, intervals and limitations are in the Vietnamese write-ups [`docs/results_rq5_vi.md`](docs/results_rq5_vi.md) and [`docs/results_local_rq1_rq4_vi.md`](docs/results_local_rq1_rq4_vi.md).
 
 ### The control arm
 
@@ -92,7 +92,7 @@ Recovery(N) = [mAP(N) - mAP(0)] / [mAP_c - mAP(0)]
 - `scripts/bdd_pipeline/` and `scripts/bdd_adapt/`: the training, evaluation and adaptation packages. Each run records the SHA256 of the package it was trained with (`bdd_pipeline/*.py` for fine-tuning, `bdd_adapt/*.py` for ALDI++ and replay). Prediction manifests and frozen plans record `predict_frcnn.py`, `evaluate_frcnn.py` and `bdd_pipeline/{data,evaluation,model}.py`. None of these files is edited.
 - `scripts/`: entry points. Data `verify_source_mirror.py`, `prepare_revised_bdd100k.py`; training `train_frcnn.py`, `train_adapt.py`; the zero-shot gate `zero_shot_gap.py` and the pilots that locked the schedules on lighting validation, `local_gate_schedule_pilot.sh`, `local_rq5_pilot.py`, `rq5_pilot_lock.py`; prediction and scoring `predict_frcnn.py`, `freeze_evaluation_plan.py`, `evaluate_frcnn.py`; queue runners `local_campaign.py`, `local_rq5_grid.py`, `local_revision_runs.py`; analysis `analyze_campaign.py`, `analyze_rq5.py`. The locked values are already in the code, so the pilots need not be rerun. `local_gate_schedule_pilot.sh` and `local_rq5_pilot.py` take no arguments and start working on any invocation, `--help` included.
 - `tests/`: 239 unit tests (`python -m unittest discover -s tests`).
-- `docs/`: the two result write-ups (Vietnamese), the pipeline description [`docs/training_pipeline.md`](docs/training_pipeline.md), the dataset description [`docs/revised_dataset_eda.md`](docs/revised_dataset_eda.md) and the protocol [`docs/proposal_dataset_aligned.docx`](docs/proposal_dataset_aligned.docx). The report `docs/bao_cao_ket_qua_vi.docx` is the 2026-11-08 version and is being rewritten; take numbers from the two write-ups.
+- `docs/`: the two result write-ups (Vietnamese), the result tables and figures in `docs/results/`, the pipeline description [`docs/training_pipeline.md`](docs/training_pipeline.md), the dataset description [`docs/revised_dataset_eda.md`](docs/revised_dataset_eda.md) and the protocol [`docs/proposal_dataset_aligned.docx`](docs/proposal_dataset_aligned.docx). The report `docs/bao_cao_ket_qua_vi.docx` is the 2026-11-08 version and is being rewritten; take numbers from the two write-ups.
 - `.agent/`: decisions, hand-over notes and plans.
 - `data/split_reference/`: the frozen split identity (manifests and hashes, no images or labels).
 - `phase1_initial/`: the initial exploration of September 2026, kept unchanged and not used by the study. `scripts/train_da_yolo_comparison.py` is an earlier YOLO prototype with a different split; it is not the implementation of this study either.

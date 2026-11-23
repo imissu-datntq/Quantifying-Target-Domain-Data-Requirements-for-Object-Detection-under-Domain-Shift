@@ -387,3 +387,10 @@ Written while the revision queue was running, before any revision run was scored
 - **`quotable` stays as recorded** (the bootstrap draw of the default seed). The exact undefined fraction is reported next to it. The compound matched-pass share against FT sits at 4.2% against the 5% limit and is not part of the headline.
 - **Seeds are strict:** each E12 ceiling needs exactly seeds 0 and 1, and lighting and weather need seed 0 (campaign) and seed 1 (revision) of the 3-epoch run at 1,738.
 - **Rounding fix in the note:** three interval bounds of the recovery table in `docs/results_local_rq1_rq4_vi.md` were mis-rounded in the 2026-11-06 version (lighting N = 1,000 low 0.52, N = 5,000 high 0.82, N = 10,000 low 0.89). The table is now generated from `recovery_points.csv`. `docs/bao_cao_ket_qua_vi.docx` still carries the old bounds.
+
+## 2026-11-23: Final analysis tables and figures are tracked under `docs/results/`
+
+- **User decision.** The report is written on another machine from a clone, and `runs/` is not tracked. A copy of the final analysis outputs is committed under `docs/results/campaign/` and `docs/results/rq5/`: the CSV tables, the two `summary.json` files and the figures of `runs/local/campaign/analysis_rev2/` and `runs/local/rq5/analysis_rev2/` (about 1.3 MB, byte-identical to the originals, no machine-specific paths).
+- **This is a second exception to "never commit `runs/`",** next to `data/split_reference/`. It covers aggregated result tables and figures only: no dataset images, labels, predictions, checkpoints or weights.
+- **Left out:** `recovery_weather_e12.png`, because weather against the 12-epoch ceiling is reported as not determined.
+- **Keep it current:** the copy is refreshed whenever the analysis is rerun (`docs/results/README.md`).

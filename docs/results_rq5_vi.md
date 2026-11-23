@@ -10,7 +10,7 @@
 - 30 run bổ sung: plan `runs/local/revision/final_plan.json` (42 bộ prediction, trong đó 30 bộ của RQ5), sha256 `de135bcc…0282`, chấm ngày 2026-11-23.
 - Bootstrap dùng cùng seed (20261030) và cùng danh sách ảnh test với campaign FT (RQ1–RQ4). Vì vậy mọi so sánh DA − FT được ghép cặp trên cùng các lần lấy mẫu lại ảnh test.
 
-Số liệu gốc của mọi bảng và hình nằm trong `runs/local/rq5/analysis_rev2/` (`rq5_*.csv`, `summary.json`, hình `rq5_<domain>.png`). Thư mục `analysis/` là bản 2026-11-07: hình của nó còn ghi "FT full-pool ceiling" và không có các run bổ sung, nên không dùng cho báo cáo. Script phân tích: `scripts/analyze_rq5.py`.
+Số liệu gốc của mọi bảng và hình nằm trong `runs/local/rq5/analysis_rev2/` (`rq5_*.csv`, `summary.json`, hình `rq5_<domain>.png`). Thư mục `analysis/` là bản 2026-11-07: hình của nó còn ghi "FT full-pool ceiling" và không có các run bổ sung, nên không dùng cho báo cáo. Vì `runs/` không nằm trong git, một bản sao của các bảng và hình này được lưu ở `docs/results/rq5/`. Script phân tích: `scripts/analyze_rq5.py`.
 
 ## Cập nhật theo nhận xét của giảng viên (2026-11-21 đến 2026-11-23)
 

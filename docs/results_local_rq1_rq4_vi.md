@@ -13,7 +13,7 @@ Plan đóng băng của campaign này được chấm **đúng một lần**:
 - 87 bộ prediction, 176 lượt chấm.
 - Bootstrap dùng 1.000 lần lấy mẫu lại ảnh test, seed 20261030.
 
-Số liệu gốc của mọi bảng và hình nằm trong `runs/local/campaign/analysis_rev2/` (CSV, `summary.json`, hình `recovery_<domain>.png` theo ceiling 3 epoch và `recovery_<domain>_e12.png` theo ceiling 12 epoch). Thư mục `analysis/` là bản 2026-11-06 và không dùng cho báo cáo.
+Số liệu gốc của mọi bảng và hình nằm trong `runs/local/campaign/analysis_rev2/` (CSV, `summary.json`, hình `recovery_<domain>.png` theo ceiling 3 epoch và `recovery_<domain>_e12.png` theo ceiling 12 epoch). Thư mục `analysis/` là bản 2026-11-06 và không dùng cho báo cáo. Vì `runs/` không nằm trong git, một bản sao của các bảng và hình này được lưu ở `docs/results/campaign/`.
 
 ## Cập nhật theo nhận xét của giảng viên (2026-11-21 đến 2026-11-23)
 
