@@ -2,7 +2,19 @@
 
 Updated 2026-11-23, Asia/Saigon.
 
-## 2026-11-23 (later): the two reports for the lecturer rewritten from scratch (latest)
+## 2026-11-23 (evening): English IEEE paper for Overleaf ready, not committed (latest)
+
+- **Goal (user):** an English IEEE paper (IEEEtran conference, two columns, pdfLaTeX) from `docs/bao_cao_ket_qua_cap_nhat_2026-11-23.docx`, as a folder `docs/overleaf/` plus a zip to upload straight to Overleaf.
+- **Ready:** `docs/overleaf/` (main.tex, 6 section files, references.bib, README.md, figures/) and `docs/overleaf_ieee.zip` (15 files, 689 KB, `main.tex` at the top level; gitignored as a build product, rebuild by zipping the folder's contents). Nothing is committed yet; commit only when the user asks.
+- **Review applied:** workflow `wf_990df5fb-6bd` (five report-only lenses). 72 of the 78 proposed edits were applied after the coordinator checked each one (two of them merged into one edit). The other 6 were duplicates, or the "1x" vs "1$\times$" conflict, which was decided as 1$\times$. Added on top: an RQ1–RQ5 sentence in the introduction (taken from the section titles), `\mathrm{Drop}` everywhere, plain table headers, a `\ref` for every table. The title now says "advantage … over fine-tuning" (claim rule). The bib has full author lists, verified on CVF, arXiv, Springer and NeurIPS (ALDI still arXiv only). The final static lint is clean (70 labels, every ref and cite resolves, every tabular row matches its spec, ASCII only). The number check is unchanged.
+- **Open for the user:** author block is a placeholder; abstract is 362 words (IEEE conferences usually ask for 150–250; trimming it means dropping qualifiers the claim rules asked for, so it is the user's call); first real compile on Overleaf.
+- **User edits after the pull (not ours, left alone):** both 2026-11-23 `.docx` files were saved at 17:01/17:03. In the results report only the date line under the title was removed and the table of contents was refreshed; no content change, so the paper is unaffected.
+- **Earlier steps:** `main.tex` (preamble, notation macros, title, abstract, keywords), `references.bib`, `README.md` (import steps), `figures/` (the 6 report figures, byte-identical to `docs/results/`).
+- **Sections written and verified:** `sections/01`–`06_*.tex` (workflow `wf_05b4350f-9bb`: 5 writers, each section verified and fixed by an independent agent). Deterministic number check (every numeric token of the Vietnamese source vs the .tex, both directions) is clean; the only "missing" tokens are table/section numbers, citation years, dates and N75/N90, now `\ref`/`\cite`/macros. Inputs were scratchpad files (report text in 5 chunks, style guide with terms and label map, `check_numbers.py`), not durable.
+- **No local TeX:** downloading Tectonic was refused by the permission classifier, so the LaTeX is checked statically only; the first real compile is on Overleaf.
+- **Pull done 2026-11-23:** `main` fast-forwarded to `0bbeabd` after a windowless Word process (PID 11616) that held `docs/bao_cao_tiep_thu_gop_y_2026-11-23.docx` was stopped with the user's approval.
+
+## 2026-11-23 (later): the two reports for the lecturer rewritten from scratch
 
 - `docs/bao_cao_ket_qua_cap_nhat_2026-11-23.docx` (full results report, control arm first) and `docs/bao_cao_tiep_thu_gop_y_2026-11-23.docx` (response to the 2026-11-21 review) were rewritten from scratch at the user's request, every number from the two result notes and `docs/results/`; audited by one independent agent and fixed.
 - The response leaves out review point 4 (report both compute runs) entirely, user decision; its sections are titled by topic, not by the lecturer's numbering.

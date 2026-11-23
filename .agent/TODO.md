@@ -15,6 +15,9 @@ Plan: `.agent/plans/active/2026-11-21-lecturer-review-revision.md`.
 - [x] Phase 3a, 2026-11-23: pre-freeze checklist passed, plan frozen (`runs/local/revision/final_plan.json`, 42 sets).
 - [x] Phase 3b: one-shot scoring done 2026-11-23 10:28, 84 of 84 entries (`runs/local/revision/scored/`).
 - [x] Phase 3c, done 2026-11-23: both analysis scripts take `--revision-scored`; outputs in `analysis_rev2/`; the two result notes updated from the CSVs.
+- [x] English IEEE paper for Overleaf: `docs/overleaf/` written, verified, reviewed (5 lenses), linted; `docs/overleaf_ieee.zip` built (2026-11-23).
+- [ ] Paper, user's side: fill the author block; decide whether to cut the 362-word abstract to 150–250; first compile on Overleaf; say whether to commit `docs/overleaf/`.
+- [x] Pull of `0bbeabd` finished 2026-11-23 (a windowless Word process held a .docx; stopped with the user's approval).
 - [ ] Phase 4, the user's own step: write the report from their template (control arm first; both threshold tables; no Kaggle runs), the reply to the lecturer and the README introduction. Kaggle is already out of the repo and the notes; `CLAUDE.md` is already rewritten.
 
 ## Local fresh rerun (RTX 3060, from 2026-11-05; Kaggle dropped)

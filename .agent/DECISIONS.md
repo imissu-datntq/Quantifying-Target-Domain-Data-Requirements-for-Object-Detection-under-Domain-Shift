@@ -394,3 +394,12 @@ Written while the revision queue was running, before any revision run was scored
 - **This is a second exception to "never commit `runs/`",** next to `data/split_reference/`. It covers aggregated result tables and figures only: no dataset images, labels, predictions, checkpoints or weights.
 - **Left out:** `recovery_weather_e12.png`, because weather against the 12-epoch ceiling is reported as not determined.
 - **Keep it current:** the copy is refreshed whenever the analysis is rerun (`docs/results/README.md`).
+
+## 2026-11-23: English IEEE paper lives in `docs/overleaf/`
+
+- **User request:** an English paper in the IEEE template (IEEEtran conference, two columns), as a folder that imports straight into Overleaf. Source of every number: `docs/bao_cao_ket_qua_cap_nhat_2026-11-23.docx`; the paper is a translation, not a new analysis, and keeps its claim scope (headline at N = 10 and N = 100 only, against fine-tuning; weather as third replication; both ceilings side by side).
+- **Tracked in git** as `docs/overleaf/` (user choice): `main.tex`, `sections/*.tex`, `references.bib`, `README.md`, `figures/`. The figures are byte-identical copies of `docs/results/` and are refreshed with it. The upload zip is a build product.
+- **Compiler:** pdfLaTeX + BibTeX (English text, no Vietnamese fonts needed). `IEEEtran.cls/.bst` come from Overleaf's TeX Live and are not vendored.
+- **No Kaggle runs** in the paper, as in the other public documents (2026-11-23 entry); the Kaggle mirror as the data source stays.
+- **Title scope (claim rule, addendum 2 of 2026-11-21):** the paper title reads "Most of the Small-Budget Advantage of Domain Adaptation over Fine-Tuning Is Not Adaptation". The Vietnamese subtitle has no "over fine-tuning", but the headline may only be stated against fine-tuning.
+- **Zip:** `docs/overleaf_ieee.zip` is gitignored; rebuild it by zipping the contents of `docs/overleaf/` (with `main.tex` at the top level).
