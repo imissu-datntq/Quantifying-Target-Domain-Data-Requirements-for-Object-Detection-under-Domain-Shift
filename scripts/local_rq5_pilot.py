@@ -1,6 +1,7 @@
 """Local GPU: RQ5 adaptation pilot on lighting val only (2026-11-05 fresh rerun, no Kaggle).
 
-Same runs and arguments as kaggle/bdd_adapt_pilot.py, without the session limit: adapt N=0 and
+Same runs and arguments as the earlier Kaggle pilot kernel (removed 2026-11-23, in git history),
+without the session limit: adapt N=0 and
 N=100 (seed 0) for each EMA alpha in bdd_adapt.grid.PILOT, teacher evaluated on the fixed
 1,000-image lighting-val subset every 500 updates. No test or weather/compound val image is read.
 Re-running is safe: finished runs are skipped, an interrupted one resumes from last.pt. The lock

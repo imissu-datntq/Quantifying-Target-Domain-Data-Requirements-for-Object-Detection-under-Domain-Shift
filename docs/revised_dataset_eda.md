@@ -7,7 +7,7 @@ Existing derived subsets and model artifacts are not inputs to this workflow.
 
 ## Source verification
 
-`scripts/kaggle_source.py` checks the byte count and CRC32 of all 80,000 original
+`scripts/verify_source_mirror.py` checks the byte count and CRC32 of all 80,000 original
 train/val images and both raw annotation files against Kaggle. It computes local
 SHA256 hashes for construction and leakage checks. CRC32 establishes content
 consistency, not a cryptographic signature. This allows reuse of matching original
@@ -15,7 +15,7 @@ files without downloading the entire 7.6 GiB archive. A local source directory m
 have images in nested folders; basenames must be unique within the original split.
 
 ```powershell
-python scripts/kaggle_source.py --images-root <original-100k-images> --labels-root <original-labels> --output-dir data/raw/kaggle_verified --workers 12
+python scripts/verify_source_mirror.py --images-root <original-100k-images> --labels-root <original-labels> --output-dir data/raw/kaggle_verified --workers 12
 ```
 
 The verification output contains machine-local input paths and remains ignored.
@@ -111,7 +111,7 @@ remain later research steps. No adaptation method is selected from EDA.
 
 ```powershell
 python -m unittest discover -s tests -v
-python -m py_compile scripts/kaggle_source.py scripts/prepare_revised_bdd100k.py scripts/eda_revised_bdd100k.py scripts/build_eda_notebook.py
+python -m py_compile scripts/verify_source_mirror.py scripts/prepare_revised_bdd100k.py scripts/eda_revised_bdd100k.py scripts/build_eda_notebook.py
 ```
 
 Dependencies for these scripts are listed in `requirements-eda.txt`. Dataset,

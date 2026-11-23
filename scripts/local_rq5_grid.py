@@ -1,6 +1,7 @@
 """Local GPU: run the 46-run RQ5 grid (bdd_adapt.grid) in order (2026-11-05 fresh rerun, no Kaggle).
 
-Same per-run logic as kaggle/bdd_adapt.py without the session limit: skip runs whose final-test
+Per-run logic of the earlier Kaggle queue runner (removed 2026-11-23, in git history) without its
+session limit: skip runs whose final-test
 predictions exist, resume an interrupted run exactly from last.pt, predict with the EMA teacher
 (last.pt["model"]) on the final-test images (no labels opened), then drop the checkpoint.
 Re-running is safe.

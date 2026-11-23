@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Local RTX 3060 chain (2026-11-05 fresh rerun, see .agent/DECISIONS.md):
 #   wait for the source model -> zero-shot gap gate -> N0 on lighting val -> schedule pilot runs.
-# Mirrors kaggle/bdd_gap_gate.py and kaggle/bdd_schedule_pilot.py, plus the round-2 seed-0
+# Mirrors the earlier Kaggle gate and schedule-pilot kernels (removed 2026-11-23, in git history),
+# plus the round-2 seed-0
 # configurations the 2026-10-30 rule compares against. It only runs; it does not apply the
 # lock rule. Re-running is safe: finished steps are skipped, interrupted ones restart.
 # Reads no held-out label: gate uses source val + target train pools, pilot uses lighting val.

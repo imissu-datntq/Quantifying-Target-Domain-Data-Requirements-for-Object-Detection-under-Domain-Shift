@@ -1,6 +1,7 @@
 """Local GPU: run the whole 87-run campaign in grid order (2026-11-05 fresh rerun, no Kaggle).
 
-Same per-run logic as kaggle/bdd_campaign.py without the session limit: skip runs whose
+Per-run logic of the earlier Kaggle queue runner (removed 2026-11-23, in git history) without its
+session limit: skip runs whose
 final-test predictions exist, resume an interrupted run exactly from last.pt, predict on the
 final-test images of the target and source domain (no labels opened), then drop optimizer
 checkpoints; full-pool ceilings keep their model weights. Re-running is safe.
