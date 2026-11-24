@@ -1,5 +1,14 @@
 # TODO
 
+## Direction 1 of the lecturer's follow-up (2026-11-24), branch `alt-1`
+
+Plan: `.agent/plans/active/2026-11-24-direction-1-analyses.md`.
+
+- [x] Branch `alt-1` from `main`; plan with the analysis rules (2026-11-24).
+- [x] `scripts/analyze_instances.py`, `scripts/analyze_seed_spread.py`, `scripts/analyze_retention.py` with synthetic tests; independent review and verification (2026-11-25).
+- [ ] User approves the rules and the run.
+- [ ] Run on the retrained results (`runs/local/.../scored`, Linux machine), record rules and results in `DECISIONS.md`, short Vietnamese result note.
+
 ## Revision after the lecturer review of 2026-11-21
 
 Plan: `.agent/plans/active/2026-11-21-lecturer-review-revision.md`.
