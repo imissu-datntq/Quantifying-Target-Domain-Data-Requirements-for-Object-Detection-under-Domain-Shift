@@ -5,11 +5,11 @@ Updated 2026-11-25, Asia/Saigon.
 ## 2026-11-25: branch `alt-1`, direction 1 of the lecturer's follow-up: run, note written (latest)
 
 - **Goal (user, 2026-11-24):** the lecturer's follow-up gave two directions; the Windows machine takes direction 1: (1) does a class's AP gain follow its labeled instances or the images, (2) seed spread against N (why not active learning), (3) source retention as a second axis (trade-off surface). Plan and rules: `.agent/plans/active/2026-11-24-direction-1-analyses.md`.
-- **Branch `alt-1`**, rebased onto `team/main` `407d60d` (which tracks the three `scored/` directories). **Not pushed:** account YN2TB has read access only on the team repo (403); the user will push later.
+- **Branch `alt-1`**, rebased onto `team/main` `407d60d` (which tracks the three `scored/` directories). Pushed to `team/alt-1` on 2026-11-25 (YN2TB has write access now).
 - **Done:** `scripts/analyze_instances.py`, `scripts/analyze_seed_spread.py`, `scripts/analyze_retention.py` with synthetic tests; run once on 2026-11-25 (user approval, Windows machine, CPU); outputs in `runs/local/direction1/` and the tracked copy `docs/results/direction1/`; Vietnamese note `docs/results_direction1_vi.md`; decision `DECISIONS.md` 2026-11-25 (readings and claim rules).
 - **Headline of the note:** no instance effect detected at a fixed image step (the level of the lecturer's 0.46 is mostly the full-pool 3-epoch ceiling: 0.75 against the matched-pool one; class order depends on the ceiling); spread shrinks like 1/√N or faster on compound and weather, flat but low on lighting, no floor clearly above training noise (assumed independent of N); adapt/replay dominate FT at N = 10 and 100, trade-off at N = 1,000 (retention is source rehearsal).
 - **Windows machine:** every older run output there was deleted at the user's request (deprecated); only `runs/local/` remains. `tests/test_revision_runs.py` cannot import `fcntl` here; every other test passes. Run single test files with `python -m unittest discover -s tests -p <file>`.
-- **Next:** the user reviews the note; push `alt-1` once YN2TB has write access; decide whether the results go into the report and the Overleaf paper.
+- **Next:** the user reviews the note; decide whether the results go into the report and the Overleaf paper.
 
 ## 2026-11-23 (evening): English IEEE paper for Overleaf ready, not committed
 
