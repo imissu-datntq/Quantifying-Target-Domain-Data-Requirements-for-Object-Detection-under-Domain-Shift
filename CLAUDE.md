@@ -71,7 +71,7 @@ These hold as of the 2026-10-19 amendment, the local rerun of 2026-11-05 and the
 - Budgets are nested by seed (N=10 ⊂ N=25), and 3 sampling seeds are fixed. Ceilings use at least 2 seeds.
 - Checkpoints are written atomically and resume exactly. Resume uses `last.pt` with the original settings, never a historical best.
 - Never edit `scripts/bdd_pipeline/` or `scripts/bdd_adapt/`: every run records the SHA256 of those files, and resume and provenance depend on them. New analysis code goes in `scripts/analyze_*.py`.
-- Never commit `data/`, `runs/`, weights or credentials. The exceptions are `data/split_reference/` (frozen manifests and hashes, no images or labels; approved 2026-11-05) and `docs/results/` (a copy of the final analysis tables and figures, about 1.3 MB, no images, labels or weights; approved 2026-11-23). Refresh `docs/results/` whenever the analysis is rerun.
+- Never commit `data/`, `runs/`, weights or credentials. The exceptions are `data/split_reference/` (frozen manifests and hashes, no images or labels; approved 2026-11-05), `docs/results/` (a copy of the final analysis tables and figures, about 1.3 MB, no images, labels or weights; approved 2026-11-23) and the three one-shot scoring outputs `runs/local/{campaign,rq5,revision}/scored/` (metrics and bootstrap arrays only, about 34 MB; approved 2026-11-25). Refresh `docs/results/` whenever the analysis is rerun.
 
 ## Project layout
 

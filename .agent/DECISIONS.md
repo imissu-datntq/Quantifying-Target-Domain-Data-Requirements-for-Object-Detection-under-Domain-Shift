@@ -403,3 +403,11 @@ Written while the revision queue was running, before any revision run was scored
 - **No Kaggle runs** in the paper, as in the other public documents (2026-11-23 entry); the Kaggle mirror as the data source stays.
 - **Title scope (claim rule, addendum 2 of 2026-11-21):** the paper title reads "Most of the Small-Budget Advantage of Domain Adaptation over Fine-Tuning Is Not Adaptation". The Vietnamese subtitle has no "over fine-tuning", but the headline may only be stated against fine-tuning.
 - **Zip:** `docs/overleaf_ieee.zip` is gitignored; rebuild it by zipping the contents of `docs/overleaf/` (with `main.tex` at the top level).
+
+## 2026-11-25: the three one-shot scoring outputs are tracked in git
+
+- **User decision:** `runs/local/campaign/scored/`, `runs/local/rq5/scored/` and `runs/local/revision/scored/` are committed and pushed, so the analysis scripts can be rerun from a clone without the local machine.
+- **Content checked before committing:** 714 files, about 34 MB: per entry a `metrics.json` (aggregate COCO metrics) and a `bootstrap_class_ap.npy` (1,000 × 10 per-class AP replicates), plus `frozen_plan.json` and `results.json` per directory. No images, labels, predictions, checkpoints or weights; no file over 50 MB.
+- **Known detail:** `frozen_plan.json` and the run records carry absolute paths of the machine at scoring time (some still under the old `CV-final` location). They are provenance and are left as scored; the files must not be edited, since the scoring outputs are frozen.
+- **Third exception to "never commit `runs/`"**, next to `data/split_reference/` and `docs/results/`. Everything else under `runs/` stays ignored, including the frozen plans themselves (`final_plan.json`) and the `.opened` markers.
+- These directories are final: each plan was scored once and is never scored again.

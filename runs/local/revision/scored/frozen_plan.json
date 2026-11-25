@@ -1,0 +1,1724 @@
+{
+  "schema": 3,
+  "model_contract": {
+    "architecture": "fasterrcnn_resnet50_fpn",
+    "class_names": [
+      "pedestrian",
+      "rider",
+      "car",
+      "truck",
+      "bus",
+      "train",
+      "motorcycle",
+      "bicycle",
+      "traffic light",
+      "traffic sign"
+    ],
+    "background_id": 0,
+    "input_width": 1280,
+    "input_height": 720,
+    "image_mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "image_std": [
+      0.229,
+      0.224,
+      0.225
+    ],
+    "min_size": 720,
+    "max_size": 1280,
+    "size_divisible": 32,
+    "roi_score_threshold": 0.001,
+    "roi_nms_threshold": 0.5,
+    "detections_per_image": 100,
+    "rpn_pre_nms_train": 2000,
+    "rpn_post_nms_train": 2000,
+    "rpn_pre_nms_eval": 1000,
+    "rpn_post_nms_eval": 1000,
+    "trainable_backbone": "layer2,layer3,layer4; FPN/RPN/ROI trainable",
+    "normalization_layers": "FrozenBatchNorm2d",
+    "frozen_batch_norm_epsilon": 0.0
+  },
+  "manifest_sha256": {
+    "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+    "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+    "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+  },
+  "evaluation_implementation_sha256": {
+    "evaluate_frcnn.py": "45fae894c855a45798cedac20e0a138798ea89218791b2efbcba9286ffda6c3d",
+    "bdd_pipeline/evaluation.py": "5455ddda2fa067f16b0bbf19e8efd82d48e546de781b2fb8dbbe01ea22ef6e0d",
+    "bdd_pipeline/data.py": "cdc14465b1e777e1b7f2a34cd8f36076ac4b344066af6d4508796a51f68b93d5",
+    "bdd_pipeline/model.py": "5a0a6a5d3fd447198319052d0b0b8f78937a023e100d1a3e272339b6e4913c14"
+  },
+  "prediction_sets": [
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_compound_Nfull_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "2010e8776b254c858586814b91724e8d31410bee6fccee6fc4228561318c5f4b",
+      "checkpoint_sha256": "c108cd06c62500538866e0ee3c6ab70004998f491058474394837e8fc24d20f5",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "compound",
+        "budget": "full",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": 12,
+        "floor_steps": 500,
+        "total_updates": 10428,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 10428,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_compound_Nfull_s0/predictions/predictions_compound.json",
+          "sha256": "a52e2d5dabbcb181784194425d9a8aea53eca1b1f552a68dd5bcd988754f943b"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_compound_Nfull_s0/predictions/predictions_source.json",
+          "sha256": "bc5707abc306970fc7cd98c36253b5d18a45dfbc9958e07b01f5c0a5c5d6211c"
+        }
+      },
+      "label": "000_fine-tune_compound_Nfull_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_compound_Nfull_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "fca95455ac07b9ecc1afa45c43c5b64c9e8af410a7265a8305fe6b43ef8a5378",
+      "checkpoint_sha256": "88c74ccf7e73763af4d2e578b21d746c57980f159b177e71f9157d153a9f1638",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "compound",
+        "budget": "full",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": 12,
+        "floor_steps": 500,
+        "total_updates": 10428,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 10428,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_compound_Nfull_s1/predictions/predictions_compound.json",
+          "sha256": "75ad381fc93a5a39298d803227c180ed17ab3de28cef3ef1ac510d93aeda4591"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_compound_Nfull_s1/predictions/predictions_source.json",
+          "sha256": "61d8c11c1af3e0a1710a8aa3f4992e4c7309e1d37aac8463f61a8cc3424a0e3c"
+        }
+      },
+      "label": "001_fine-tune_compound_Nfull_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_N1738_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "a56adf60fcfb1ef4bb0d9af55f4810171ec20f2f97ca2f7c5d3399a255baf3d3",
+      "checkpoint_sha256": "2a60a8e9ce373fde40a526f912a788156ab3ee6166155aa8c5721227fd23d76f",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "lighting",
+        "budget": "1738",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": 12,
+        "floor_steps": 500,
+        "total_updates": 10428,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 10428,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_N1738_s0/predictions/predictions_lighting.json",
+          "sha256": "2d38f70772cc0129795e068ae2f3716d268f712d22537146177380f14badce6b"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_N1738_s0/predictions/predictions_source.json",
+          "sha256": "87f0923c0a157c8b4cc03431ad39b4044b847750febc435ba9259827e2cb60d5"
+        }
+      },
+      "label": "002_fine-tune_lighting_N1738_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_N1738_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "4cd56bfe6d45ae1540f3f63136bddd7ac7a4c1a6eb39d23dfead443f3e1c6e85",
+      "checkpoint_sha256": "2dcfda7058d4572442ca2fd1dc437ecab4bd1ec78dc0acb2f437bb434062b8a6",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "lighting",
+        "budget": "1738",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": 12,
+        "floor_steps": 500,
+        "total_updates": 10428,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 10428,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_N1738_s1/predictions/predictions_lighting.json",
+          "sha256": "4e47049fdaa89496a9d7aed536678ba3aa010cb5a5a264d402d07b6e0be55788"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_N1738_s1/predictions/predictions_source.json",
+          "sha256": "a83720d6ad5ee1742f7cb404757adfa2b4825cbff2e247a92b02153affa72a20"
+        }
+      },
+      "label": "003_fine-tune_lighting_N1738_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_Nfull_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "c006d2aa202f16035918801c9c104328814ae9912b5d0da00eb293f60a692e7f",
+      "checkpoint_sha256": "a357eb9dd4172955a22c49869a8aa52877fdc455b94d4c651644694bc7faf7a6",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "lighting",
+        "budget": "full",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": 12,
+        "floor_steps": 500,
+        "total_updates": 108096,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 108096,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_Nfull_s0/predictions/predictions_lighting.json",
+          "sha256": "36f0794684399b25f8b329312d9d546cc4306009d65019046109dc23df02f578"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_Nfull_s0/predictions/predictions_source.json",
+          "sha256": "40cea2786546f2d6c1598e03a9745b0a0ee52ba404a68f9df6649e8f5dfe20c3"
+        }
+      },
+      "label": "004_fine-tune_lighting_Nfull_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_Nfull_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "61912b4f31c18ab886c4ee1fce0a7d78113552afeb078558a808176e95901267",
+      "checkpoint_sha256": "c24a14e35105eec396b6287d0378c3cf364fa3f912250151f0117707a34edf4b",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "lighting",
+        "budget": "full",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": 12,
+        "floor_steps": 500,
+        "total_updates": 108096,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 108096,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_Nfull_s1/predictions/predictions_lighting.json",
+          "sha256": "82d7c9579ff6cb0f6cd3b3db9c53ed41e59137e5366cfa38de8e42a681eac5b2"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_lighting_Nfull_s1/predictions/predictions_source.json",
+          "sha256": "122cdfd0446036e6c46085ac6df4856c678818730a822ae8067dd4de094e800f"
+        }
+      },
+      "label": "005_fine-tune_lighting_Nfull_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_N1738_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "8221438c9ff67c08216153ef25f092ace487334444d212bb79ceb01dc9fc78a0",
+      "checkpoint_sha256": "e50db4b3f718b57f2441b0bf0242919c932e1e4464f0b122ff4c4800cf3fe750",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "weather",
+        "budget": "1738",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": 12,
+        "floor_steps": 500,
+        "total_updates": 10428,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 10428,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_N1738_s0/predictions/predictions_weather.json",
+          "sha256": "f8e004fdf5b9768cb8c8a68073deb367a10996543fa4debf130cbf49d56d83ca"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_N1738_s0/predictions/predictions_source.json",
+          "sha256": "e708f02abb6ddb3b2afba3fd526f3b7ee16e4de157bf61e005e50ed5d859c68f"
+        }
+      },
+      "label": "006_fine-tune_weather_N1738_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_N1738_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "1a2e0fc1d616da950285836e09035666270f2f6ad2774ea10819a3b2c08969d6",
+      "checkpoint_sha256": "c10635553c3544f324cbdc311816ee237d2e40dd2e30cfaad77ad0f492e9e0b9",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "weather",
+        "budget": "1738",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": 12,
+        "floor_steps": 500,
+        "total_updates": 10428,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 10428,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_N1738_s1/predictions/predictions_weather.json",
+          "sha256": "22c9cb6b118a52221122c56c2472dad801e33658a219324b0d0302dfbfde9788"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_N1738_s1/predictions/predictions_source.json",
+          "sha256": "a9552503000cc8ad05864e4a783437f9efc20eccd2b8a2c5ca83a817fa29ed0a"
+        }
+      },
+      "label": "007_fine-tune_weather_N1738_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_Nfull_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "7b583d6522453a90cd579362230e60865df06a4e7af77c2c632858dde9340e8f",
+      "checkpoint_sha256": "299f4a29279d321deebf8049e03fc67c04dc18f96533ba7d4ddee5471baf39be",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "weather",
+        "budget": "full",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": 12,
+        "floor_steps": 500,
+        "total_updates": 11916,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 11916,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_Nfull_s0/predictions/predictions_weather.json",
+          "sha256": "d30fdc155eef1b45f80356378b2544350c943adf992eba633a7677f917185e4a"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_Nfull_s0/predictions/predictions_source.json",
+          "sha256": "ddc8f669087cb5e2715ea60b34960396d20685db09825d48693614f83576a8cf"
+        }
+      },
+      "label": "008_fine-tune_weather_Nfull_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_Nfull_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "e046b2621e7cc8e569ae69b3c5dcce6d8cccde37b5d6127b0e4356c598f05e18",
+      "checkpoint_sha256": "1cce29947e31ddde2dd1093e0ad8b5a0e95c22c7c64e98932adfb9193c00ddf7",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "weather",
+        "budget": "full",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": 12,
+        "floor_steps": 500,
+        "total_updates": 11916,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 11916,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_Nfull_s1/predictions/predictions_weather.json",
+          "sha256": "99fbdcd52ed7f1623cf9bbcbfd618cf0db2c5065e06b339754c8dadeee7b31f3"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/ceiling_e12/fine-tune_weather_Nfull_s1/predictions/predictions_source.json",
+          "sha256": "4d2aaacd8596bd2828de15a71c95ce5abab024c828c07d5ca643e4ea2d8adae8"
+        }
+      },
+      "label": "009_fine-tune_weather_Nfull_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_compound_N1000_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "a24a8f68cf3685e11e2cf2f71dc1a903444f512bd54ca7e43bfc2df552996beb",
+      "checkpoint_sha256": "dfcabf2d3106bc509beb8420bd973afce7588b246a073f872a0aca7adbc8835e",
+      "run": {
+        "stage": "adapt",
+        "domain": "compound",
+        "budget": "1000",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 4,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_compound_N1000_s0/predictions/predictions_compound.json",
+          "sha256": "0c5e76725a920d7e0e8d6fe5b50ff151425ca521aeecdc3686c7c302d0451ace"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_compound_N1000_s0/predictions/predictions_source.json",
+          "sha256": "3780554ca3f60c32dd28d3a864f601008b78c90ec7d220409089ea6fa77d9ee0"
+        }
+      },
+      "label": "010_adapt_compound_N1000_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_compound_N1000_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "0905b0936eaaadccb27f1f03711a1d1b26ffa2d56c89d77b017bd1bfc9d01dda",
+      "checkpoint_sha256": "e05bf7bc77087b4dcb81ba2322db00c458bf8660eaa516c804b7ea875298ce71",
+      "run": {
+        "stage": "adapt",
+        "domain": "compound",
+        "budget": "1000",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 4,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_compound_N1000_s1/predictions/predictions_compound.json",
+          "sha256": "b0c832b3d82cafb8ba2be562b1c3e1ac6a5886ae120ca5fa7e0b269ce2dd5809"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_compound_N1000_s1/predictions/predictions_source.json",
+          "sha256": "a2298ece358a048c2373da24510ba98c8f0a8eb4f49f14464708a6f35b7891ac"
+        }
+      },
+      "label": "011_adapt_compound_N1000_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_compound_N1000_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "ffebef944d5870fb38df71a88491c4b422fbbde6ca8fdc16b662d24200e5b2ff",
+      "checkpoint_sha256": "1920ee29a73bd5444d0502c3ea5dd4de086dc8c4fbdfa8faf24523c8a2fa786b",
+      "run": {
+        "stage": "adapt",
+        "domain": "compound",
+        "budget": "1000",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 4,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_compound_N1000_s2/predictions/predictions_compound.json",
+          "sha256": "7a16de9c1704ad54d061473a1466f705fcecfb1cc7ed7c56c53ee52b86d87dc7"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_compound_N1000_s2/predictions/predictions_source.json",
+          "sha256": "ab3a362726642e00c2465e0ab3ebca571f270f2607cfd4fec6ba731c9be1d4ff"
+        }
+      },
+      "label": "012_adapt_compound_N1000_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_lighting_N1000_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "8c22e2cd1fd26bc7cc04852ebc7b2becfc4eb36c707c53bb5557821406f7ed6d",
+      "checkpoint_sha256": "1d98ce3fc6f97ef5840a525a198897c562b8b495b5024060392dc43cecb6d7d2",
+      "run": {
+        "stage": "adapt",
+        "domain": "lighting",
+        "budget": "1000",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 4,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_lighting_N1000_s0/predictions/predictions_lighting.json",
+          "sha256": "b5ef4c037af80c9ed113275eae40a455a358e622cb694197b63fdc4c8bd03953"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_lighting_N1000_s0/predictions/predictions_source.json",
+          "sha256": "1457b1a27bed67719de9562fb3abe286bca2f7a973dcfe2f6525fde9d96802f4"
+        }
+      },
+      "label": "013_adapt_lighting_N1000_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_lighting_N1000_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "04993187a552ece278248191b8c8797bc21e322860bf3c9d2c8a3910b4aa120c",
+      "checkpoint_sha256": "d2485fc3016e81cb4195213a0e4e932460bcb3758955b2affc5067011b155a1a",
+      "run": {
+        "stage": "adapt",
+        "domain": "lighting",
+        "budget": "1000",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 4,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_lighting_N1000_s1/predictions/predictions_lighting.json",
+          "sha256": "c56e2fbd4991c9f2ada233882aa5ee9b23242fec94ce85bde02c82e71d79de4a"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_lighting_N1000_s1/predictions/predictions_source.json",
+          "sha256": "6bae3230acc1e37c94146928d4bf41716819d862fefd4aba3118a8a0a200ef01"
+        }
+      },
+      "label": "014_adapt_lighting_N1000_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_lighting_N1000_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "3eee7b6a1658757c08dd53c4bea74972c06f32170228f4d6e1c5206384c51f73",
+      "checkpoint_sha256": "94d6f1572a5548dacaea02779b6b20c0893462c4de22cb0c26d0e2157657b1e5",
+      "run": {
+        "stage": "adapt",
+        "domain": "lighting",
+        "budget": "1000",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 4,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_lighting_N1000_s2/predictions/predictions_lighting.json",
+          "sha256": "991480c867aea3d3bed1cafc5327c9ea6825eb25f5ed5daf8492a98c6ce54919"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_lighting_N1000_s2/predictions/predictions_source.json",
+          "sha256": "8abe1bad15fa07bdfee273859b325574e27554cf65a332817248c6bf01637b89"
+        }
+      },
+      "label": "015_adapt_lighting_N1000_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_weather_N1000_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "9d6238a56252cb3c661e6211073c38b56bf433f518e00d9c354e64ab49047b62",
+      "checkpoint_sha256": "f9f07e70b5db3dbb6553f48b29bdd5aa640941b5ad0f37dee9b57e10019bad6e",
+      "run": {
+        "stage": "adapt",
+        "domain": "weather",
+        "budget": "1000",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 4,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_weather_N1000_s0/predictions/predictions_weather.json",
+          "sha256": "589c940f0d22bed9afb7a605f504a8ef7fc14b4802df85ff6f49c6b69d63e220"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_weather_N1000_s0/predictions/predictions_source.json",
+          "sha256": "6db518fd6223d4dbdfa3798e26b9dba413535ba8140096b637bbd22f2dae03a6"
+        }
+      },
+      "label": "016_adapt_weather_N1000_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_weather_N1000_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "17834713fc703afc155f5569a2c79bf3e4a4c957139374bbcbec7e52dbddfad3",
+      "checkpoint_sha256": "65813bae46825d6609f2d46bddf4d0801e678bd319a8675a7fa7c1c3d5fec0a0",
+      "run": {
+        "stage": "adapt",
+        "domain": "weather",
+        "budget": "1000",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 4,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_weather_N1000_s1/predictions/predictions_weather.json",
+          "sha256": "72054fbe30b20fb536a253419debfb57d17b1b5bf159dca0b38777b9f85255a3"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_weather_N1000_s1/predictions/predictions_source.json",
+          "sha256": "89df9e9fe0f3dee860d5b8c5448a0ccd7a0f568180d842299247ab8ec3ebcc6f"
+        }
+      },
+      "label": "017_adapt_weather_N1000_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_weather_N1000_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "dc4cb4de664a443224d0b8766d3bf51a6d7c564fb6fcc5d12cfa476fafbc6982",
+      "checkpoint_sha256": "c68f6b44c04636e18c794918a9e0292bc0f0eef5527c23db4eb9116eb35ad8bc",
+      "run": {
+        "stage": "adapt",
+        "domain": "weather",
+        "budget": "1000",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 4,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_weather_N1000_s2/predictions/predictions_weather.json",
+          "sha256": "217dd9bdc97eb3f0d111e81236e1214cbbe831ae05c1c7bd355800d5ab5e9aba"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/adapt_weather_N1000_s2/predictions/predictions_source.json",
+          "sha256": "aceabe32f18e9dce15efb620124f85d6d5dd7aec77e8b126f48dedf238400ec6"
+        }
+      },
+      "label": "018_adapt_weather_N1000_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_compound_N1000_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "6728fbf1f0ee7b1551ddaef2c14d562094e6e88424522ae73ab92e125559d35c",
+      "checkpoint_sha256": "48885a2160e4a4768115025a1dc7d35a4699eca56197c57d3fb58d39a89e6eb1",
+      "run": {
+        "stage": "replay",
+        "domain": "compound",
+        "budget": "1000",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_compound_N1000_s0/predictions/predictions_compound.json",
+          "sha256": "1cba747cb1f2df93182fc63feb69cf79e53c557c42a683a9316f7c686a8376a3"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_compound_N1000_s0/predictions/predictions_source.json",
+          "sha256": "a66f34b0c32297617ae143dfef0f85428f2e14f02284885425511f880fc026a1"
+        }
+      },
+      "label": "019_replay_compound_N1000_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_compound_N1000_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "19e5f8fafc0beebde9e9359b6f55a4d00caaaa7e8183e60a017e50e3eefdc6d9",
+      "checkpoint_sha256": "89b90d321ad9729283f13b18a734acf2918ab297fb0530b0ab52f50ed9829b5f",
+      "run": {
+        "stage": "replay",
+        "domain": "compound",
+        "budget": "1000",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_compound_N1000_s1/predictions/predictions_compound.json",
+          "sha256": "0d9acb76605b90cb2e61ce99305bc1b0c2e8afa81c3587c928311bc73372cd48"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_compound_N1000_s1/predictions/predictions_source.json",
+          "sha256": "ff477f512f0459b81c9264c74fdbcb0714422e1744f27dfa8f3c3030527027f3"
+        }
+      },
+      "label": "020_replay_compound_N1000_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_compound_N1000_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "e6208744ac6b820ec26f2448e975f1d225a2eb0cc111bf4a34951b9d2b50bcfe",
+      "checkpoint_sha256": "cb51481f099b9d2fd8dfd1bce7aaabc9c25098f03090c8468431992b1c0b4dc7",
+      "run": {
+        "stage": "replay",
+        "domain": "compound",
+        "budget": "1000",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_compound_N1000_s2/predictions/predictions_compound.json",
+          "sha256": "cb38c6dbbae931629c2cc16d9a792ff81698fdfa44831fec7695504ae2a2a517"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_compound_N1000_s2/predictions/predictions_source.json",
+          "sha256": "1571256743bf9f2abb91ceb924ffaf65c9cf9795cfb36387421d6e2081f637f1"
+        }
+      },
+      "label": "021_replay_compound_N1000_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_lighting_N1000_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "b1367d3608ea5162bdcbf55104b775019047dd6054aa171e1885c21524141aeb",
+      "checkpoint_sha256": "b781be72389bfa5df84aaafc8558392e1e08b8be9f6c537aed27877c0563edb4",
+      "run": {
+        "stage": "replay",
+        "domain": "lighting",
+        "budget": "1000",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_lighting_N1000_s0/predictions/predictions_lighting.json",
+          "sha256": "9c856f58920681a3b08d45adbbe79224d8ec1953edb57b0d1b1636b81e93b343"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_lighting_N1000_s0/predictions/predictions_source.json",
+          "sha256": "9f24c36732beb0708ebee710507413f598b2b6e875b4a7361bff66d2c69c010e"
+        }
+      },
+      "label": "022_replay_lighting_N1000_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_lighting_N1000_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "40c15bff4d7e99b387cc94c68813322cf2c2384214a33cd663505f85966983cc",
+      "checkpoint_sha256": "278fb64b9aa1926dad7a7aa3ee908f1104998bb9c824f7b7aa090f78c3d92e20",
+      "run": {
+        "stage": "replay",
+        "domain": "lighting",
+        "budget": "1000",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_lighting_N1000_s1/predictions/predictions_lighting.json",
+          "sha256": "dd3721359df7533b65e10d5ad98b2beecea0d71496640875c48193db60a899ba"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_lighting_N1000_s1/predictions/predictions_source.json",
+          "sha256": "700406798b2317199e9c461576a63395b9fb73c064c44a94baf99384582db998"
+        }
+      },
+      "label": "023_replay_lighting_N1000_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_lighting_N1000_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "e4dfb583bc6dcda21a21e03f83b1decf1617318fe12d469984fa400f46c214dd",
+      "checkpoint_sha256": "bb4563124cb911cd35f3d32cfc29bcbb8947c90af9dbc2e556e832269c395b1f",
+      "run": {
+        "stage": "replay",
+        "domain": "lighting",
+        "budget": "1000",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_lighting_N1000_s2/predictions/predictions_lighting.json",
+          "sha256": "3bc26f3ff023e17a9cf279c68a3f2b909e9e172865d359c5cdb32cc7245e65b7"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_lighting_N1000_s2/predictions/predictions_source.json",
+          "sha256": "f20ffdc0d5e8cc82f545a8dc5c8f03d09d79b98a0f27d659fea86032e36bcfbf"
+        }
+      },
+      "label": "024_replay_lighting_N1000_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_weather_N1000_s0/predictions/prediction_manifest.json",
+      "manifest_sha256": "01fdb175f7e612e451f09818b86d3901b2100a99b7fad46045b9fb8c30069796",
+      "checkpoint_sha256": "425535d5ffdfa1871f3567f68d5f80c1dd2a2657616a222326cd4f0aaaead71a",
+      "run": {
+        "stage": "replay",
+        "domain": "weather",
+        "budget": "1000",
+        "seed": 0,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_weather_N1000_s0/predictions/predictions_weather.json",
+          "sha256": "3e5deb6333c55005685af13bc2456ee92384afdcdb25076f786e02f41a413523"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_weather_N1000_s0/predictions/predictions_source.json",
+          "sha256": "bf1fb7ad6add133d72941c846068e9b766453f394f937df5eed5cd94f4c6ec83"
+        }
+      },
+      "label": "025_replay_weather_N1000_seed0"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_weather_N1000_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "8eab6008208ed872e6d15de33773f7eb356d0a17e2cf76f5f9b8d30bffc93187",
+      "checkpoint_sha256": "e4412319f11ce4fb8cf6a5e10e5edafbb62bb5850e0274326775b6dfde35e318",
+      "run": {
+        "stage": "replay",
+        "domain": "weather",
+        "budget": "1000",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_weather_N1000_s1/predictions/predictions_weather.json",
+          "sha256": "08df2da99a848ea77612ced59917680d939c3943ea2b64948a6216465c0dff7c"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_weather_N1000_s1/predictions/predictions_source.json",
+          "sha256": "a11574135012bc0169bde2dc0d618692c18e4c04e76400de1df7cfcf430fe7d0"
+        }
+      },
+      "label": "026_replay_weather_N1000_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_weather_N1000_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "65559662162a87dfbac695fe4a22431a6d1443cf1de386f06785ebc89c37d9b7",
+      "checkpoint_sha256": "db87ee744ad4b9ece71a5a18c4bda0dfa6d09ba91fcdf196484e105436fab550",
+      "run": {
+        "stage": "replay",
+        "domain": "weather",
+        "budget": "1000",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 3000,
+        "total_updates": 3000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 3000,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_weather_N1000_s2/predictions/predictions_weather.json",
+          "sha256": "fee529618f4aa3c456ed4939a158d08c637ac24e61c31c48c8614ffef755f683"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_passes/replay_weather_N1000_s2/predictions/predictions_source.json",
+          "sha256": "1f219cf986ecde0aa1ddec4773952abd8f2f03df89149645a2011a06c958984c"
+        }
+      },
+      "label": "027_replay_weather_N1000_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_pool_e3/fine-tune_lighting_N1738_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "57f800e4b511a302867e6138c16e10185c3f95c26bbe1190d2df5337335581b4",
+      "checkpoint_sha256": "1cdb7a2f592f4b401b578694e95ee8e45a079ffd957f386effe77a529b529702",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "lighting",
+        "budget": "1738",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": 3,
+        "floor_steps": 500,
+        "total_updates": 2607,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2607,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_pool_e3/fine-tune_lighting_N1738_s1/predictions/predictions_lighting.json",
+          "sha256": "94917619ae5db1c642e750c0922c364e98c65e8d5eae5d2803d94de2e510c8a8"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_pool_e3/fine-tune_lighting_N1738_s1/predictions/predictions_source.json",
+          "sha256": "e281a9c17e6bf24830a67a7121a49d5a7e493819f8de48af4b9f0120259ba2b0"
+        }
+      },
+      "label": "028_fine-tune_lighting_N1738_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_pool_e3/fine-tune_weather_N1738_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "82d4d4a23046e60f422f58edd84b47951d4f48903401bc26b0d2c624d891bef0",
+      "checkpoint_sha256": "23b324f1c16df3d913d26bc8ebef01ed2d28f286527a389789913566202d09e8",
+      "run": {
+        "stage": "fine-tune",
+        "domain": "weather",
+        "budget": "1738",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": 3,
+        "floor_steps": 500,
+        "total_updates": 2607,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2607,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_pool_e3/fine-tune_weather_N1738_s1/predictions/predictions_weather.json",
+          "sha256": "e692cca5ccb78a74e01181e8e77d23cd8083654c77ae90b13d66533d5c07a825"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/matched_pool_e3/fine-tune_weather_N1738_s1/predictions/predictions_source.json",
+          "sha256": "38f86e7dce509eb869f82b02f6c55f80341a96ab7020dc4404beda1072db6772"
+        }
+      },
+      "label": "029_fine-tune_weather_N1738_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N100_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "52640b3fab24a74dcd274277ed9265b908c3c8701fe7109d73bf8ec9d84bad1c",
+      "checkpoint_sha256": "bd7b725af0b1f0d95c1b646c14010c8cde32bc599e895b7498fcda65900bda8e",
+      "run": {
+        "stage": "replay",
+        "domain": "compound",
+        "budget": "100",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N100_s1/predictions/predictions_compound.json",
+          "sha256": "a65e5915e217cbdbcfb9b8906797f34dfb4083cdf5ee2d7ac50fd82fb7f23309"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N100_s1/predictions/predictions_source.json",
+          "sha256": "141419cef7d13f1bc0edda7b5c949d6983bf314f19de14b13f008a9b8bae9301"
+        }
+      },
+      "label": "030_replay_compound_N100_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N100_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "c2d16a9e235d64f9796372cfc7a4dc8edfbda7b857a29d9e8e88a2724fe0c13a",
+      "checkpoint_sha256": "5ee2968c76065903eb68483569d971d8f3e5454dc83cb91d2f39d2feff186c5e",
+      "run": {
+        "stage": "replay",
+        "domain": "compound",
+        "budget": "100",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N100_s2/predictions/predictions_compound.json",
+          "sha256": "99ff8b9f63e255b8c7c281b740ea87b1ecc5f21caf603e88d78d90bd8212e7b3"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N100_s2/predictions/predictions_source.json",
+          "sha256": "960ca3204c162d0c3d4ba02117c98482089976387fdf26b24c94c8ecb27bc202"
+        }
+      },
+      "label": "031_replay_compound_N100_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N10_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "b6033dffe2c11f246862af806df86e65d2510ba5c3b80f5daa484c267880ee57",
+      "checkpoint_sha256": "13e25488f491880c4873c46ec0a2724eabc96914312dd5e25cec2ab69bf43ba6",
+      "run": {
+        "stage": "replay",
+        "domain": "compound",
+        "budget": "10",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N10_s1/predictions/predictions_compound.json",
+          "sha256": "e5ca90acf07c6ec711bf8293f5bb575373225e85fa4b3c956cda6713d31b4c80"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N10_s1/predictions/predictions_source.json",
+          "sha256": "ef2708ceefd45765e3906cd4052aaaf5ae6d038f784f507a44d26f4f36687f44"
+        }
+      },
+      "label": "032_replay_compound_N10_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N10_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "c3ecad7a49a38858ce8c4dea9d22de72c1d2bc9c8be6d2e59317fb6e916b9fdf",
+      "checkpoint_sha256": "d88e7761eceefd51711e66fbdfbd6d05205d3b95fee673a2da065b169578be5e",
+      "run": {
+        "stage": "replay",
+        "domain": "compound",
+        "budget": "10",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "compound": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N10_s2/predictions/predictions_compound.json",
+          "sha256": "56530ac589615dc6bdd2851738e25a708a1bd71e98ce45533a069412f0ea88fc"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_compound_N10_s2/predictions/predictions_source.json",
+          "sha256": "6855ab9014054a253906800c0ba2cffb95018a2e90890f78989f4a85625e6d33"
+        }
+      },
+      "label": "033_replay_compound_N10_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N100_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "824c4ba9db2200bca66bee088b324db7b1e5be815060002e89c52e64874b9a66",
+      "checkpoint_sha256": "ec4e1ef5c98f881705fbad34ce0674ca339221f21a9f80da893456eeb588d776",
+      "run": {
+        "stage": "replay",
+        "domain": "lighting",
+        "budget": "100",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N100_s1/predictions/predictions_lighting.json",
+          "sha256": "314b81a178ab9c428a99f068cddb0b58c1ae081b279502b90f07dee73ad28928"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N100_s1/predictions/predictions_source.json",
+          "sha256": "d869c42d50791a8e59b70bf2b880265d4ec19006e23c68107023eb305d14c96b"
+        }
+      },
+      "label": "034_replay_lighting_N100_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N100_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "58e2b9b416e05a8783daf396b282561a3be799319a3ad23221aa2a274b2aafa6",
+      "checkpoint_sha256": "e63e3778ed45076d27edd6115ff2160d63b855899c9ce7c7027aa399f273386d",
+      "run": {
+        "stage": "replay",
+        "domain": "lighting",
+        "budget": "100",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N100_s2/predictions/predictions_lighting.json",
+          "sha256": "42067e9dd6a58af07f6fa6c8ca8797015681c453ad968f7da00c60721abe910f"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N100_s2/predictions/predictions_source.json",
+          "sha256": "4d3de3bf9b65fd35dfa634fc51cc2e3152c14214e5205ac7456806a8488a251c"
+        }
+      },
+      "label": "035_replay_lighting_N100_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N10_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "7676b240d4fdcf29c8e138baa76add10cb18fbe54726cb77d756c0dc5479c0b1",
+      "checkpoint_sha256": "715ba8f18568be40ce62f30f4536755849c870717d4d8a187ef5b9adab26ede0",
+      "run": {
+        "stage": "replay",
+        "domain": "lighting",
+        "budget": "10",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N10_s1/predictions/predictions_lighting.json",
+          "sha256": "e592245335dd4034e87149f0d2ae1d1acc7b795e9318d9b9967fa2eb302c32a3"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N10_s1/predictions/predictions_source.json",
+          "sha256": "30c873f358733e2bc50680c65a1df7c29a542b1e04789bda97f9b4fca6f7178c"
+        }
+      },
+      "label": "036_replay_lighting_N10_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N10_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "d4f9669726effa80db4e90906cfa8aba3feb4d0fb973884c711fa0ec420adf76",
+      "checkpoint_sha256": "512ca0828dde8eb32cdb6d0c6c55033b251bce478d0ac3e217164d942ed983ff",
+      "run": {
+        "stage": "replay",
+        "domain": "lighting",
+        "budget": "10",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "lighting": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N10_s2/predictions/predictions_lighting.json",
+          "sha256": "693161c9e313e4d99156b0202ed091b70031819eb5d411660c21f9940b468174"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_lighting_N10_s2/predictions/predictions_source.json",
+          "sha256": "892cbfe9308b578a4e8ebd43904be21c95d6934d6dc76849148789ba6cace57f"
+        }
+      },
+      "label": "037_replay_lighting_N10_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N100_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "0f07648fbc1dd171c422d2b0cce03027693ca5386c78b08806caaf25fafadae6",
+      "checkpoint_sha256": "c8042d3e7d94438d220685958f5f9692b1a76be1cb04e3d2f29fbd7a9814308f",
+      "run": {
+        "stage": "replay",
+        "domain": "weather",
+        "budget": "100",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N100_s1/predictions/predictions_weather.json",
+          "sha256": "b7709cc12a24e0c50a945145c2c3e586068ced5adf7356f16c83a2303e32c62d"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N100_s1/predictions/predictions_source.json",
+          "sha256": "02ed867c15d9512c398ad6bc7b76486d51b6729ee8e94ba902175b7e8c41f3aa"
+        }
+      },
+      "label": "038_replay_weather_N100_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N100_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "ec0aecb411901e51cf1166f5b0e4a041461dffa0ae56aade85f2cb2879c1c7c5",
+      "checkpoint_sha256": "ed74e9e4bbc3b9dcd6079be6cc963b932d45bb04ce40106b50073a9f1ebbe4af",
+      "run": {
+        "stage": "replay",
+        "domain": "weather",
+        "budget": "100",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N100_s2/predictions/predictions_weather.json",
+          "sha256": "f038944892518cabc144661671f143e388986c66cda13c72fd74bc3b2f13e80f"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N100_s2/predictions/predictions_source.json",
+          "sha256": "e6858fb3a83e3e62ffa0e72cbf271e70c90055b82c7f9a6d8a6dc17d44b01776"
+        }
+      },
+      "label": "039_replay_weather_N100_seed2"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N10_s1/predictions/prediction_manifest.json",
+      "manifest_sha256": "ed24970290496102ef5dae91d24eb2388ffd45a64d84fbc586f3847c3c6de7db",
+      "checkpoint_sha256": "bf97f5ab52a759062df3dc74ed7fa67cecd5c913f66253c19f2ac66d18ffa87d",
+      "run": {
+        "stage": "replay",
+        "domain": "weather",
+        "budget": "10",
+        "seed": 1,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N10_s1/predictions/predictions_weather.json",
+          "sha256": "606227c2fa32d1714dfc3b77dee97b0891365f2d0e0f914d1415a01939bc5421"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N10_s1/predictions/predictions_source.json",
+          "sha256": "7c598d18e3f3f3573931d72635a07baac8fb8ae3b89f7db5c9038b2804868107"
+        }
+      },
+      "label": "040_replay_weather_N10_seed1"
+    },
+    {
+      "manifest": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N10_s2/predictions/prediction_manifest.json",
+      "manifest_sha256": "22781bf3cd674c3f184f02c334c95a395a771f2399695a257b0ddb8bf6622bd2",
+      "checkpoint_sha256": "e89603bea9875496a58055695eecf9942e553e4d9691db0244485928603584be",
+      "run": {
+        "stage": "replay",
+        "domain": "weather",
+        "budget": "10",
+        "seed": 2,
+        "initialization": "source-checkpoint",
+        "epochs": null,
+        "floor_steps": 2000,
+        "total_updates": 2000,
+        "effective_batch_size": 2,
+        "lr": 0.001,
+        "warmup_updates": 50,
+        "amp": true,
+        "smoke": false,
+        "manifest_sha256": {
+          "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+          "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+          "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+        },
+        "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+        "global_step": 2000,
+        "completed": true
+      },
+      "files": {
+        "weather": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N10_s2/predictions/predictions_weather.json",
+          "sha256": "38b4c7fe200fe7fd19a6438ccfaee512f2115ddd72b7a60198f0ccdca7b27fe5"
+        },
+        "source": {
+          "path": "/media/orlab/437478a6-2666-4549-903d-18e9d7d1c34f/orlab/Quocdat/Quantifying-Target-Domain-Data-Requirements-for-Object-Detection-under-Domain-Shift/runs/local/revision/grid/replay_seeds/replay_weather_N10_s2/predictions/predictions_source.json",
+          "sha256": "e3d3e08ca3eb9ec1d56549113d01dca62fa8cb7ffdfe692151aa06fb056becd1"
+        }
+      },
+      "label": "041_replay_weather_N10_seed2"
+    }
+  ],
+  "domains": [
+    "source",
+    "lighting",
+    "weather",
+    "compound"
+  ],
+  "bootstrap": {
+    "resamples": 1000,
+    "seed": 20261030
+  },
+  "reliable_classes": [
+    "pedestrian",
+    "car",
+    "traffic light",
+    "traffic sign"
+  ],
+  "holdout_val_domains": [
+    "weather",
+    "compound"
+  ],
+  "final_test_images": {
+    "source": 2650,
+    "lighting": 4869,
+    "weather": 933,
+    "compound": 756
+  },
+  "selection": "Fixed before accessing held-out labels; no backup selection",
+  "primary_metric": "reliable_AP50_95",
+  "test_labels_accessed": false
+}

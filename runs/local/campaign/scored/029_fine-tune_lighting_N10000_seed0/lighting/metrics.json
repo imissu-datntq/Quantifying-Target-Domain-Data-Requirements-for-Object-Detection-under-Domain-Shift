@@ -1,0 +1,184 @@
+{
+  "images": 4869,
+  "instances": 80609,
+  "predictions": 486814,
+  "units": "fractions in [0,1]; unsupported metrics null",
+  "AP50_95": 0.23422364564687204,
+  "AP50": 0.4787392368462301,
+  "AP75": 0.1938521097434962,
+  "AR100": 0.3748789954313927,
+  "AP_small": 0.08901511059387042,
+  "AP_medium": 0.2510446112223951,
+  "AP_large": 0.37271859206635344,
+  "reliable_AP50_95": 0.2916424123926073,
+  "reliable_AP50": 0.6426703994861689,
+  "reliable_classes": [
+    "pedestrian",
+    "car",
+    "traffic light",
+    "traffic sign"
+  ],
+  "reliable_classes_without_ground_truth": [],
+  "reliable_policy": "Fixed roster shared by every domain (protocol amendment 2026-10-19); ten-class AP50_95 is a sensitivity analysis",
+  "full_mean_policy": "COCO excludes categories with no ground-truth instances; ten-class roster reported explicitly",
+  "per_class": [
+    {
+      "class": "pedestrian",
+      "category_id": 1,
+      "instances": 3071,
+      "positive_images": 888,
+      "reliable": true,
+      "AP50_95": 0.2498956537956069,
+      "AP50": 0.5566551284524255,
+      "AR100": 0.368772386844676
+    },
+    {
+      "class": "rider",
+      "category_id": 2,
+      "instances": 164,
+      "positive_images": 141,
+      "reliable": false,
+      "AP50_95": 0.16447934869052175,
+      "AP50": 0.3917626545177542,
+      "AR100": 0.2932926829268293
+    },
+    {
+      "class": "car",
+      "category_id": 3,
+      "instances": 45749,
+      "positive_images": 4805,
+      "reliable": true,
+      "AP50_95": 0.3970351105841766,
+      "AP50": 0.7511764346044647,
+      "AR100": 0.48729152549782506
+    },
+    {
+      "class": "truck",
+      "category_id": 4,
+      "instances": 924,
+      "positive_images": 713,
+      "reliable": false,
+      "AP50_95": 0.3450001476529084,
+      "AP50": 0.5435435994470222,
+      "AR100": 0.5792207792207793
+    },
+    {
+      "class": "bus",
+      "category_id": 5,
+      "instances": 378,
+      "positive_images": 320,
+      "reliable": false,
+      "AP50_95": 0.35970117767285537,
+      "AP50": 0.5310481346956633,
+      "AR100": 0.6092592592592593
+    },
+    {
+      "class": "train",
+      "category_id": 6,
+      "instances": 9,
+      "positive_images": 6,
+      "reliable": false,
+      "AP50_95": 0.0,
+      "AP50": 0.0,
+      "AR100": 0.0
+    },
+    {
+      "class": "motorcycle",
+      "category_id": 7,
+      "instances": 140,
+      "positive_images": 109,
+      "reliable": false,
+      "AP50_95": 0.10458278253084377,
+      "AP50": 0.2698739756741907,
+      "AR100": 0.2935714285714286
+    },
+    {
+      "class": "bicycle",
+      "category_id": 8,
+      "instances": 268,
+      "positive_images": 167,
+      "reliable": false,
+      "AP50_95": 0.20190335035116147,
+      "AP50": 0.48048240618299437,
+      "AR100": 0.333955223880597
+    },
+    {
+      "class": "traffic light",
+      "category_id": 9,
+      "instances": 14265,
+      "positive_images": 3140,
+      "reliable": true,
+      "AP50_95": 0.17668015977658996,
+      "AP50": 0.5783791613905224,
+      "AR100": 0.3073957237995093
+    },
+    {
+      "class": "traffic sign",
+      "category_id": 10,
+      "instances": 15641,
+      "positive_images": 3939,
+      "reliable": true,
+      "AP50_95": 0.3429587254140557,
+      "AP50": 0.684470873497263,
+      "AR100": 0.4760309443130235
+    }
+  ],
+  "iou_thresholds": [
+    0.5,
+    0.55,
+    0.6,
+    0.65,
+    0.7,
+    0.75,
+    0.8,
+    0.85,
+    0.8999999999999999,
+    0.95
+  ],
+  "max_detections": 100,
+  "split": "test",
+  "domain": "lighting",
+  "label": "029_fine-tune_lighting_N10000_seed0",
+  "run": {
+    "stage": "fine-tune",
+    "domain": "lighting",
+    "budget": "10000",
+    "seed": 0,
+    "initialization": "source-checkpoint",
+    "epochs": 3,
+    "floor_steps": 500,
+    "total_updates": 15000,
+    "effective_batch_size": 2,
+    "lr": 0.001,
+    "warmup_updates": 50,
+    "amp": true,
+    "smoke": false,
+    "manifest_sha256": {
+      "train": "08658a692f34f09f8e7f5bce120b2c772eaa653d542d1ba7f4b770afb01def73",
+      "test": "355aa96dc6ed819a2fa4fc2d43351bc1f93131eca0c15e4c618284d20f750b90",
+      "val": "7a3c67ac9a168bf1ed994c6052263a5b9343679f95fe57bb4f330d867f95f951"
+    },
+    "source_checkpoint_sha256": "8b1b5b4d6b0d6a4d8f13783de1b7c88817512573bb051709679dc852435d8faf",
+    "global_step": 15000,
+    "completed": true
+  },
+  "checkpoint_sha256": "e021013e304cf7badf8f8c6210be50a6547295135ca5a77da31f199fe03366ec",
+  "frozen_plan_sha256": "a1c5eb9fa457188d8094d97f2a8e8984e7b0b34d633a5b37c9b8175fc9436a44",
+  "bootstrap": {
+    "resamples": 1000,
+    "seed": 20261030,
+    "file": "bootstrap_class_ap.npy",
+    "class_order": [
+      "pedestrian",
+      "rider",
+      "car",
+      "truck",
+      "bus",
+      "train",
+      "motorcycle",
+      "bicycle",
+      "traffic light",
+      "traffic sign"
+    ]
+  }
+}

@@ -35,7 +35,19 @@ Thumbs.db
 /external/
 
 # Training/evaluation outputs
-/runs/
+/runs/*
+# Exception: the one-shot scoring outputs (metrics and bootstrap arrays only; user decision 2026-11-25)
+!/runs/local/
+/runs/local/*
+!/runs/local/campaign/
+/runs/local/campaign/*
+!/runs/local/campaign/scored/
+!/runs/local/rq5/
+/runs/local/rq5/*
+!/runs/local/rq5/scored/
+!/runs/local/revision/
+/runs/local/revision/*
+!/runs/local/revision/scored/
 /wandb/
 /mlruns/
 /logs/
