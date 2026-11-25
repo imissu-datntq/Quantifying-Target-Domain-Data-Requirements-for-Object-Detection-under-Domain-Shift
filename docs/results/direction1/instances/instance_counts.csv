@@ -1,0 +1,313 @@
+shift,seed,budget,images,class,instances,positive_images
+compound,0,10,10,pedestrian,2,1
+compound,0,10,10,car,71,10
+compound,0,10,10,traffic light,28,6
+compound,0,10,10,traffic sign,23,8
+compound,0,25,25,pedestrian,5,3
+compound,0,25,25,car,200,25
+compound,0,25,25,traffic light,90,17
+compound,0,25,25,traffic sign,77,21
+compound,0,50,50,pedestrian,23,9
+compound,0,50,50,car,395,50
+compound,0,50,50,traffic light,171,36
+compound,0,50,50,traffic sign,139,42
+compound,0,100,100,pedestrian,48,17
+compound,0,100,100,car,835,100
+compound,0,100,100,traffic light,294,66
+compound,0,100,100,traffic sign,282,79
+compound,0,250,250,pedestrian,108,40
+compound,0,250,250,car,2083,250
+compound,0,250,250,traffic light,808,175
+compound,0,250,250,traffic sign,726,192
+compound,0,500,500,pedestrian,206,90
+compound,0,500,500,car,4164,496
+compound,0,500,500,traffic light,1668,365
+compound,0,500,500,traffic sign,1513,396
+compound,0,1000,1000,pedestrian,517,193
+compound,0,1000,1000,car,8644,991
+compound,0,1000,1000,traffic light,3268,719
+compound,0,1000,1000,traffic sign,3019,785
+compound,0,full,1738,pedestrian,980,346
+compound,0,full,1738,car,15136,1723
+compound,0,full,1738,traffic light,5812,1264
+compound,0,full,1738,traffic sign,5159,1376
+compound,1,10,10,pedestrian,1,1
+compound,1,10,10,car,110,10
+compound,1,10,10,traffic light,41,8
+compound,1,10,10,traffic sign,35,8
+compound,1,25,25,pedestrian,1,1
+compound,1,25,25,car,235,25
+compound,1,25,25,traffic light,76,17
+compound,1,25,25,traffic sign,72,20
+compound,1,50,50,pedestrian,24,7
+compound,1,50,50,car,488,50
+compound,1,50,50,traffic light,171,38
+compound,1,50,50,traffic sign,151,40
+compound,1,100,100,pedestrian,60,14
+compound,1,100,100,car,1009,100
+compound,1,100,100,traffic light,307,76
+compound,1,100,100,traffic sign,273,75
+compound,1,250,250,pedestrian,146,44
+compound,1,250,250,car,2268,249
+compound,1,250,250,traffic light,833,186
+compound,1,250,250,traffic sign,738,194
+compound,1,500,500,pedestrian,291,99
+compound,1,500,500,car,4446,497
+compound,1,500,500,traffic light,1667,364
+compound,1,500,500,traffic sign,1550,399
+compound,1,1000,1000,pedestrian,542,195
+compound,1,1000,1000,car,8789,993
+compound,1,1000,1000,traffic light,3400,728
+compound,1,1000,1000,traffic sign,2917,787
+compound,1,full,1738,pedestrian,980,346
+compound,1,full,1738,car,15136,1723
+compound,1,full,1738,traffic light,5812,1264
+compound,1,full,1738,traffic sign,5159,1376
+compound,2,10,10,pedestrian,0,0
+compound,2,10,10,car,86,10
+compound,2,10,10,traffic light,36,7
+compound,2,10,10,traffic sign,39,9
+compound,2,25,25,pedestrian,2,2
+compound,2,25,25,car,192,25
+compound,2,25,25,traffic light,75,18
+compound,2,25,25,traffic sign,82,24
+compound,2,50,50,pedestrian,12,8
+compound,2,50,50,car,398,48
+compound,2,50,50,traffic light,155,35
+compound,2,50,50,traffic sign,157,46
+compound,2,100,100,pedestrian,52,17
+compound,2,100,100,car,804,97
+compound,2,100,100,traffic light,322,69
+compound,2,100,100,traffic sign,335,82
+compound,2,250,250,pedestrian,131,40
+compound,2,250,250,car,1985,246
+compound,2,250,250,traffic light,803,177
+compound,2,250,250,traffic sign,777,206
+compound,2,500,500,pedestrian,289,84
+compound,2,500,500,car,4264,496
+compound,2,500,500,traffic light,1709,366
+compound,2,500,500,traffic sign,1611,404
+compound,2,1000,1000,pedestrian,529,182
+compound,2,1000,1000,car,8655,993
+compound,2,1000,1000,traffic light,3401,731
+compound,2,1000,1000,traffic sign,3013,807
+weather,0,10,10,pedestrian,7,3
+weather,0,10,10,car,58,10
+weather,0,10,10,traffic light,8,4
+weather,0,10,10,traffic sign,9,5
+weather,0,25,25,pedestrian,34,10
+weather,0,25,25,car,223,25
+weather,0,25,25,traffic light,55,14
+weather,0,25,25,traffic sign,38,14
+weather,0,50,50,pedestrian,70,19
+weather,0,50,50,car,479,50
+weather,0,50,50,traffic light,123,29
+weather,0,50,50,traffic sign,112,34
+weather,0,100,100,pedestrian,138,32
+weather,0,100,100,car,987,100
+weather,0,100,100,traffic light,240,56
+weather,0,100,100,traffic sign,231,70
+weather,0,250,250,pedestrian,492,102
+weather,0,250,250,car,2555,250
+weather,0,250,250,traffic light,765,156
+weather,0,250,250,traffic sign,717,191
+weather,0,500,500,pedestrian,865,190
+weather,0,500,500,car,5057,499
+weather,0,500,500,traffic light,1482,303
+weather,0,500,500,traffic sign,1538,391
+weather,0,1000,1000,pedestrian,1622,384
+weather,0,1000,1000,car,9923,994
+weather,0,1000,1000,traffic light,2951,599
+weather,0,1000,1000,traffic sign,3186,797
+weather,0,full,1985,pedestrian,3249,763
+weather,0,full,1985,car,19707,1969
+weather,0,full,1985,traffic light,5957,1169
+weather,0,full,1985,traffic sign,6482,1587
+weather,1,10,10,pedestrian,15,4
+weather,1,10,10,car,105,10
+weather,1,10,10,traffic light,41,6
+weather,1,10,10,traffic sign,36,8
+weather,1,25,25,pedestrian,79,14
+weather,1,25,25,car,267,25
+weather,1,25,25,traffic light,84,19
+weather,1,25,25,traffic sign,91,22
+weather,1,50,50,pedestrian,133,23
+weather,1,50,50,car,534,50
+weather,1,50,50,traffic light,163,34
+weather,1,50,50,traffic sign,176,42
+weather,1,100,100,pedestrian,263,47
+weather,1,100,100,car,999,100
+weather,1,100,100,traffic light,389,71
+weather,1,100,100,traffic sign,392,86
+weather,1,250,250,pedestrian,536,102
+weather,1,250,250,car,2510,250
+weather,1,250,250,traffic light,891,168
+weather,1,250,250,traffic sign,896,198
+weather,1,500,500,pedestrian,883,191
+weather,1,500,500,car,4869,496
+weather,1,500,500,traffic light,1697,322
+weather,1,500,500,traffic sign,1705,398
+weather,1,1000,1000,pedestrian,1794,389
+weather,1,1000,1000,car,9824,992
+weather,1,1000,1000,traffic light,3057,599
+weather,1,1000,1000,traffic sign,3298,798
+weather,1,full,1985,pedestrian,3249,763
+weather,1,full,1985,car,19707,1969
+weather,1,full,1985,traffic light,5957,1169
+weather,1,full,1985,traffic sign,6482,1587
+weather,2,10,10,pedestrian,8,4
+weather,2,10,10,car,119,10
+weather,2,10,10,traffic light,29,5
+weather,2,10,10,traffic sign,30,8
+weather,2,25,25,pedestrian,35,9
+weather,2,25,25,car,276,25
+weather,2,25,25,traffic light,87,15
+weather,2,25,25,traffic sign,85,20
+weather,2,50,50,pedestrian,115,19
+weather,2,50,50,car,483,50
+weather,2,50,50,traffic light,166,27
+weather,2,50,50,traffic sign,157,40
+weather,2,100,100,pedestrian,206,40
+weather,2,100,100,car,1001,100
+weather,2,100,100,traffic light,331,56
+weather,2,100,100,traffic sign,348,82
+weather,2,250,250,pedestrian,454,96
+weather,2,250,250,car,2444,248
+weather,2,250,250,traffic light,796,148
+weather,2,250,250,traffic sign,830,201
+weather,2,500,500,pedestrian,835,182
+weather,2,500,500,car,5107,498
+weather,2,500,500,traffic light,1468,284
+weather,2,500,500,traffic sign,1612,403
+weather,2,1000,1000,pedestrian,1606,373
+weather,2,1000,1000,car,10022,995
+weather,2,1000,1000,traffic light,2993,583
+weather,2,1000,1000,traffic sign,3134,798
+lighting,0,10,10,pedestrian,7,3
+lighting,0,10,10,car,113,10
+lighting,0,10,10,traffic light,21,5
+lighting,0,10,10,traffic sign,20,8
+lighting,0,25,25,pedestrian,37,7
+lighting,0,25,25,car,254,24
+lighting,0,25,25,traffic light,67,17
+lighting,0,25,25,traffic sign,86,20
+lighting,0,50,50,pedestrian,69,15
+lighting,0,50,50,car,506,49
+lighting,0,50,50,traffic light,148,38
+lighting,0,50,50,traffic sign,157,41
+lighting,0,100,100,pedestrian,125,28
+lighting,0,100,100,car,925,96
+lighting,0,100,100,traffic light,258,66
+lighting,0,100,100,traffic sign,309,80
+lighting,0,250,250,pedestrian,243,56
+lighting,0,250,250,car,2243,246
+lighting,0,250,250,traffic light,662,161
+lighting,0,250,250,traffic sign,785,211
+lighting,0,500,500,pedestrian,452,113
+lighting,0,500,500,car,4613,490
+lighting,0,500,500,traffic light,1453,335
+lighting,0,500,500,traffic sign,1581,415
+lighting,0,1000,1000,pedestrian,754,210
+lighting,0,1000,1000,car,9145,984
+lighting,0,1000,1000,traffic light,2967,664
+lighting,0,1000,1000,traffic sign,3254,832
+lighting,0,2000,2000,pedestrian,1420,389
+lighting,0,2000,2000,car,18270,1963
+lighting,0,2000,2000,traffic light,5841,1308
+lighting,0,2000,2000,traffic sign,6467,1644
+lighting,0,5000,5000,pedestrian,3353,968
+lighting,0,5000,5000,car,45737,4924
+lighting,0,5000,5000,traffic light,14848,3290
+lighting,0,5000,5000,traffic sign,16086,4090
+lighting,0,10000,10000,pedestrian,6900,1978
+lighting,0,10000,10000,car,91384,9840
+lighting,0,10000,10000,traffic light,29490,6485
+lighting,0,10000,10000,traffic sign,32334,8168
+lighting,0,full,18015,pedestrian,12265,3553
+lighting,0,full,18015,car,165378,17753
+lighting,0,full,18015,traffic light,53397,11710
+lighting,0,full,18015,traffic sign,58543,14708
+lighting,1,10,10,pedestrian,6,2
+lighting,1,10,10,car,92,10
+lighting,1,10,10,traffic light,15,5
+lighting,1,10,10,traffic sign,42,9
+lighting,1,25,25,pedestrian,22,7
+lighting,1,25,25,car,261,25
+lighting,1,25,25,traffic light,96,18
+lighting,1,25,25,traffic sign,103,23
+lighting,1,50,50,pedestrian,35,15
+lighting,1,50,50,car,492,50
+lighting,1,50,50,traffic light,192,37
+lighting,1,50,50,traffic sign,200,47
+lighting,1,100,100,pedestrian,75,23
+lighting,1,100,100,car,994,100
+lighting,1,100,100,traffic light,296,65
+lighting,1,100,100,traffic sign,352,85
+lighting,1,250,250,pedestrian,215,59
+lighting,1,250,250,car,2359,247
+lighting,1,250,250,traffic light,764,168
+lighting,1,250,250,traffic sign,858,208
+lighting,1,500,500,pedestrian,382,105
+lighting,1,500,500,car,4636,495
+lighting,1,500,500,traffic light,1536,335
+lighting,1,500,500,traffic sign,1650,410
+lighting,1,1000,1000,pedestrian,730,203
+lighting,1,1000,1000,car,9182,985
+lighting,1,1000,1000,traffic light,2957,657
+lighting,1,1000,1000,traffic sign,3207,814
+lighting,1,2000,2000,pedestrian,1454,422
+lighting,1,2000,2000,car,18182,1965
+lighting,1,2000,2000,traffic light,6241,1345
+lighting,1,2000,2000,traffic sign,6588,1657
+lighting,1,5000,5000,pedestrian,3541,999
+lighting,1,5000,5000,car,45068,4928
+lighting,1,5000,5000,traffic light,14947,3277
+lighting,1,5000,5000,traffic sign,16057,4090
+lighting,1,10000,10000,pedestrian,6929,1972
+lighting,1,10000,10000,car,91320,9847
+lighting,1,10000,10000,traffic light,29607,6495
+lighting,1,10000,10000,traffic sign,32547,8193
+lighting,1,full,18015,pedestrian,12265,3553
+lighting,1,full,18015,car,165378,17753
+lighting,1,full,18015,traffic light,53397,11710
+lighting,1,full,18015,traffic sign,58543,14708
+lighting,2,10,10,pedestrian,2,2
+lighting,2,10,10,car,79,9
+lighting,2,10,10,traffic light,10,4
+lighting,2,10,10,traffic sign,32,7
+lighting,2,25,25,pedestrian,2,2
+lighting,2,25,25,car,204,24
+lighting,2,25,25,traffic light,43,10
+lighting,2,25,25,traffic sign,79,18
+lighting,2,50,50,pedestrian,10,5
+lighting,2,50,50,car,423,49
+lighting,2,50,50,traffic light,135,29
+lighting,2,50,50,traffic sign,144,36
+lighting,2,100,100,pedestrian,42,19
+lighting,2,100,100,car,884,99
+lighting,2,100,100,traffic light,306,68
+lighting,2,100,100,traffic sign,273,75
+lighting,2,250,250,pedestrian,144,49
+lighting,2,250,250,car,2205,246
+lighting,2,250,250,traffic light,774,171
+lighting,2,250,250,traffic sign,792,194
+lighting,2,500,500,pedestrian,272,97
+lighting,2,500,500,car,4504,491
+lighting,2,500,500,traffic light,1470,323
+lighting,2,500,500,traffic sign,1573,386
+lighting,2,1000,1000,pedestrian,687,205
+lighting,2,1000,1000,car,9078,984
+lighting,2,1000,1000,traffic light,2955,655
+lighting,2,1000,1000,traffic sign,3305,797
+lighting,2,2000,2000,pedestrian,1368,413
+lighting,2,2000,2000,car,18301,1976
+lighting,2,2000,2000,traffic light,5923,1300
+lighting,2,2000,2000,traffic sign,6471,1589
+lighting,2,5000,5000,pedestrian,3314,968
+lighting,2,5000,5000,car,45905,4934
+lighting,2,5000,5000,traffic light,14841,3284
+lighting,2,5000,5000,traffic sign,16366,4081
+lighting,2,10000,10000,pedestrian,6831,1977
+lighting,2,10000,10000,car,91768,9869
+lighting,2,10000,10000,traffic light,29518,6480
+lighting,2,10000,10000,traffic sign,32563,8140

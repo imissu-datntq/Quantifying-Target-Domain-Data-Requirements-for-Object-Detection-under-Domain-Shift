@@ -2,7 +2,7 @@
 
 A tracked copy of the final analysis outputs, so that the report can be written from a clone. The originals are in `runs/local/campaign/analysis_rev2/` and `runs/local/rq5/analysis_rev2/`, which are not tracked. Copied on 2026-11-23; every file is byte-identical to its original.
 
-The numbers are explained in [`../results_local_rq1_rq4_vi.md`](../results_local_rq1_rq4_vi.md) and [`../results_rq5_vi.md`](../results_rq5_vi.md). The rules behind them are in `.agent/DECISIONS.md` (2026-11-21 onwards).
+The numbers are explained in [`../results_local_rq1_rq4_vi.md`](../results_local_rq1_rq4_vi.md), [`../results_rq5_vi.md`](../results_rq5_vi.md) and, for `direction1/`, [`../results_direction1_vi.md`](../results_direction1_vi.md). The rules behind them are in `.agent/DECISIONS.md` (2026-11-21 onwards).
 
 ## `campaign/`: fine-tuning curves, thresholds and ceilings
 
@@ -43,3 +43,22 @@ The column `analysis` separates the ceilings: `full-pool` and `matched-pool` use
 ## Refreshing the copy
 
 Rerun the two analysis commands in the repository README ("Reproducing the Runs"), then copy the CSV, JSON and PNG files here again, except `recovery_weather_e12.png`.
+
+## `direction1/`: instances, seed spread and source retention
+
+Copied on 2026-11-25 from `runs/local/direction1/` (not tracked); every file is byte-identical to its original. Rules: `.agent/plans/active/2026-11-24-direction-1-analyses.md`; decision: `.agent/DECISIONS.md` (2026-11-25). Scripts: `scripts/analyze_instances.py`, `scripts/analyze_seed_spread.py`, `scripts/analyze_retention.py`.
+
+| File | Content |
+| --- | --- |
+| `instances/instance_pool_density.csv` | Instances per image for each class in each train pool |
+| `instances/instance_counts.csv`, `instances/instance_transitions.csv` | Instances and images of every run's subset; per-class ΔAP between rungs |
+| `instances/instance_regression.csv`, `instances/instance_summary.json` | ΔAP on Δ(instances) and Δ(images): pooled, `within` (the reading), per class; log and raw forms |
+| `instances/instance_recovery.csv`, `instances/instance_recovery.png` | Per-class recovery against images and against instances |
+| `seed_spread/seed_spread.csv` | SD over sampling seeds per rung, with chi-square CI, finite-population factor, SD in recovery units |
+| `seed_spread/seed_spread_floor.csv` | Training noise: SD of the two full-pool E = 3 seeds, per shift and pooled |
+| `seed_spread/seed_spread_fit.csv`, `seed_spread/seed_spread_summary.json` | Power law (`power_fpc` primary, `power` uncorrected) and the variance model with a floor |
+| `seed_spread/seed_spread_reliable.png`, `seed_spread/seed_spread_classes.png` | SD against N with the fits and the training-noise band |
+| `retention/retention_points.csv` | Recovery (E = 3 and E = 12) and source retention per method and N |
+| `retention/retention_paired.csv` | Paired differences against FT (or the source model at N = 0) and the dominance flags |
+| `retention/retention_summary.json` | References, Pareto front, caveat |
+| `retention/retention_<shift>.png` | Recovery against retention, Pareto front circled |

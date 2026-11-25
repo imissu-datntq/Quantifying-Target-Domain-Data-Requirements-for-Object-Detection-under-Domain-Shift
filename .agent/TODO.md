@@ -6,8 +6,10 @@ Plan: `.agent/plans/active/2026-11-24-direction-1-analyses.md`.
 
 - [x] Branch `alt-1` from `main`; plan with the analysis rules (2026-11-24).
 - [x] `scripts/analyze_instances.py`, `scripts/analyze_seed_spread.py`, `scripts/analyze_retention.py` with synthetic tests; independent review and verification (2026-11-25).
-- [ ] User approves the rules and the run.
-- [ ] Run on the retrained results (`runs/local/.../scored`, Linux machine), record rules and results in `DECISIONS.md`, short Vietnamese result note.
+- [x] User approves the run (2026-11-25, on the Windows machine).
+- [x] Run on `runs/local/.../scored`; rules and results in `DECISIONS.md` (2026-11-25); note `docs/results_direction1_vi.md`; copy in `docs/results/direction1/`.
+- [ ] Push `alt-1` to the team repo: YN2TB has read access only there (403); the user will push later.
+- [ ] User reviews the note; decide whether the results go into the report and the paper.
 
 ## Revision after the lecturer review of 2026-11-21
 

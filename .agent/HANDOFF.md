@@ -2,14 +2,14 @@
 
 Updated 2026-11-25, Asia/Saigon.
 
-## 2026-11-25: branch `alt-1`, direction 1 of the lecturer's follow-up: code written, not run (latest)
+## 2026-11-25: branch `alt-1`, direction 1 of the lecturer's follow-up: run, note written (latest)
 
 - **Goal (user, 2026-11-24):** the lecturer's follow-up gave two directions; the Windows machine takes direction 1: (1) does a class's AP gain follow its labeled instances or the images, (2) seed spread against N (why not active learning), (3) source retention as a second axis (trade-off surface). Plan and rules: `.agent/plans/active/2026-11-24-direction-1-analyses.md`.
-- **Branch `alt-1`** from `main` (`ef354cf`), committed there, not pushed. **Code only:** the user reviews before anything runs ("lúc nào chạy thì báo để mình duyệt").
-- **New:** `scripts/analyze_instances.py`, `scripts/analyze_seed_spread.py`, `scripts/analyze_retention.py`, their tests (synthetic only). Nothing under `scripts/bdd_pipeline/`, `scripts/bdd_adapt/` or the existing analysis scripts changed.
-- **Inputs when approved:** the retrained local results only (`runs/local/campaign/scored`, `runs/local/rq5/scored`, `runs/local/revision/scored`) and the train annotations. The Kaggle outputs still on the Windows machine (`runs/campaign/`, `runs/rq5/`) are dropped and never read. The `scored/` directories are on the Linux machine; only aggregates are tracked in `docs/results/`, and they lack the per-seed, per-class values these analyses need. Commands: the plan's "Commands" section.
-- **Windows notes:** `tests/test_revision_runs.py` cannot import `fcntl` here (Linux-only driver); every other test passes. Run single test files with `python -m unittest discover -s tests -p <file>`.
-- **Next:** the user approves the rules and the run; then run on the Linux machine (or copy the three `scored/` folders here), record rules and results in `DECISIONS.md`, write a short Vietnamese result note.
+- **Branch `alt-1`**, rebased onto `team/main` `407d60d` (which tracks the three `scored/` directories). **Not pushed:** account YN2TB has read access only on the team repo (403); the user will push later.
+- **Done:** `scripts/analyze_instances.py`, `scripts/analyze_seed_spread.py`, `scripts/analyze_retention.py` with synthetic tests; run once on 2026-11-25 (user approval, Windows machine, CPU); outputs in `runs/local/direction1/` and the tracked copy `docs/results/direction1/`; Vietnamese note `docs/results_direction1_vi.md`; decision `DECISIONS.md` 2026-11-25 (readings and claim rules).
+- **Headline of the note:** no instance effect detected at a fixed image step (the level of the lecturer's 0.46 is mostly the full-pool 3-epoch ceiling: 0.75 against the matched-pool one; class order depends on the ceiling); spread shrinks like 1/√N or faster on compound and weather, flat but low on lighting, no floor clearly above training noise (assumed independent of N); adapt/replay dominate FT at N = 10 and 100, trade-off at N = 1,000 (retention is source rehearsal).
+- **Windows machine:** every older run output there was deleted at the user's request (deprecated); only `runs/local/` remains. `tests/test_revision_runs.py` cannot import `fcntl` here; every other test passes. Run single test files with `python -m unittest discover -s tests -p <file>`.
+- **Next:** the user reviews the note; push `alt-1` once YN2TB has write access; decide whether the results go into the report and the Overleaf paper.
 
 ## 2026-11-23 (evening): English IEEE paper for Overleaf ready, not committed
 
